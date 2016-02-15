@@ -1,3 +1,4 @@
+package ArenaFighter;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;

@@ -1,3 +1,5 @@
+package ArenaFighter;
+
 public class Player extends Entity {
 	private int dx, dy;
 	

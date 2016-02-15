@@ -1,3 +1,4 @@
+package ArenaFighter;
 public class Game implements Runnable {
 
 	private GameState GAMESTATE;

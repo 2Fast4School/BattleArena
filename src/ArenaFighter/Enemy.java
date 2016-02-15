@@ -1,3 +1,4 @@
+package ArenaFighter;
 
 public class Enemy extends Entity {
 
