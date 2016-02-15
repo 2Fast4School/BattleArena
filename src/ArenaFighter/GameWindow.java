@@ -2,6 +2,7 @@ package ArenaFighter;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -25,9 +26,19 @@ public class GameWindow extends Canvas implements Observer{
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, 800, 800);
 		for(Entity e : gameObjects){
-			g.drawImage(e.getSprite(), e.getX(),e.getY(), null);
-			g.setColor(Color.blue);
-			g.fillRect(e.getX(), e.getY(), e.getWidth(), e.getHeight());
+			//Graphics 2D object used for rotating sprites.
+			Graphics2D g2d = (Graphics2D)g;
+			
+			//Draw the objects visual appearance.
+			g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
+			g2d.setColor(Color.blue);
+			g2d.drawRect(e.getX(), e.getY(), e.getWidth(), e.getHeight());
+			g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
+			
+			//Draw the objects "hitbox"
+			g2d.setColor(Color.RED);
+			g2d.drawRect(e.getX(), e.getY(), e.getWidth(), e.getHeight());
+			g2d.dispose();
 		}
 		
 		////
