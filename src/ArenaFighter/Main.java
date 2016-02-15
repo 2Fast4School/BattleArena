@@ -1,12 +1,11 @@
-package ArenaFighter;
-
 import java.awt.Dimension;
-import java.awt.Frame;
+
+import javax.swing.JFrame;
 
 public class Main{
 	private static final int numberOfPlayers=1;
 	public static void main(String[] args){
-		Frame frame = new Frame();
+		JFrame frame = new JFrame();
 		GameWindow window=new GameWindow();
 		GameState state=new GameState(numberOfPlayers);
 		Client client = new Client(1234, "127.0.0.1", state);
@@ -20,11 +19,11 @@ public class Main{
 		window.addMouseMotionListener(input);
 		state.addObserver(client);
 		state.addObserver(window);
-		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
 		
-		new Thread(game).start();
+		game.start();
 		new Thread(client).start();
 	}
 }

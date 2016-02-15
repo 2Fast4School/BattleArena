@@ -1,4 +1,3 @@
-package ArenaFighter;
 public class Player extends Entity {
 	private int dx, dy;
 	
@@ -12,10 +11,13 @@ public class Player extends Entity {
 		this.y += dy;
 	}
 	
+	
+	//FUNGERAR EJ.
 	public void move(int dx, int dy){ // Use for collision
 		if(dx != 0 && dy != 0){
 			move(this.x+dx, 0);
 			move(0, this.y+dy);
+			return;
 		}
 		
 		if(!collision()){
@@ -38,5 +40,3 @@ public class Player extends Entity {
 	}
 	
 }
-
-

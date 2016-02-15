@@ -1,4 +1,3 @@
-package ArenaFighter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -7,6 +6,7 @@ import java.awt.event.MouseMotionListener;
 
 public class Input implements KeyListener, MouseMotionListener{
 	private Player p;
+	private final int VELOCITY = 2;
 
 	public Input(Player p){
 		this.p = p;
@@ -14,19 +14,19 @@ public class Input implements KeyListener, MouseMotionListener{
 
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_W){
-			p.setdy(-2);
+			p.setdy(-VELOCITY);
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_A){
-			p.setdx(-2);
+			p.setdx(-VELOCITY);
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_S){
-			p.setdy(2);
+			p.setdy(VELOCITY);
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_D){
-			p.setdx(2);
+			p.setdx(VELOCITY);
 		}
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 			System.exit(1);
@@ -48,7 +48,7 @@ public class Input implements KeyListener, MouseMotionListener{
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_D){
-			p.setdy(0);
+			p.setdx(0);
 		}
 	}
 

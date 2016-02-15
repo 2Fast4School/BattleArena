@@ -1,5 +1,3 @@
-package ArenaFighter;
-
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -11,7 +9,7 @@ public class GameState extends Observable{
 	public GameState(int numberOfPlayers){
 		this.numberOfPlayers=numberOfPlayers;
 		gameObjects=new ArrayList<Entity>();
-		player=new Player(0, 100, 100, 5, 5);
+		player=new Player(0, 100, 100, 20, 20);
 		gameObjects.add(player);
 		for(int n=1; n<numberOfPlayers;n++){
 			gameObjects.add(new Enemy(n, (n+1)*100, (n+1)*100, 5, 5));
@@ -22,17 +20,15 @@ public class GameState extends Observable{
 		Player player=null;
 		for(Entity e : gameObjects){
 				//Implementera collision
-				if(e instanceof Player || e instanceof Enemy){
-					player = (Player)e; 
-					e.tick();
-					((Player)e).setdx(0);
-					((Player)e).setdy(0);
-				}
+				if(e instanceof Player){ player = (Player) e; }
+				
+				e.tick();
 				setChanged();
-				if(player!=null){
+				if(player != null){
 					notifyObservers(player);
+				}else {
+					notifyObservers();
 				}
-				notifyObservers();
 		}
 	}
 	

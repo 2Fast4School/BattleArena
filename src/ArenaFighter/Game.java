@@ -1,4 +1,3 @@
-package ArenaFighter;
 public class Game implements Runnable {
 
 	private GameState GAMESTATE;
@@ -7,51 +6,58 @@ public class Game implements Runnable {
 	
 	public Game(GameState GAMESTATE){
 		this.GAMESTATE = GAMESTATE;
-		//running = false;
-		running=true;
+		running = false;
 	}
 
-	/*public synchronized void start(){
-		if(!running)
-			running = true;
-		
+	public synchronized void start(){
+		if(running){return;}
+			
+		running = true;
 		thread = new Thread(this);
 		thread.start();
-	}*/
+	}
 	
 	public synchronized void stop(){
 		if(running)
 			running = false;
-		try{
+		
+		try {
 			thread.join();
-		}catch(InterruptedException e){}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void run() {
+
 		long lastTime = System.nanoTime();
 		final double amountOfTicks = 60.0;
-		double ns = 100000000 / amountOfTicks;
+		double ns = 1000000000 / amountOfTicks;
 		double delta = 0;
-		int ups = 0;
+		int updates = 0;
 		long timer = System.currentTimeMillis();
 		
 		while(running){
-			System.out.println("test");
+			
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
-			lastTime = 0;
-			
-			while(delta >= 1){
+			lastTime = now;
+			while(delta >= 1){ 
 				GAMESTATE.tick();
-				ups++;
+				updates++;
+				delta--;
 			}
+			
 			
 			if(System.currentTimeMillis() - timer > 1000){
 				timer += 1000;
-				System.out.println("UPS: "+ups);
-				ups = 0;
+				System.out.println("TICKS: "+updates);
+				updates = 0;
 			}
-		}		
+		}
+		
+		stop();	
 	}
 	
 }
