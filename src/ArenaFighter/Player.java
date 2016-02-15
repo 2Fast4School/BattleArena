@@ -10,10 +10,10 @@ public class Player extends Entity {
 	
 	public void tick(){
 		move(dx, dy);
+		
 	}
 	
-	
-	//FUNGERAR EJ.
+	//Temporär lösning.
 	public void move(int dx, int dy){ // Use for collision
 		if(dx != 0 && dy != 0){
 			move(dx, 0);

@@ -61,39 +61,14 @@ public class Input implements KeyListener, MouseMotionListener{
 	}
 
 	public void mouseMoved(MouseEvent e) {
-		int deltax, deltay;
-		deltax = p.getX()-e.getX();
-		deltay = p.getY()-e.getY();
+		int angle = (int)Math.toDegrees(Math.atan2(e.getY() - p.getCenterY(), e.getX() - p.getCenterX()));
+		angle += 90;
 		
-		if(deltax == 0){
-			if(deltay < 0){
-				p.setRotVar(180);
-			} else {
-				p.setRotVar(0);
-			}
+		if(angle < 0){
+			angle += 360;
 		}
 		
-		if(deltay == 0){
-			if(deltax < 0){
-				p.setRotVar(270);
-			} else {
-				p.setRotVar(90);
-			}
-		}
-		
-		if(deltax > 0 && deltay > 0){
-			p.setRotVar((int)(90-Math.atan(deltax/deltay)));
-		}
-		if(deltax > 0 && deltay < 0){
-			p.setRotVar((int)(90+Math.atan(deltax/deltay)));
-		}
-		if(deltax < 0 && deltay < 0){
-			p.setRotVar((int)(180+Math.atan(deltay/deltax)));
-		}
-		if(deltax < 0 && deltay > 0){
-			p.setRotVar((int)(270+Math.atan(deltax/deltay)));
-		}
-		
+		p.setRotVar(angle);
 	}
 
 }
