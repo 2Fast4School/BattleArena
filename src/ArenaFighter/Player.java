@@ -9,16 +9,15 @@ public class Player extends Entity {
 	}
 	
 	public void tick(){
-		this.x += dx;
-		this.y += dy;
+		move(dx, dy);
 	}
 	
 	
 	//FUNGERAR EJ.
 	public void move(int dx, int dy){ // Use for collision
 		if(dx != 0 && dy != 0){
-			move(this.x+dx, 0);
-			move(0, this.y+dy);
+			move(dx, 0);
+			move(0, dy);
 			return;
 		}
 		
