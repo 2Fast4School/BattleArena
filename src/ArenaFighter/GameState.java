@@ -7,14 +7,21 @@ public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private int numberOfPlayers;
 	private Player player;
+	private int id;
 	
 	public GameState(int numberOfPlayers){
 		this.numberOfPlayers=numberOfPlayers;
 		gameObjects=new ArrayList<Entity>();
-		player=new Player(0, 100, 100, 20, 20);
+	}
+	
+	public void setup(){
+		player=new Player(id, (id+1)*100, (id+1)*100, 20, 20);
 		gameObjects.add(player);
-		for(int n=1; n<numberOfPlayers;n++){
-			gameObjects.add(new Enemy(n, (n+1)*100, (n+1)*100, 5, 5));
+		
+		for(int n=0; n<numberOfPlayers;n++){
+			if(n!=id){
+				gameObjects.add(new Enemy(n, (n+1)*100, (n+1)*100, 20, 20));
+			}
 		}
 	}
 	
@@ -36,4 +43,5 @@ public class GameState extends Observable{
 	
 	public ArrayList<Entity> getList(){return gameObjects;}
 	public Player returnPlayer(){return player;}
+	public void setID(int id){this.id=id;}
 }

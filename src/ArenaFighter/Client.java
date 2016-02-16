@@ -15,24 +15,28 @@ public class Client implements Runnable, Observer{
 	private DataOutputStream out;
 	private DataInputStream in;
 	private GameState state;
+	private int id;
 	
-	public Client(int port, String ip, GameState state){
-		
+	public Client(int port, String ip, GameState state, int id){
+		this.id=id;
 		this.port=port;
 		this.ip=ip;
 		this.state=state;
-		try{
-			Socket socket=new Socket(InetAddress.getByAddress(ip, null), port);
-			out=new DataOutputStream(socket.getOutputStream());
-			in=new DataInputStream(socket.getInputStream());
-		}catch(UnknownHostException f){}
-		catch(IOException e){e.printStackTrace();}
+		state.setID(id);
 	}
 
 	@Override
 	public void run() {
+		if(out==null){
+			try{
+				Socket socket=new Socket(ip, port);
+				out=new DataOutputStream(socket.getOutputStream());
+				in=new DataInputStream(socket.getInputStream());
+			}catch(UnknownHostException f){}
+			catch(IOException e){e.printStackTrace();}
+		}
 		String message[];
-		String code;
+		int code;
 		int id;
 		int xVal;
 		int yVal;
@@ -41,12 +45,12 @@ public class Client implements Runnable, Observer{
 			if(in!=null){
 				try{
 					in.read(receive, 0, receive.length);
-					message=new String(receive).split(",");
-					code=message[0];
+					message=new String(receive).trim().split(",");
+					code=Integer.parseInt(message[0].trim());
 					id=Integer.parseInt(message[1]);
-					xVal=Integer.parseInt(message[2]);
-					yVal=Integer.parseInt(message[3]);
-					if(code=="move"){
+					if(code==1){	// 1 = move code. For some reason a string wouldn't work out.
+						xVal=Integer.parseInt(message[2]);
+						yVal=Integer.parseInt(message[3]);
 						for(Entity e : state.getList()){
 							if (e.getID()==id){
 								e.setX(xVal);
@@ -60,16 +64,16 @@ public class Client implements Runnable, Observer{
 	}
 	
 	@Override
-	public void update(Observable arg0, Object arg1) {
+	public void update(Observable arg0, Object arg1){
 		String message;
 		byte[] toSend;
 		if(arg1 instanceof Player){
 			Player player=(Player)arg1;
 			if(out!=null){
-				message="move,"+player.getID()+","+player.getX()+","+player.getY()+",Filler";
-				toSend=message.getBytes();
-				try{
+				try{	// 1 = move code. For some reason a string wouldn't work out.
+					toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+",Filler").getBytes();
 					out.write(toSend, 0, toSend.length);
+					out.flush();
 				}catch(IOException e){e.printStackTrace();}
 			}
 		}

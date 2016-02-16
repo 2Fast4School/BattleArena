@@ -8,12 +8,10 @@ import java.awt.event.MouseMotionListener;
 
 public class Input implements KeyListener, MouseMotionListener{
 	private Player p;
-	private final int VELOCITY = 2;
+	private final int VELOCITY = 1;
 
-	public Input(Player p){
-		this.p = p;
-	}
-
+	public void setup(Player p){this.p = p;}
+	
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_W){
 			p.setdy(-VELOCITY);
