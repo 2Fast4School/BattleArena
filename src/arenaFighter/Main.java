@@ -1,4 +1,4 @@
-package ArenaFighter;
+package arenaFighter;
 
 import java.awt.Dimension;
 import java.io.IOException;
