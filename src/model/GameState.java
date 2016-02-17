@@ -41,11 +41,15 @@ public class GameState extends Observable{
 		Player player=null;
 		for(Entity e : gameObjects){
 				//Implementera collision
-				//if(e instanceof Player){ player = (Player) e; }
+				if(e instanceof Player){ player = (Player) e; }
 				e.tick();
 		}
 		setChanged();
-		notifyObservers();		
+		if(player != null){
+			notifyObservers(player);
+		}else {
+			notifyObservers();
+		}		
 	}
 	
 	public ArrayList<Entity> getList(){return gameObjects;}
