@@ -1,4 +1,4 @@
-package ArenaFighter;
+package model;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 

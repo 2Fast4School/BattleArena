@@ -1,4 +1,4 @@
-package ArenaFighter;
+package model;
 
 public class Player extends Entity {
 	private int dx, dy;

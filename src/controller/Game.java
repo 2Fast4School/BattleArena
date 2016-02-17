@@ -1,4 +1,7 @@
-package ArenaFighter;
+package controller;
+
+import model.GameState;
+
 public class Game implements Runnable {
 
 	private GameState GAMESTATE;

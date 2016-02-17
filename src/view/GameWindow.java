@@ -1,4 +1,4 @@
-package ArenaFighter;
+package view;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,6 +7,9 @@ import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+
+import model.Entity;
+import model.GameState;
 
 
 public class GameWindow extends Canvas implements Observer{
