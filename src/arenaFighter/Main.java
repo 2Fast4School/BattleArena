@@ -14,7 +14,7 @@ import view.GameWindow;
 
 public class Main{
 	private static final int numberOfPlayers=2;
-	private static final String ip = "192.168.0.106";
+	private static final String ip = "192.168.1.64";
 	private static final int port=1555;
 	public static void main(String[] args){
 		
