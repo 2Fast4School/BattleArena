@@ -1,6 +1,8 @@
 
 package model;
+import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 public class GameState extends Observable{
@@ -8,10 +10,12 @@ public class GameState extends Observable{
 	private int numberOfPlayers;
 	private Player player;
 	private int id;
+	private Quadtree quadtree;
 	
 	public GameState(int numberOfPlayers){
 		this.numberOfPlayers=numberOfPlayers;
 		gameObjects=new ArrayList<Entity>();
+		quadtree = new Quadtree(0, new Rectangle(0,0,800,800));
 	}
 	
 	public void setup(){
@@ -27,6 +31,23 @@ public class GameState extends Observable{
 	
 	public void tick(){
 		Player player=null;
+		quadtree.clear();
+		for(Entity e : gameObjects){
+			quadtree.insert(e);
+		}
+		
+		ArrayList<Entity> returnObjects = new ArrayList<Entity>();
+		for(Entity e : gameObjects){
+			returnObjects.clear();
+			quadtree.retrive(returnObjects, e);
+			for(Entity e2 : returnObjects){
+				if(e.getBounds().intersects(e2.getBounds())){
+					//Kollision, gör något.
+				}
+			}
+		}
+		
+		
 		for(Entity e : gameObjects){
 				//Implementera collision
 				if(e instanceof Player){ player = (Player) e; }
