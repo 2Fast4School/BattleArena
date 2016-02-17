@@ -10,7 +10,7 @@ import model.Player;
 
 public class Input implements KeyListener, MouseMotionListener{
 	private Player p;
-	private final int VELOCITY = 1;
+	private final int VELOCITY = 2;
 
 	public void setup(Player p){this.p = p;}
 	

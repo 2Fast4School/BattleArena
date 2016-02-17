@@ -23,22 +23,29 @@ public class GameState extends Observable{
 				gameObjects.add(new Enemy(n, (n+1)*100, (n+1)*100, 20, 20));
 			}
 		}
+		
+		//Generate 50^2 16x16 entities
+		/*
+		int k = 0;
+		for(int i = 0; i < 50; i++){
+			for(int j = 0; j < 50; j++){
+				gameObjects.add(new Enemy(k, 16*i, 16*j, 16, 16 ));
+				k++;
+			}
+		}
+		*/
+		
 	}
 	
 	public void tick(){
 		Player player=null;
 		for(Entity e : gameObjects){
 				//Implementera collision
-				if(e instanceof Player){ player = (Player) e; }
-				
+				//if(e instanceof Player){ player = (Player) e; }
 				e.tick();
-				setChanged();
-				if(player != null){
-					notifyObservers(player);
-				}else {
-					notifyObservers();
-				}
 		}
+		setChanged();
+		notifyObservers();		
 	}
 	
 	public ArrayList<Entity> getList(){return gameObjects;}
