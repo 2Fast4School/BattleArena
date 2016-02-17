@@ -110,7 +110,7 @@ public abstract class Entity {
 	 * @param y The y-pos of The Rectangle.
 	 * @return A Rectangle specified by the parameters with the same width and height as the Entity.
 	 */
-	public Rectangle getBounds(int x, int y){
+	public Rectangle getBounds(){
 		return new Rectangle(x, y, w, h);
 	}
 	
