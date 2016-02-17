@@ -1,9 +1,16 @@
-package ArenaFighter;
+package arenaFighter;
 
 import java.awt.Dimension;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+
+import controller.Client;
+import controller.Game;
+import controller.Input;
+import model.GameState;
+import server.Server;
+import view.GameWindow;
 
 public class Main{
 	private static final int numberOfPlayers=2;

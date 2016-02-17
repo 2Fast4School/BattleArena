@@ -1,4 +1,4 @@
-package ArenaFighter;
+package controller;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -8,6 +8,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
+
+import model.Entity;
+import model.GameState;
+import model.Player;
 
 public class Client implements Runnable, Observer{
 	private int port;
