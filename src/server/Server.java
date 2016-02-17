@@ -7,7 +7,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+/**
+* <h1>Server</h1>
+* Server is just that, a server for the game application.
+* This Server doesn't hold any actual game information 
+* of it's own, instead it listens to the clients, and forwards
+* the messages they send to the other clients.<p>
+* This is done by the use of multiple threaded instances of
+* the private class MiniServer, which are stored in an ArrayList
+* so that they can be iterated over.
+* @author  William Björklund
+* @version 1.0
+* @since   2016-02-17
+*/
 public class Server{
 	private int numberOfPlayers;
 	private ServerSocket serverSocket;
@@ -32,6 +44,16 @@ public class Server{
 		serverSocket.close();
 	}
 
+	/**
+	* <h1>MiniServer</h1>
+	* MiniServer is a private class to Server, and it's threaded.
+	* It continually listens to the Client it is associated with,
+	* and will forward any messages sent by that Client to all other
+	* clients.
+	* @author  William Björklund
+	* @version 1.0
+	* @since   2016-02-17
+	*/
 	private class MiniServer extends Thread{
 		Socket socket;
 		DataInputStream in;
@@ -45,8 +67,7 @@ public class Server{
 				out = new DataOutputStream(socket.getOutputStream());
 			}catch(IOException e){}
 		}
-		/*Main loop. Listens to each individual client in a separate thread.
-		  If anything is received, it sends it to all other clients*/
+
 		public void run(){
 			int code;
 			int id;
@@ -67,6 +88,7 @@ public class Server{
 		}
 		public void sendToClient(byte[] byt, int id){
 			//Send to all clients, except the one that sent the message. It already knows.
+			// This is why the id is extracted from the message.
 			for(MiniServer server : servers){
 					if(id!=server.getID()){
 						try{

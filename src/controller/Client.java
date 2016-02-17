@@ -12,7 +12,17 @@ import java.util.Observer;
 import model.Entity;
 import model.GameState;
 import model.Player;
-
+/**
+* <h1>Client</h1>
+* Client is the network portion of each client-side application.
+* It has access to a socket towards the Server, and the related
+* DataOutput, and DataInput streams. Client implements the Observer 
+* interface, and it's an observer to GameState from which it receives
+* messages if there is information that needs to be sent to other clients.
+* @author  William Björklund
+* @version 1.0
+* @since   2016-02-17
+*/
 public class Client implements Runnable, Observer{
 	private int port;
 	private String ip;
@@ -29,6 +39,17 @@ public class Client implements Runnable, Observer{
 		state.setID(id);
 	}
 
+	/**<H1>run<H1>
+	* Each Client runs in it's own thread and listen for messages from
+	* the server, which it will react to depending on the contents.
+	* Messages are expected to come as byte[], and when translated into
+	* a String they should follow the format:<p>
+	* "OP-CODE, ID, [variable], [variable]....,Filler"<p>
+	* The individual parts of the message can then be extracted, and a
+	* proper reaction to the message can be done. An OP-CODE corresponds
+	* to what sort of reaction is desired, and the ID which player sent
+	* the message. These are always read. Further information might be
+	* sent depending on which OP-CODE it is.*/
 	@Override
 	public void run() {
 		if(out==null){
@@ -67,6 +88,12 @@ public class Client implements Runnable, Observer{
 		}
 	}
 	
+	/**<H1>update<H1>
+	* Client is notified when there is information that needs
+	* to be sent to other clients. Depending on the parameters
+	* sent with this notification, a correct OP-CODE will be
+	* chosen for the message.
+	*/
 	@Override
 	public void update(Observable arg0, Object arg1){
 		String message;
