@@ -3,16 +3,16 @@ package model;
 public class Player extends Entity {
 	private final int maxHP=100;
 	private int dx, dy;
+	private boolean attacking=false;
 	
 	public Player(int id, int x, int y, int w, int h){
 		super(id, x, y, w, h, true);
 		dx = dy = 0;
-		hp=50;
+		hp=maxHP;
 	}
 	
 	public void tick(){
 		move(dx, dy);
-		
 	}
 	
 	//Temporär lösning.
@@ -40,5 +40,11 @@ public class Player extends Entity {
 	
 	public void setdy(int dy){
 		this.dy = dy;
+	}
+	public void setAttacking(boolean state){
+		attacking=state;
+	}
+	public boolean getAttacking(){
+		return attacking;
 	}
 }

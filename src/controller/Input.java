@@ -3,12 +3,13 @@ package controller;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import model.Player;
 
 
-public class Input implements KeyListener, MouseMotionListener{
+public class Input implements KeyListener, MouseListener, MouseMotionListener{
 	private Player p;
 	private final int VELOCITY = 1;
 
@@ -69,6 +70,33 @@ public class Input implements KeyListener, MouseMotionListener{
 		}
 		
 		p.setRotVar(angle);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		if(arg0.getButton()==MouseEvent.BUTTON1){
+			p.setAttacking(true);
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+				
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+				
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+				
 	}
 
 }

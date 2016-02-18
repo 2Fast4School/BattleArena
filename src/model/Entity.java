@@ -163,4 +163,6 @@ public abstract class Entity {
 	public int getHP(){
 		return hp;
 	}
+	public abstract void setAttacking(boolean state);
+	public abstract boolean getAttacking();
 }

@@ -102,6 +102,9 @@ public class Client implements Runnable, Observer{
 			Player player=(Player)arg1;
 			if(out!=null){
 				try{	// 1 = move code. For some reason a string wouldn't work out.
+					/*if(player.getAttacking){
+						
+					}*/
 					toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+",Filler").getBytes();
 					out.write(toSend, 0, toSend.length);
 					out.flush();

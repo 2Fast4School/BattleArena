@@ -9,6 +9,8 @@ import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import model.Enemy;
 import model.Entity;
@@ -18,6 +20,7 @@ import model.Player;
 public class GameWindow extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Entity> gameObjects;
+	private int attackAnimationStage=0;
 	
 	public void render(){
 		BufferStrategy bs = this.getBufferStrategy();
@@ -33,7 +36,6 @@ public class GameWindow extends Canvas implements Observer{
 		g2d.fillRect(0, 0, 800, 800);
 		for(Entity e : gameObjects){
 			//Graphics 2D object used for rotating sprites.
-
 			
 			//Draw the objects visual appearance.
 			g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
@@ -52,6 +54,24 @@ public class GameWindow extends Canvas implements Observer{
 				g2d.setStroke(oldStroke);
 				g2d.setColor(Color.RED);
 				g2d.fillRect(e.getX()+2, e.getY()-18, (56*e.getHP()/100), 16);
+			}
+			//Draw an attack
+			if((e instanceof Player || e instanceof Enemy) && e.getAttacking()){
+				double weaponRotation=0;
+				
+				attackAnimationStage++;
+				if(attackAnimationStage<12){weaponRotation=((Math.PI*2)-(Math.PI/4));}
+				else if(attackAnimationStage>=12 && attackAnimationStage<24){weaponRotation=(Math.PI*2)-(Math.PI/8);}
+				else if(attackAnimationStage>=24 && attackAnimationStage<36){weaponRotation=(Math.PI*2);}
+				else if(attackAnimationStage>=36){
+					weaponRotation=(Math.PI*2);
+					e.setAttacking(false);
+					attackAnimationStage=0;
+				}
+				g2d.setColor(Color.BLACK);
+				g2d.rotate(weaponRotation, e.getCenterX(), e.getCenterY());
+				g2d.fillRect(e.getX()+10, e.getY()+10, 70, 5);
+				g2d.rotate(weaponRotation*-1, e.getCenterX(), e.getCenterY());
 			}
 		}
 		
