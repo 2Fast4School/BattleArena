@@ -1,11 +1,18 @@
 package model;
+
+import java.awt.Rectangle;
+import java.util.ArrayList;
 /**
  * Player class, extends the Entity Class. Used to store the data of YOUR player. Only one player per Game.
  * @author Victor Dahlberg.
  * @version 1.0
  */
+
 public class Player extends Entity {
 	private int dx, dy;
+	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
+	private boolean attacking;
+	private Weapon weapon;
 	
 	/**
 	 * Constructor.
@@ -18,12 +25,19 @@ public class Player extends Entity {
 	public Player(int id, int x, int y, int w, int h){
 		super(id, x, y, w, h, true);
 		dx = dy = 0;
+		attacking = false;
 	}
 	
+	//Dummy-tick
+	public void tick(){}
+	
 	/**
-	 * 
+	 * An override of the usual tick because this tick needs to know about the objects closeby so it can check for collission.
+	 * @param closeObjects Possible object the Player can collide with.
 	 */
-	public void tick(){
+	public void tick(ArrayList<Entity> closeObjects){
+		this.closeObjects.clear();
+		this.closeObjects.addAll(closeObjects);
 		move(dx, dy);
 		
 	}
@@ -50,18 +64,24 @@ public class Player extends Entity {
 		/*
 		 * CHECK if collision. If no collision change the position.
 		 */
-		if(!collision()){
+		if(!collision(dx, dy)){
 			this.x += dx;
 			this.y += dy;
 		}
 	}
 	
 	/**
-	 * DUMMY-method. will be implemented.
+	 * Checks if the players NEXT position, x + dx, y + dy, intersects a closeby object.
 	 * @return boolean, returns true if the player intersects an object, false otherwise.
 	 */
-	private boolean collision(){
-		
+	private boolean collision(int dx, int dy){
+		Rectangle pNext = new Rectangle(x+dx, y+dy, w, h);
+		for(Entity e : closeObjects){
+			if(pNext.intersects(e.getBounds())){
+				return true;
+			}
+			
+		}
 		return false;
 	}
 	
@@ -79,6 +99,17 @@ public class Player extends Entity {
 	 */
 	public void setdy(int dy){
 		this.dy = dy;
+	}
+	
+	public void setAttacking(boolean state){
+		attacking=state;
+	}
+	public boolean getAttacking(){
+		return attacking;
+	}
+	
+	public Weapon getWeapon(){
+		return weapon;
 	}
 	
 }

@@ -14,6 +14,7 @@ public abstract class Entity {
 	private boolean solid;
 	protected int id, x, y, w, h, rotation;
 	private BufferedImage sprite;
+	private int hp;
 	
 	
 	/**
@@ -110,7 +111,7 @@ public abstract class Entity {
 	 * @param y The y-pos of The Rectangle.
 	 * @return A Rectangle specified by the parameters with the same width and height as the Entity.
 	 */
-	public Rectangle getBounds(int x, int y){
+	public Rectangle getBounds(){
 		return new Rectangle(x, y, w, h);
 	}
 	
@@ -148,8 +149,20 @@ public abstract class Entity {
 		return y+(getHeight()/2);
 	}
 	
+	public void setHP(int hp){
+		this.hp = hp;
+	}
+	public int getHP(){
+		return hp;
+	}
+	
+	public abstract void setAttacking(boolean state);
+	public abstract boolean getAttacking();
+	
 	/**
 	 * Abstract class, "handle" the logic in this method in subclasses of Entity.
 	 */
 	public abstract void tick();
+	
+	
 }
