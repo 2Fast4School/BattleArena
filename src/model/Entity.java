@@ -12,7 +12,7 @@ import java.util.TreeMap;
  * @author Victor Dahlberg
  * @version 1.0
  */
-public abstract class Entity {
+public abstract class Entity{
 	private boolean solid;
 	protected int id, x, y, w, h, rotation;
 	protected int hp;

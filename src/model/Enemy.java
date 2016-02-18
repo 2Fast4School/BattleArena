@@ -56,4 +56,5 @@ public class Enemy extends Entity {
 	public int getFacing(){return facing;}
 	public Weapon getWeapon(){return weapon;}
 	public TreeMap<Integer, ArrayList<BufferedImage>> getSprites(){return sprites;}
+	
 }

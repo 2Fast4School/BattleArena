@@ -12,7 +12,7 @@ import java.awt.Rectangle;
  * @version 1.0
  */
 
-public class Player extends Entity {
+public class Player extends Entity{
 	private final int maxHP=100;
 	private int dx, dy;
 	private boolean attacking;
@@ -20,6 +20,8 @@ public class Player extends Entity {
 	private TreeMap<Integer, ArrayList<BufferedImage>> sprites;
 	private int facing=1;
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
+	
+	private ArrayList<Integer> idsHitByAttack;
 	
 	/**
 	 * Constructor.
@@ -37,6 +39,7 @@ public class Player extends Entity {
 		sprites=new TreeMap<Integer, ArrayList<BufferedImage>>();
 		loadImages();
 		attacking = false;
+		idsHitByAttack=new ArrayList<Integer>();
 	}
 	
 	//Dummy-tick
@@ -142,4 +145,5 @@ public class Player extends Entity {
 	public int getFacing(){return facing;}
 	public Weapon getWeapon(){return weapon;}
 	public TreeMap<Integer, ArrayList<BufferedImage>> getSprites(){return sprites;}
+	public ArrayList<Integer> getHitByList(){return idsHitByAttack;}
 }

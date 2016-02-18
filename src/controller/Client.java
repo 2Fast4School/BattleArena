@@ -60,13 +60,10 @@ public class Client implements Runnable, Observer{
 			}catch(UnknownHostException f){}
 			catch(IOException e){e.printStackTrace();}
 		}
+		
 		String message[];
-		int code;
-		int id;
-		int xVal;
-		int yVal;
-		int rot;
-		int facing;
+		int code,id,xVal,yVal,rot,facing;
+		
 		byte[] receive=new byte[1024];
 		while(true){
 			if(in!=null){
@@ -99,8 +96,8 @@ public class Client implements Runnable, Observer{
 								e.setX(xVal);
 								e.setY(yVal);
 								e.setRotVar(rot);
-								e.setAttacking(true);
 								e.setFacing(facing);
+								e.setAttacking(true);
 							}
 						}
 					}
@@ -124,10 +121,12 @@ public class Client implements Runnable, Observer{
 			if(out!=null){
 				try{	// 1 = move code. For some reason a string wouldn't work out.
 					if(player.getAttacking()){
-						toSend=new String(2+","+player.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getFacing()+",Filler").getBytes();
+						toSend=new String(2+","+player.getID()+","+player.getX()+","+player.getY()+
+						","+player.getRotVar()+","+player.getFacing()+",Filler").getBytes();
 					}
 					else{
-						toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getFacing()+",Filler").getBytes();
+						toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+
+						","+player.getRotVar()+","+player.getFacing()+",Filler").getBytes();
 					}
 					out.write(toSend, 0, toSend.length);
 					out.flush();
