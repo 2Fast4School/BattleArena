@@ -33,11 +33,11 @@ public class GameState extends Observable{
 				
 				e.tick();
 				setChanged();
-				if(player != null){
-					notifyObservers(player);
-				}else {
-					notifyObservers();
-				}
+		}
+		if(player != null){
+			notifyObservers(player);
+		}else {
+			notifyObservers();
 		}
 	}
 	

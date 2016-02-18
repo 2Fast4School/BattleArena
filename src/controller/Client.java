@@ -65,6 +65,8 @@ public class Client implements Runnable, Observer{
 		int id;
 		int xVal;
 		int yVal;
+		int rot;
+		int facing;
 		byte[] receive=new byte[1024];
 		while(true){
 			if(in!=null){
@@ -76,21 +78,29 @@ public class Client implements Runnable, Observer{
 					if(code==1){	// 1 = move code. For some reason a string wouldn't work out.
 						xVal=Integer.parseInt(message[2]);
 						yVal=Integer.parseInt(message[3]);
+						rot=Integer.parseInt(message[4]);
+						facing=Integer.parseInt(message[5]);
 						for(Entity e : state.getList()){
 							if (e.getID()==id){
 								e.setX(xVal);
 								e.setY(yVal);
+								e.setRotVar(rot);
+								e.setFacing(facing);
 							}
 						}
 					}
 					if(code==2){	// 2= attack code. (Also updates for move)
 						xVal=Integer.parseInt(message[2]);
 						yVal=Integer.parseInt(message[3]);
+						rot=Integer.parseInt(message[4]);
+						facing=Integer.parseInt(message[5]);
 						for(Entity e : state.getList()){
 							if (e.getID()==id){
 								e.setX(xVal);
 								e.setY(yVal);
+								e.setRotVar(rot);
 								e.setAttacking(true);
+								e.setFacing(facing);
 							}
 						}
 					}
@@ -114,10 +124,10 @@ public class Client implements Runnable, Observer{
 			if(out!=null){
 				try{	// 1 = move code. For some reason a string wouldn't work out.
 					if(player.getAttacking()){
-						toSend=new String(2+","+player.getID()+","+player.getX()+","+player.getY()+",Filler").getBytes();
+						toSend=new String(2+","+player.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getFacing()+",Filler").getBytes();
 					}
 					else{
-						toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+",Filler").getBytes();
+						toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getFacing()+",Filler").getBytes();
 					}
 					out.write(toSend, 0, toSend.length);
 					out.flush();

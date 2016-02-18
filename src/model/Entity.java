@@ -1,6 +1,8 @@
 package model;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
  * <h1>Entity</h1>
@@ -165,4 +167,8 @@ public abstract class Entity {
 	}
 	public abstract void setAttacking(boolean state);
 	public abstract boolean getAttacking();
+	public abstract Weapon getWeapon();
+	public abstract TreeMap<Integer, ArrayList<BufferedImage>> getSprites();
+	public abstract int getFacing();
+	public abstract void setFacing(int facing);
 }
