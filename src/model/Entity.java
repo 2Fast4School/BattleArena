@@ -156,19 +156,42 @@ public abstract class Entity{
 	public abstract void tick();
 	
 	/**
-	 *
-	 * HP set and get.
+	 * Sets the HP value of the Entity.
+	 * @param hp : int
 	 */
 	public void setHP(int hp){
 		this.hp = hp;
 	}
+	/**
+	 * Returns the HP value of the Entity
+	 * @return hp : int
+	 */
 	public int getHP(){
 		return hp;
 	}
+	
+	/**
+	 * Abstract method used in Player and Enemy.
+	 */
 	public abstract void setAttacking(boolean state);
+	/**
+	 * Abstract method used in Player and Enemy.
+	 */
 	public abstract boolean getAttacking();
+	/**
+	 * Abstract method used in Player and Enemy.
+	 */
 	public abstract Weapon getWeapon();
+	/**
+	 * Abstract method used in Player and Enemy.
+	 */
 	public abstract TreeMap<Integer, ArrayList<BufferedImage>> getSprites();
+	/**
+	 * Abstract method used in Player and Enemy.
+	 */
 	public abstract int getFacing();
+	/**
+	 * Abstract method used in Player and Enemy.
+	 */
 	public abstract void setFacing(int facing);
 }

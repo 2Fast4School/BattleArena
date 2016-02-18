@@ -39,7 +39,7 @@ public class Client implements Runnable, Observer{
 		state.setID(id);
 	}
 
-	/**<H1>run<H1>
+	/**
 	* Each Client runs in it's own thread and listen for messages from
 	* the server, which it will react to depending on the contents.
 	* Messages are expected to come as byte[], and when translated into
@@ -106,11 +106,13 @@ public class Client implements Runnable, Observer{
 		}
 	}
 	
-	/**<H1>update<H1>
+	/**
 	* Client is notified when there is information that needs
 	* to be sent to other clients. Depending on the parameters
 	* sent with this notification, a correct OP-CODE will be
 	* chosen for the message.
+	* @param arg0 : GameState 
+	* @param arg1 : Player/null
 	*/
 	@Override
 	public void update(Observable arg0, Object arg1){

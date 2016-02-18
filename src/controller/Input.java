@@ -30,6 +30,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 	
 	/**
 	 * keyPressed will set the player velocity, listening to the WASD keys.
+	 * The player's facing direction will also be set to match this.
+	 * @param e : KeyEvent
 	 */
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_W){

@@ -7,11 +7,11 @@ import java.util.TreeMap;
 import javax.imageio.ImageIO;
 import java.awt.Rectangle;
 /**
- * Player class, extends the Entity Class. Used to store the data of YOUR player. Only one player per Game.
+ * <h1>Player</h1>
+ * Player class extends the Entity Class. Used to store the data of YOUR player. Only one player per Game.
  * @author Victor Dahlberg.
  * @version 1.0
  */
-
 public class Player extends Entity{
 	private final int maxHP=100;
 	private int dx, dy;
@@ -55,6 +55,12 @@ public class Player extends Entity{
 		move(dx, dy);
 	}
 	
+	/**
+	 * Loads in all the sprites associated with the Player's character to a TreeMap.
+	 * The keys to the map are which direction the character is facing, IE: (R)ight, (L)eft etc.
+	 * The associated value is an ArrayList containing all sprites comprising the attack animation,
+	 * where [0] is used as regular standing animation. 
+	 */
 	public void loadImages(){
 		try{
 			ArrayList<BufferedImage> list=new ArrayList<BufferedImage>();
@@ -134,16 +140,46 @@ public class Player extends Entity{
 		this.dy = dy;
 	}
 
+	/**
+	 * Sets wether the Player is attacking or not.
+	 * @param state : boolean
+	 */
 	public void setAttacking(boolean state){
 		attacking=state;
 	}
+	/**
+	 * Returns wether the Player is currently attacking
+	 * @return attacking : boolean
+	 */
 	public boolean getAttacking(){
 		return attacking;
 	}
 
+	/**
+	 * Sets the direction the Player's sprite should be facing
+	 * @param facing : int(0-3) 0=Right, 1=Left, 2=Down, 3=Up
+	 */
 	public void setFacing(int facing){this.facing=facing;}
+	/**
+	 * Returns the Player's sprite's current facing direction
+	 * @return facing : int(0-3) 0=Right, 1=Left, 2=Down, 3=Up
+	 */
 	public int getFacing(){return facing;}
+	/**
+	 * Returns the Player's Weapon
+	 * @return weapon : Weapon
+	 */
 	public Weapon getWeapon(){return weapon;}
+	/**
+	 * Returns the TreeMap containing all sprites of the character, sorted by
+	 * Keys corresponding to which direction the character is facing.
+	 * @return sprites : TreeMap(Integer, ArrayList(BufferedImage))
+	 */
 	public TreeMap<Integer, ArrayList<BufferedImage>> getSprites(){return sprites;}
+	/**
+	 * Returns an ArrayList containing the ID:s of all other Enemys hit by
+	 * this Player's latest attack
+	 * @return idsHitByAttack : ArrayList(Integer)
+	 */
 	public ArrayList<Integer> getHitByList(){return idsHitByAttack;}
 }

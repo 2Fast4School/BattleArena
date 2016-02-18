@@ -25,14 +25,26 @@ public class Enemy extends Entity {
 	public void tick() {
 	
 	}
-
+	/**
+	 * Sets wether the Enemy is attacking or not.
+	 * @param state : boolean
+	 */
 	public void setAttacking(boolean state){
 		attacking=state;
 	}
+	/**
+	 * Returns wether the Enemy is currently attacking
+	 * @return attacking : boolean
+	 */
 	public boolean getAttacking(){
 		return attacking;
 	}
-	
+	/**
+	 * Loads in all the sprites associated with the Enemy's character to a TreeMap.
+	 * The keys to the map are which direction the character is facing, IE: (R)ight, (L)eft etc.
+	 * The associated value is an ArrayList containing all sprites comprising the attack animation,
+	 * where [0] is used as regular standing animation. 
+	 */
 	public void loadImages(){
 		try{
 			ArrayList<BufferedImage> list=new ArrayList<BufferedImage>();
@@ -52,9 +64,26 @@ public class Enemy extends Entity {
 			}
 		}catch(IOException e){}
 	}
+	/**
+	 * Sets the direction the Enemy's sprite should be facing
+	 * @param facing : int(0-3) 0=Right, 1=Left, 2=Down, 3=Up
+	 */
 	public void setFacing(int facing){this.facing=facing;}
+	/**
+	 * Returns the Enemy's sprite's current facing direction
+	 * @return facing : int(0-3) 0=Right, 1=Left, 2=Down, 3=Up
+	 */
 	public int getFacing(){return facing;}
+	/**
+	 * Returns the Enemy's Weapon
+	 * @return weapon : Weapon
+	 */
 	public Weapon getWeapon(){return weapon;}
+	/**
+	 * Returns an ArrayList containing the ID:s of all other Enemys hit by
+	 * this Enemy's latest attack
+	 * @return idsHitByAttack : ArrayList(Integer)
+	 */
 	public TreeMap<Integer, ArrayList<BufferedImage>> getSprites(){return sprites;}
 	
 }
