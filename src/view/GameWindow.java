@@ -74,7 +74,6 @@ public class GameWindow extends Canvas implements Observer{
 				g2d.rotate(weaponRotation*-1, e.getCenterX(), e.getCenterY());
 			}
 		}
-		
 		////
 		g2d.dispose();
 		g.dispose();

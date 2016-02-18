@@ -83,6 +83,17 @@ public class Client implements Runnable, Observer{
 							}
 						}
 					}
+					if(code==2){	// 2= attack code. (Also updates for move)
+						xVal=Integer.parseInt(message[2]);
+						yVal=Integer.parseInt(message[3]);
+						for(Entity e : state.getList()){
+							if (e.getID()==id){
+								e.setX(xVal);
+								e.setY(yVal);
+								e.setAttacking(true);
+							}
+						}
+					}
 				}catch(IOException e){e.printStackTrace();}
 			}
 		}
@@ -102,10 +113,12 @@ public class Client implements Runnable, Observer{
 			Player player=(Player)arg1;
 			if(out!=null){
 				try{	// 1 = move code. For some reason a string wouldn't work out.
-					/*if(player.getAttacking){
-						
-					}*/
-					toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+",Filler").getBytes();
+					if(player.getAttacking()){
+						toSend=new String(2+","+player.getID()+","+player.getX()+","+player.getY()+",Filler").getBytes();
+					}
+					else{
+						toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+",Filler").getBytes();
+					}
 					out.write(toSend, 0, toSend.length);
 					out.flush();
 				}catch(IOException e){e.printStackTrace();}
