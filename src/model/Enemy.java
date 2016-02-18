@@ -9,4 +9,15 @@ public class Enemy extends Entity {
 	public void tick() {
 	
 	}
+
+	@Override
+	public void setAttacking(boolean state) {
+		
+	}
+
+	@Override
+	public boolean getAttacking() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
