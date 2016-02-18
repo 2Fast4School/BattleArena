@@ -26,6 +26,9 @@ public class Input implements KeyListener, MouseMotionListener{
 	 */
 	public void setup(Player p){this.p = p;}
 	
+	/**
+	 * keyPressed will set the player velocity, listening to the WASD keys.
+	 */
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_W){
 			p.setdy(-VELOCITY);
@@ -42,12 +45,17 @@ public class Input implements KeyListener, MouseMotionListener{
 		if(e.getKeyCode() == KeyEvent.VK_D){
 			p.setdx(VELOCITY);
 		}
+		
+		//Force shut down the game.
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 			System.exit(1);
 		}
 		
 	}
 
+	/**
+	 * keyReleased will set the player's x or y velocity to 0, depending on which of the WASD keys is released.
+	 */
 	public void keyReleased(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_W){
 			p.setdy(0);
@@ -65,9 +73,11 @@ public class Input implements KeyListener, MouseMotionListener{
 			p.setdx(0);
 		}
 	}
-
+	
+	//Unused
 	public void keyTyped(KeyEvent e) {}
 
+	//Unused
 	public void mouseDragged(MouseEvent e) {
 		
 	}
