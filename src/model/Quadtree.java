@@ -4,6 +4,11 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Quadtree is 
+ * @author  Victor Dahlberg
+ *
+ */
 public class Quadtree {
 	
 	private int MAX_OBJECTS = 10;
@@ -14,13 +19,24 @@ public class Quadtree {
 	private Rectangle bounds;
 	private Quadtree[] nodes;
 	 
-	 
-	public Quadtree(int level, Rectangle bounds) {
-		  	this.level = level;
-		  	this.bounds = bounds;
-		  	objects = new ArrayList<Entity>();
-		  	nodes = new Quadtree[4];
+	/**
+	 * 
+	 * @param bounds The Bounds of the quadtree in form of a Rectangle. Should be the size of the screen.
+	 */
+	public Quadtree(Rectangle bounds) {
+	  	this.level = 0;
+	  	this.bounds = bounds;
+	  	objects = new ArrayList<Entity>();
+	  	nodes = new Quadtree[4];
 	}
+
+	private Quadtree(int level, Rectangle bounds){
+		this.level = level;
+	  	this.bounds = bounds;
+	  	objects = new ArrayList<Entity>();
+	  	nodes = new Quadtree[4];
+	}
+	
 	
 	public void clear(){
 		objects.clear();
@@ -97,13 +113,14 @@ public class Quadtree {
 		}
 	}
 	
-	public List<Entity> retrive(List<Entity> returnObjects, Entity e){
+	public ArrayList<Entity> retrive(ArrayList<Entity> returnObjects, Entity e){
 		int index = getIndex(e);
 		if(index != -1 && nodes[0] != null){
 			nodes[index].retrive(returnObjects, e);
 		}
 		
 		returnObjects.addAll(objects);
+		returnObjects.remove((Entity)e);
 		return returnObjects;
 	}
 	
