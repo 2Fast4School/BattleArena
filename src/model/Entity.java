@@ -1,6 +1,8 @@
 package model;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
  * <h1>Entity</h1>
@@ -13,9 +15,8 @@ import java.awt.image.BufferedImage;
 public abstract class Entity {
 	private boolean solid;
 	protected int id, x, y, w, h, rotation;
+	protected int hp;
 	private BufferedImage sprite;
-	private int hp;
-	
 	
 	/**
 	 * Constructor for Entity. 
@@ -149,20 +150,25 @@ public abstract class Entity {
 		return y+(getHeight()/2);
 	}
 	
+	/**
+	 * Abstract class, "handle" the logic in this method in subclasses of Entity.
+	 */
+	public abstract void tick();
+	
+	/**
+	 *
+	 * HP set and get.
+	 */
 	public void setHP(int hp){
 		this.hp = hp;
 	}
 	public int getHP(){
 		return hp;
 	}
-	
 	public abstract void setAttacking(boolean state);
 	public abstract boolean getAttacking();
-	
-	/**
-	 * Abstract class, "handle" the logic in this method in subclasses of Entity.
-	 */
-	public abstract void tick();
-	
-	
+	public abstract Weapon getWeapon();
+	public abstract TreeMap<Integer, ArrayList<BufferedImage>> getSprites();
+	public abstract int getFacing();
+	public abstract void setFacing(int facing);
 }

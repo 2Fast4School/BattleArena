@@ -1,5 +1,9 @@
 package model;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
 public class Weapon{
 	private int length;
 	private int width;

@@ -33,6 +33,7 @@ public class Main{
 			frame.setPreferredSize(new Dimension(800, 800));
 			
 			window.addKeyListener(input);
+			window.addMouseListener(input);
 			window.addMouseMotionListener(input);
 			state.addObserver(client);
 			state.addObserver(window);
