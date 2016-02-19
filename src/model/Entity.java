@@ -16,7 +16,7 @@ public abstract class Entity{
 	private boolean solid;
 	protected int id, x, y, w, h, rotation;
 	protected int hp;
-	private BufferedImage sprite;
+	protected BufferedImage sprite;
 	
 	/**
 	 * Constructor for Entity. 
@@ -182,16 +182,4 @@ public abstract class Entity{
 	 * Abstract method used in Player and Enemy.
 	 */
 	public abstract Weapon getWeapon();
-	/**
-	 * Abstract method used in Player and Enemy.
-	 */
-	public abstract TreeMap<Integer, ArrayList<BufferedImage>> getSprites();
-	/**
-	 * Abstract method used in Player and Enemy.
-	 */
-	public abstract int getFacing();
-	/**
-	 * Abstract method used in Player and Enemy.
-	 */
-	public abstract void setFacing(int facing);
 }

@@ -17,8 +17,6 @@ public class Player extends Entity{
 	private int dx, dy;
 	private boolean attacking;
 	private Weapon weapon;
-	private TreeMap<Integer, ArrayList<BufferedImage>> sprites;
-	private int facing=1;
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
 	private boolean hasSentHP=false;
 	
@@ -36,8 +34,7 @@ public class Player extends Entity{
 		super(id, x, y, w, h, true);
 		dx = dy = 0;
 		hp=maxHP;
-		weapon=new Weapon(200,50,20);
-		sprites=new TreeMap<Integer, ArrayList<BufferedImage>>();
+		weapon=new Weapon(50,10,20);
 		loadImages();
 		attacking = false;
 		idsHitByAttack=new ArrayList<Integer>();
@@ -64,21 +61,7 @@ public class Player extends Entity{
 	 */
 	public void loadImages(){
 		try{
-			ArrayList<BufferedImage> list=new ArrayList<BufferedImage>();
-			BufferedImage sprite;
-			String direction="R";
-			for(int n=0;n<4;n++){
-				list=new ArrayList<BufferedImage>();
-				if(n==0){direction="R";}
-				else if(n==1){direction="L";}
-				else if(n==2){direction="D";}
-				else if(n==3){direction="U";}
-				for(int m=1;m<7;m++){
-					sprite = ImageIO.read(getClass().getResourceAsStream("/C1_"+direction+m+".gif"));
-					list.add(sprite);
-				}
-				sprites.put(n, list);
-			}
+			sprite = ImageIO.read(getClass().getResourceAsStream("/Character1.gif"));
 		}catch(IOException e){}
 	}
 	
@@ -155,34 +138,27 @@ public class Player extends Entity{
 	public boolean getAttacking(){
 		return attacking;
 	}
-
-	/**
-	 * Sets the direction the Player's sprite should be facing
-	 * @param facing : int(0-3) 0=Right, 1=Left, 2=Down, 3=Up
-	 */
-	public void setFacing(int facing){this.facing=facing;}
-	/**
-	 * Returns the Player's sprite's current facing direction
-	 * @return facing : int(0-3) 0=Right, 1=Left, 2=Down, 3=Up
-	 */
-	public int getFacing(){return facing;}
 	/**
 	 * Returns the Player's Weapon
 	 * @return weapon : Weapon
 	 */
 	public Weapon getWeapon(){return weapon;}
 	/**
-	 * Returns the TreeMap containing all sprites of the character, sorted by
-	 * Keys corresponding to which direction the character is facing.
-	 * @return sprites : TreeMap(Integer, ArrayList(BufferedImage))
-	 */
-	public TreeMap<Integer, ArrayList<BufferedImage>> getSprites(){return sprites;}
-	/**
 	 * Returns an ArrayList containing the ID:s of all other Enemys hit by
 	 * this Player's latest attack
 	 * @return idsHitByAttack : ArrayList(Integer)
 	 */
 	public ArrayList<Integer> getHitByList(){return idsHitByAttack;}
+	/**
+	 * Returns wether the Player has sent out damage to be applied because of an attack.
+	 * It shouldn't be done multiple times, which is determined by true/false.
+	 * @return hasSentHP : boolean
+	 */
 	public boolean hasSentHP(){return hasSentHP;}
+	/**
+	 * Sets wether the Player has sent out damage to be applied because of an attack.
+	 * It shouldn't be done multiple times, which is why we set this to true/false.
+	 * @param state : boolean
+	 */
 	public void setHasSentHP(boolean state){hasSentHP=state;}
 }

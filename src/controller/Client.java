@@ -62,7 +62,7 @@ public class Client implements Runnable, Observer{
 		}
 		
 		String message[];
-		int code,id,xVal,yVal,rot,facing;
+		int code,id,xVal,yVal,rot;
 		
 		byte[] receive=new byte[1024];
 		while(true){
@@ -76,13 +76,11 @@ public class Client implements Runnable, Observer{
 						xVal=Integer.parseInt(message[2]);
 						yVal=Integer.parseInt(message[3]);
 						rot=Integer.parseInt(message[4]);
-						facing=Integer.parseInt(message[5]);
 						for(Entity e : state.getList()){
 							if (e.getID()==id){
 								e.setX(xVal);
 								e.setY(yVal);
 								e.setRotVar(rot);
-								e.setFacing(facing);
 							}
 						}
 					}
@@ -90,13 +88,11 @@ public class Client implements Runnable, Observer{
 						xVal=Integer.parseInt(message[2]);
 						yVal=Integer.parseInt(message[3]);
 						rot=Integer.parseInt(message[4]);
-						facing=Integer.parseInt(message[5]);
 						for(Entity e : state.getList()){
 							if (e.getID()==id){
 								e.setX(xVal);
 								e.setY(yVal);
 								e.setRotVar(rot);
-								e.setFacing(facing);
 								e.setAttacking(true);
 							}
 						}
@@ -143,15 +139,14 @@ public class Client implements Runnable, Observer{
 						}
 						message+="Filler";
 						toSend=message.getBytes();
-						System.out.println(message);
 					}
 					else if(player.getAttacking()){
 						toSend=new String(2+","+player.getID()+","+player.getX()+","+player.getY()+
-						","+player.getRotVar()+","+player.getFacing()+",Filler").getBytes();
+						","+player.getRotVar()+",Filler").getBytes();
 					}
 					else{
 						toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+
-						","+player.getRotVar()+","+player.getFacing()+",Filler").getBytes();
+						","+player.getRotVar()+",Filler").getBytes();
 					}
 					out.write(toSend, 0, toSend.length);
 					out.flush();

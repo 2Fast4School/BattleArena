@@ -36,22 +36,18 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_W){
 			p.setdy(-VELOCITY);
-			p.setFacing(3);
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_A){
 			p.setdx(-VELOCITY);
-			p.setFacing(1);
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_S){
 			p.setdy(VELOCITY);
-			p.setFacing(2);
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_D){
 			p.setdx(VELOCITY);
-			p.setFacing(0);
 		}
 		
 		//Force shut down the game.

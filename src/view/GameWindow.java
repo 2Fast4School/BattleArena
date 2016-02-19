@@ -14,22 +14,8 @@ import java.util.Observer;
 import model.Enemy;
 import model.Entity;
 import model.GameState;
-<<<<<<< HEAD
-
-/**
-* <h1>GameWindow</h1>
-* GameWindow is the GUI class.
-* To keep the coupling low, the class implements observer and
-* keeps track of the GameState and entities etc within the game world.
-* The class is using a triple-buffer.
-* @author  
-* @version 1.0
-* @since   2016-02-19
-*/
-=======
 import model.Player;
 
->>>>>>> origin/development
 public class GameWindow extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Entity> gameObjects;
@@ -56,41 +42,27 @@ public class GameWindow extends Canvas implements Observer{
 		for(Entity e : gameObjects){
 			//Graphics 2D object used for rotating sprites.
 			if(e instanceof Player || e instanceof Enemy){
-				
-				ArrayList<BufferedImage> spriteSet = new ArrayList<BufferedImage>();
-				spriteSet = e.getSprites().get(0);
-				if(e.getFacing()==0){spriteSet=e.getSprites().get(0);}
-				if(e.getFacing()==1){spriteSet=e.getSprites().get(1);}
-				if(e.getFacing()==2){spriteSet=e.getSprites().get(2);}
-				if(e.getFacing()==3){spriteSet=e.getSprites().get(3);}
-			
 				//Draw an attack
 					if(e.getAttacking()){
-					BufferedImage sprite=null;
-				
-					attackAnimationStage++;
-				
-					if(attackAnimationStage<6){sprite=spriteSet.get(0);}
-					else if(attackAnimationStage>=6 && attackAnimationStage<12){sprite=spriteSet.get(1);}
-					else if(attackAnimationStage>=12 && attackAnimationStage<18){sprite=spriteSet.get(2);}
-					else if(attackAnimationStage>=18 && attackAnimationStage<24){sprite=spriteSet.get(3);}
-					else if(attackAnimationStage>=24 && attackAnimationStage<30){sprite=spriteSet.get(4);}
-					else if(attackAnimationStage>=30 && attackAnimationStage<36){sprite=spriteSet.get(5);}
-					else if(attackAnimationStage>=36){
-						sprite=spriteSet.get(5);
-						e.setAttacking(false);
-						attackAnimationStage=0;
+						attackAnimationStage++;
+						double rot=0;
+						if(attackAnimationStage<6){rot=(Math.PI*2)+Math.PI/8;}
+						else if(attackAnimationStage>=6 && attackAnimationStage<12){rot=(Math.PI*2)+Math.PI/4;}
+						else if(attackAnimationStage>=12 && attackAnimationStage<18){rot=(Math.PI*2)+Math.PI/2;}
+						else if(attackAnimationStage>=18){
+							rot=(Math.PI*2)+Math.PI/2;
+							e.setAttacking(false);
+							attackAnimationStage=0;
+						}
+						g2d.rotate(rot, e.getCenterX(), e.getCenterY());
+						g2d.setColor(Color.BLACK);
+						g2d.fillRect(e.getX()+10, e.getY()+10, e.getWeapon().getWidth(), e.getWeapon().getLength());
+						g2d.rotate(-rot, e.getCenterX(), e.getCenterY());
 					}
-					//g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
-					g2d.drawImage(sprite, e.getX()+10, e.getY()+10, null);
-					//g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
-				}
 				//Draw the objects visual appearance.
-				else if(!e.getAttacking()){
-					//g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
-					g2d.drawImage(spriteSet.get(0), e.getX(), e.getY(), null);
-					//g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
-				}
+					g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
+					g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
+					g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
 			}
 				g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
 				g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
