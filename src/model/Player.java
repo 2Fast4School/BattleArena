@@ -20,6 +20,7 @@ public class Player extends Entity{
 	private TreeMap<Integer, ArrayList<BufferedImage>> sprites;
 	private int facing=1;
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
+	private boolean hasSentHP=false;
 	
 	private ArrayList<Integer> idsHitByAttack;
 	
@@ -35,7 +36,7 @@ public class Player extends Entity{
 		super(id, x, y, w, h, true);
 		dx = dy = 0;
 		hp=maxHP;
-		weapon=new Weapon(50,10,20);
+		weapon=new Weapon(200,50,20);
 		sprites=new TreeMap<Integer, ArrayList<BufferedImage>>();
 		loadImages();
 		attacking = false;
@@ -182,4 +183,6 @@ public class Player extends Entity{
 	 * @return idsHitByAttack : ArrayList(Integer)
 	 */
 	public ArrayList<Integer> getHitByList(){return idsHitByAttack;}
+	public boolean hasSentHP(){return hasSentHP;}
+	public void setHasSentHP(boolean state){hasSentHP=state;}
 }

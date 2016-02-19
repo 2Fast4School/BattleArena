@@ -86,7 +86,7 @@ public class GameState extends Observable{
 						}
 					}
 				}
-				else{player.getHitByList().clear();}	// Attack is over, clear list of who was hit by it.
+				else{player.getHitByList().clear();player.setHasSentHP(false);}	// Attack is over, clear list of who was hit by it.
 				
 				/* When we check collision for the player movement, we need to check the players NEXT position.
 				*  We can't do it here nicely, so instead the player checks it's own movement in the tick method.
