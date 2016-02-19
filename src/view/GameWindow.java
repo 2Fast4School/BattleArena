@@ -14,16 +14,36 @@ import java.util.Observer;
 import model.Enemy;
 import model.Entity;
 import model.GameState;
+<<<<<<< HEAD
+
+/**
+* <h1>GameWindow</h1>
+* GameWindow is the GUI class.
+* To keep the coupling low, the class implements observer and
+* keeps track of the GameState and entities etc within the game world.
+* The class is using a triple-buffer.
+* @author  
+* @version 1.0
+* @since   2016-02-19
+*/
+=======
 import model.Player;
 
+>>>>>>> origin/development
 public class GameWindow extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Entity> gameObjects;
 	private int attackAnimationStage=0;
 	
+	/**
+	 * The actual drawing of the current GameState
+	 * using triple-buffering.
+	 * Checks all entities and draws them.
+	 */
 	public void render(){
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null){
+			//Triple-buffer
 			this.createBufferStrategy(3);
 			return;
 		}
@@ -95,11 +115,17 @@ public class GameWindow extends Canvas implements Observer{
 		g.dispose();
 		bs.show();
 	}
-	
+	/**
+	 * GameWindow is an observer to GameState.
+	 * GameState notifies GameWindow that it needs to render.
+	 * @param arg0 the object that sent the notification (observable object)
+	 * @param arg1 notification can be sent with an argument, which ends up in arg1
+	 * 
+	 */
 	public void update(Observable arg0, Object arg1) {
 		if(arg0 instanceof GameState){
 			GameState state = (GameState)arg0;
-			gameObjects=state.getList();
+			gameObjects = state.getList();
 			render();
 		}
 	}
