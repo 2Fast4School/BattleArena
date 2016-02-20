@@ -15,13 +15,13 @@ import view.GameWindow;
 public class Main{
 	private static final int numberOfPlayers=2;
 	private static final String ip = "127.0.0.1";
-	private static final int port=1555;
+	private static final int port=7020;
 	public static void main(String[] args){
 		
 		for(int n=0;n<numberOfPlayers;n++){
 			JFrame frame = new JFrame();
 			GameWindow window=new GameWindow();
-			GameState state=new GameState(numberOfPlayers);
+			GameState state=new GameState(numberOfPlayers, n);
 			Client client = new Client(port, ip, state, n);
 			Input input = new Input();
 			Game game=new Game(state);
@@ -44,9 +44,6 @@ public class Main{
 			game.start();
 			new Thread(client).start();
 		}
-		try{
-			new Server(numberOfPlayers, ip, port);
-		}catch(IOException e){}
 	}
 }
 //ost2

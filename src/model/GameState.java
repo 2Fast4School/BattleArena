@@ -14,23 +14,29 @@ public class GameState extends Observable{
 	private Quadtree quadtree;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
-	public GameState(int numberOfPlayers){
+	public GameState(int numberOfPlayers, int id){
 		this.numberOfPlayers=numberOfPlayers;
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
+		this.id = id;
+		for(int i = 0; i < numberOfPlayers-1; i++){
+			gameObjects.add(new Enemy(0,0,20,20));
+		}
 		//Init the quadtree with the size of the screen.
 		quadtree = new Quadtree(new Rectangle(0,0,800,800));
 	}
 	
-	public void setup(){
-		player=new Player(id, (id+1)*100, (id+1)*100, 20, 20);
-		gameObjects.add(player);
-		
-		for(int n=0; n<numberOfPlayers;n++){
-			if(n!=id){
-				gameObjects.add(new Enemy(n, (n+1)*100, (n+1)*100, 20, 20));
+	public ArrayList<Enemy> getTheEnemies(){
+		ArrayList<Enemy> ens = new ArrayList<Enemy>();
+		for(Entity e : gameObjects){
+			if(e instanceof Enemy){
+				ens.add((Enemy)e);
 			}
-		}
+		} return ens;
+	}
+	public void setup(){
+		player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 20, 20);
+		gameObjects.add(player);
 		
 		//Generate 50^2 16x16 entities
 		/*
@@ -64,29 +70,7 @@ public class GameState extends Observable{
 			
 			//We actually only need to do something when 'e' is the Player.
 			if(e instanceof Player){
-				//We store some variables just for easy access.
 				player = (Player)e;
-				//The player is currently executing an attack.
-				if(player.getAttacking()){
-					//Variables just for easý access.
-					int rot = player.getRotVar();
-					int wLen = player.getWeapon().getLength();
-					int wWid = player.getWeapon().getWidth();
-							
-					//Creates a Rectangle at the tip of the sword. The Rectangle is a square with the side the size of the swords width.
-					Rectangle wBounds = new Rectangle(player.getCenterX() + wLen*(int)Math.cos(rot) - (wWid / 2),
-								player.getCenterY() + wLen*(int)Math.sin(rot) - (int)(wWid / 2), wWid, wWid);
-					
-					//So if an attack is going on, we see if the Rectangle wBoudns intersects with any of the closeby Enemys, and then lowers the HP.
-					//Attacks only hit a target once, so we only do damage to a particular ID if they aren't in getHitByList.
-					for(Entity f : objInNode){
-						if(wBounds.intersects(f.getBounds()) && f instanceof Enemy && !player.getHitByList().contains(f.getID())){
-							f.setHP(f.getHP() - player.getWeapon().getDamage());
-							player.getHitByList().add(f.getID());
-						}
-					}
-				}
-				else{player.getHitByList().clear();player.setHasSentHP(false);}	// Attack is over, clear list of who was hit by it.
 				
 				/* When we check collision for the player movement, we need to check the players NEXT position.
 				*  We can't do it here nicely, so instead the player checks it's own movement in the tick method.
@@ -109,4 +93,6 @@ public class GameState extends Observable{
 	public ArrayList<Entity> getList(){return gameObjects;}
 	public Player returnPlayer(){return player;}
 	public void setID(int id){this.id=id;}
+	public int getID(){ return id; }
+	
 }

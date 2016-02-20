@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 /**
  * <h1>Weapon</h1>
  * Weapon stores data about a weapon. Each Player will have at least one weapon.
- * @author William Björklund.
+ * @author William Bjï¿½rklund.
  * @version 1.0
  */
 public class Weapon{

@@ -3,12 +3,12 @@ package controller;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
 
+import model.Enemy;
 import model.Entity;
 import model.GameState;
 import model.Player;
@@ -19,7 +19,7 @@ import model.Player;
 * DataOutput, and DataInput streams. Client implements the Observer 
 * interface, and it's an observer to GameState from which it receives
 * messages if there is information that needs to be sent to other clients.
-* @author  William Björklund
+* @author  William Bjï¿½rklund
 * @version 1.0
 * @since   2016-02-17
 */
@@ -76,24 +76,32 @@ public class Client implements Runnable, Observer{
 						xVal=Integer.parseInt(message[2]);
 						yVal=Integer.parseInt(message[3]);
 						rot=Integer.parseInt(message[4]);
-						for(Entity e : state.getList()){
-							if (e.getID()==id){
+								
+						for(Enemy e : state.getTheEnemies()){
+									
+							if(e.getID() == id || e.getID() == -1){
+								
 								e.setX(xVal);
 								e.setY(yVal);
 								e.setRotVar(rot);
+								
+								if(e.getID() == -1){
+									e.setID(id);
+								}
 							}
+								
 						}
-					}
-					if(code==2){	// 2= attack code. (Also updates for move)
+				}
+					/*if(code==2){	// 2= attack code. (Also updates for move)
 						xVal=Integer.parseInt(message[2]);
 						yVal=Integer.parseInt(message[3]);
 						rot=Integer.parseInt(message[4]);
 						for(Entity e : state.getList()){
-							if (e.getID()==id){
+							if (e instanceof Player){
 								e.setX(xVal);
 								e.setY(yVal);
 								e.setRotVar(rot);
-								e.setAttacking(true);
+								//e.setAttacking(true);
 							}
 						}
 					}
@@ -108,7 +116,7 @@ public class Client implements Runnable, Observer{
 								}
 							}
 						}
-					}
+					}*/
 				}catch(IOException e){e.printStackTrace();}
 			}
 		}
@@ -130,7 +138,7 @@ public class Client implements Runnable, Observer{
 			Player player=(Player)arg1;
 			if(out!=null){
 				try{	// 1 = move code. For some reason a string wouldn't work out.
-					if(player.getHitByList().size()>0 && !player.hasSentHP()){
+					/*if(player.getHitByList().size()>0 && !player.hasSentHP()){
 						player.setHasSentHP(true);
 						message=3+","+player.getID()+","+player.getHitByList().size()+",";
 						for(int n=0;n<player.getHitByList().size(); n++){
@@ -147,7 +155,11 @@ public class Client implements Runnable, Observer{
 					else{
 						toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+
 						","+player.getRotVar()+",Filler").getBytes();
-					}
+					}*/
+					
+					message ="1,"+state.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+",Filler";
+					toSend = message.getBytes();
+	
 					out.write(toSend, 0, toSend.length);
 					out.flush();
 				}catch(IOException e){e.printStackTrace();}

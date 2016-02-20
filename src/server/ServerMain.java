@@ -23,7 +23,7 @@ public class ServerMain {
 	private static JButton startGameBtn, chooseMapBtn;
 	
 	private static final int numberOfPlayers=2;
-	private static String ip = "129.16.229.30";
+	private static String ip = "127.0.0.1";
 	private static int port=7020;
 	
 	public static void main(String[] args) {

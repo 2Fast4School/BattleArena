@@ -1,9 +1,7 @@
 package model;
 
-import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
@@ -11,30 +9,25 @@ public class Enemy extends Entity {
 	private final int maxHP=100;
 	private boolean attacking=false;
 	private Weapon weapon;
+	private int ID;
 	
-	public Enemy(int id, int x, int y, int w, int h){
-		super(id, x, y, w ,h, true);
+	public Enemy(int x, int y, int w, int h){
+		super(x, y, w ,h, true);
 		hp=maxHP;
 		weapon=new Weapon(50,10,20);
+		setID(-1);
 		loadImages();
 	}
 
 	public void tick() {
 	
 	}
-	/**
-	 * Sets wether the Enemy is attacking or not.
-	 * @param state : boolean
-	 */
-	public void setAttacking(boolean state){
-		attacking=state;
+	public int getID(){
+		return ID;
 	}
-	/**
-	 * Returns wether the Enemy is currently attacking
-	 * @return attacking : boolean
-	 */
-	public boolean getAttacking(){
-		return attacking;
+	
+	public void setID(int ID){
+		this.ID = ID;
 	}
 	/**
 	 * Loads in all the sprites associated with the Enemy's character to a TreeMap.
@@ -44,8 +37,8 @@ public class Enemy extends Entity {
 	 */
 	public void loadImages(){
 		try{
-			sprite = ImageIO.read(getClass().getResourceAsStream("/Character1.gif"));
-		}catch(IOException e){}
+			sprite = ImageIO.read(new File("res/Character1.gif"));
+		}catch(IOException e){}	
 	}
 	/**
 	 * Returns the Enemy's Weapon

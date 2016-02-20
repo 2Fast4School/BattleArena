@@ -43,30 +43,16 @@ public class GameWindow extends Canvas implements Observer{
 			//Graphics 2D object used for rotating sprites.
 			if(e instanceof Player || e instanceof Enemy){
 				//Draw an attack
-					if(e.getAttacking()){
-						attackAnimationStage++;
-						double rot=0;
-						if(attackAnimationStage<6){rot=(Math.PI*2)+Math.PI/8;}
-						else if(attackAnimationStage>=6 && attackAnimationStage<12){rot=(Math.PI*2)+Math.PI/4;}
-						else if(attackAnimationStage>=12 && attackAnimationStage<18){rot=(Math.PI*2)+Math.PI/2;}
-						else if(attackAnimationStage>=18){
-							rot=(Math.PI*2)+Math.PI/2;
-							e.setAttacking(false);
-							attackAnimationStage=0;
-						}
-						g2d.rotate(rot, e.getCenterX(), e.getCenterY());
-						g2d.setColor(Color.BLACK);
-						g2d.fillRect(e.getX()+10, e.getY()+10, e.getWeapon().getWidth(), e.getWeapon().getLength());
-						g2d.rotate(-rot, e.getCenterX(), e.getCenterY());
-					}
+	
 				//Draw the objects visual appearance.
-					g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
-					g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
-					g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
-			}
 				g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
 				g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
 				g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
+			}
+			
+			g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
+			g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
+			g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
 			
 			//Draw the objects "hitbox"
 			g2d.setColor(Color.RED);
@@ -79,7 +65,7 @@ public class GameWindow extends Canvas implements Observer{
 				g2d.drawRect(e.getX(), e.getY()-20, 60, 20);
 				g2d.setStroke(oldStroke);
 				g2d.setColor(Color.RED);
-				g2d.fillRect(e.getX()+2, e.getY()-18, (56*e.getHP()/100), 16);
+				g2d.fillRect(e.getX()+2, e.getY()-18, (56), 16);
 			}
 		}
 		////
