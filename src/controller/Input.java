@@ -106,7 +106,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		if(arg0.getButton()==MouseEvent.BUTTON1){
-			
+			p.doAttack();
 		}
 	}
 

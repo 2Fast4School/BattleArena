@@ -8,6 +8,7 @@ import java.util.TreeMap;
 public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private ArrayList<Entity> objInNode;
+	private ArrayList<Entity> gotHit;
 	private int numberOfPlayers;
 	private Player player;
 	private int id;
@@ -18,14 +19,21 @@ public class GameState extends Observable{
 		this.numberOfPlayers=numberOfPlayers;
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
+		gotHit = new ArrayList<Entity>();
 		this.id = id;
+		
+		//Add dummy-enemies to start with. These enemies will get initilized with real values one's there's proper info from the server about them.
 		for(int i = 0; i < numberOfPlayers-1; i++){
-			gameObjects.add(new Enemy(0,0,20,20));
+			gameObjects.add(new Enemy(0,0,40,40));
 		}
 		//Init the quadtree with the size of the screen.
 		quadtree = new Quadtree(new Rectangle(0,0,800,800));
 	}
 	
+	/**
+	 * 
+	 * @return A list with all the enemies in the game.
+	 */
 	public ArrayList<Enemy> getTheEnemies(){
 		ArrayList<Enemy> ens = new ArrayList<Enemy>();
 		for(Entity e : gameObjects){
@@ -35,7 +43,7 @@ public class GameState extends Observable{
 		} return ens;
 	}
 	public void setup(){
-		player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 20, 20);
+		player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 40, 40);
 		gameObjects.add(player);
 		
 		//Generate 50^2 16x16 entities
@@ -52,10 +60,25 @@ public class GameState extends Observable{
 	}
 	
 	public void tick(){
+
+		for(Enemy e : getTheEnemies()){
+			if(e.getWeapon().isAttacking()){
+				gameObjects.add(e.getWeapon());
+			} else {
+				gameObjects.remove(e.getWeapon());
+			}
+		}
 		
-		Player player = null;
+		if(player.getWeapon().isAttacking()){
+			gameObjects.add(player.getWeapon());
+		} else {
+			gameObjects.remove(player.getWeapon());
+		}
+		
+		
 		//Clear the QuadTree every tick.
 		quadtree.clear();
+		gotHit.clear();
 		
 		//Insert every object in the quadtree.
 		for(Entity e : gameObjects){
@@ -77,6 +100,18 @@ public class GameState extends Observable{
 				*/
 				player.tick(objInNode);
 				
+			} else if (e instanceof Weapon) {
+				for(Entity Ent : objInNode){
+					if(e.getBounds().intersects(Ent.getBounds()) && Ent instanceof Enemy && !((Weapon) e).getDmgDone()){
+						Ent.setHP(Ent.getHP() - ((Weapon) e).getDmg());
+						((Weapon) e).damageDone();
+						gotHit.add(e);
+						break;
+					}
+				}
+				
+				e.tick();
+				
 			} else {
 				e.tick(); //If 'e' isn't the Player. Just tick as usual.
 			}
@@ -90,6 +125,7 @@ public class GameState extends Observable{
 		}		
 	}
 	
+	public ArrayList<Entity> gotHitList(){return gotHit;}
 	public ArrayList<Entity> getList(){return gameObjects;}
 	public Player returnPlayer(){return player;}
 	public void setID(int id){this.id=id;}

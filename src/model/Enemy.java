@@ -7,14 +7,13 @@ import javax.imageio.ImageIO;
 
 public class Enemy extends Entity {
 	private final int maxHP=100;
-	private boolean attacking=false;
 	private Weapon weapon;
 	private int ID;
 	
 	public Enemy(int x, int y, int w, int h){
 		super(x, y, w ,h, true);
-		hp=maxHP;
-		weapon=new Weapon(50,10,20);
+		setHP(maxHP);
+		weapon=new Weapon(this,8,50);
 		setID(-1);
 		loadImages();
 	}
@@ -22,10 +21,18 @@ public class Enemy extends Entity {
 	public void tick() {
 	
 	}
+	/**
+	 * 
+	 * @return The ID of this enemy.
+	 */
 	public int getID(){
 		return ID;
 	}
 	
+	/**
+	 * 
+	 * @param ID The id to give this enemy.
+	 */
 	public void setID(int ID){
 		this.ID = ID;
 	}
@@ -37,7 +44,7 @@ public class Enemy extends Entity {
 	 */
 	public void loadImages(){
 		try{
-			sprite = ImageIO.read(new File("res/Character1.gif"));
+			sprite = ImageIO.read(new File("res/testa.png"));
 		}catch(IOException e){}	
 	}
 	/**
@@ -50,4 +57,11 @@ public class Enemy extends Entity {
 	 * this Enemy's latest attack
 	 * @return idsHitByAttack : ArrayList(Integer)
 	 */
+	
+	/**
+	 * Initializes the enemies attack.
+	 */
+	public void doAttack(){
+		weapon.attack();
+	}
 }

@@ -15,12 +15,8 @@ import javax.imageio.ImageIO;
 public class Player extends Entity{
 	private final int maxHP=100;
 	private int dx, dy;
-	private boolean attacking;
 	private Weapon weapon;
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
-	private boolean hasSentHP=false;
-	
-	private ArrayList<Integer> idsHitByAttack;
 	
 	/**
 	 * Constructor.
@@ -33,11 +29,9 @@ public class Player extends Entity{
 	public Player(int x, int y, int w, int h){
 		super(x, y, w, h, true);
 		dx = dy = 0;
-		hp=maxHP;
-		weapon=new Weapon(50,10,20);
+		setHP(maxHP);
+		weapon=new Weapon(this ,8,50);
 		loadImages();
-		attacking = false;
-		idsHitByAttack=new ArrayList<Integer>();
 	}
 	
 	//Dummy-tick
@@ -61,7 +55,7 @@ public class Player extends Entity{
 	 */
 	public void loadImages(){
 		try{
-			sprite = ImageIO.read(new File("res/Character1.gif"));
+			sprite = ImageIO.read(new File("res/testa.png"));
 		}catch(IOException e){}
 	}
 	
@@ -100,7 +94,7 @@ public class Player extends Entity{
 	private boolean collision(int dx, int dy){
 		Rectangle pNext = new Rectangle(x+dx, y+dy, w, h);
 		for(Entity e : closeObjects){
-			if(pNext.intersects(e.getBounds())){
+			if(pNext.intersects(e.getBounds()) && !(e instanceof Weapon)){
 				return true;
 			}
 			
@@ -129,4 +123,12 @@ public class Player extends Entity{
 	 * @return weapon : Weapon
 	 */
 	public Weapon getWeapon(){return weapon;}
+	
+	/**
+	 * Will start the weapon attack.
+	 */
+	public void doAttack(){
+		weapon.attack();
+	}
+	
 }

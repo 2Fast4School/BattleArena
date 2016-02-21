@@ -63,6 +63,7 @@ public class Client implements Runnable, Observer{
 		
 		String message[];
 		int code,id,xVal,yVal,rot;
+		boolean at;
 		
 		byte[] receive=new byte[1024];
 		while(true){
@@ -76,6 +77,7 @@ public class Client implements Runnable, Observer{
 						xVal=Integer.parseInt(message[2]);
 						yVal=Integer.parseInt(message[3]);
 						rot=Integer.parseInt(message[4]);
+						at=Boolean.parseBoolean(message[5]);
 								
 						for(Enemy e : state.getTheEnemies()){
 									
@@ -84,6 +86,9 @@ public class Client implements Runnable, Observer{
 								e.setX(xVal);
 								e.setY(yVal);
 								e.setRotVar(rot);
+								if(at){
+									e.doAttack();
+								}
 								
 								if(e.getID() == -1){
 									e.setID(id);
@@ -157,7 +162,7 @@ public class Client implements Runnable, Observer{
 						","+player.getRotVar()+",Filler").getBytes();
 					}*/
 					
-					message ="1,"+state.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+",Filler";
+					message ="1,"+state.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getWeapon().isAttacking()+",Filler";
 					toSend = message.getBytes();
 	
 					out.write(toSend, 0, toSend.length);

@@ -14,8 +14,7 @@ import java.util.TreeMap;
  */
 public abstract class Entity{
 	private boolean solid;
-	protected int x, y, w, h, rotation;
-	protected int hp;
+	protected int x, y, w, h, rotation, hp;
 	protected BufferedImage sprite;
 	
 	/**
@@ -147,5 +146,6 @@ public abstract class Entity{
 	 */
 	public abstract void tick();
 	
-	
+	public int getHP(){ return hp; }
+	public void setHP( int hp ){ this.hp = hp;}
 }
