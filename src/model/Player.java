@@ -17,7 +17,6 @@ public class Player extends Entity{
 	private int dx, dy;
 	private Weapon weapon;
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
-	
 	/**
 	 * Constructor.
 	 * @param id ID of the entity.
@@ -130,5 +129,4 @@ public class Player extends Entity{
 	public void doAttack(){
 		weapon.attack();
 	}
-	
 }

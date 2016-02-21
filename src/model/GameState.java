@@ -13,6 +13,7 @@ public class GameState extends Observable{
 	private Player player;
 	private int id;
 	private Quadtree quadtree;
+	private boolean hasSentHP=false;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
 	public GameState(int numberOfPlayers, int id){
@@ -105,7 +106,7 @@ public class GameState extends Observable{
 					if(e.getBounds().intersects(Ent.getBounds()) && Ent instanceof Enemy && !((Weapon) e).getDmgDone()){
 						Ent.setHP(Ent.getHP() - ((Weapon) e).getDmg());
 						((Weapon) e).damageDone();
-						gotHit.add(e);
+						gotHit.add(Ent);
 						break;
 					}
 				}
@@ -130,5 +131,6 @@ public class GameState extends Observable{
 	public Player returnPlayer(){return player;}
 	public void setID(int id){this.id=id;}
 	public int getID(){ return id; }
-	
+	public boolean hasSentHP(){return hasSentHP;}
+	public void setHasSentHP(boolean state){hasSentHP=state;}
 }

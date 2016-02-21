@@ -96,32 +96,29 @@ public class Client implements Runnable, Observer{
 							}
 								
 						}
-				}
-					/*if(code==2){	// 2= attack code. (Also updates for move)
-						xVal=Integer.parseInt(message[2]);
-						yVal=Integer.parseInt(message[3]);
-						rot=Integer.parseInt(message[4]);
-						for(Entity e : state.getList()){
-							if (e instanceof Player){
-								e.setX(xVal);
-								e.setY(yVal);
-								e.setRotVar(rot);
-								//e.setAttacking(true);
-							}
-						}
-					}
-					if(code==3){
+					}	
+					if(code==2){
+						Entity toHurt=null;
 						int attackedID;
 						int numberOfIDs=Integer.parseInt(message[2]);
 						for(int n=3;n<(numberOfIDs+3);n++){
 							attackedID=Integer.parseInt(message[n]);
-							for(Entity e : state.getList()){
-								if (e.getID()==attackedID){
-									e.setHP(e.getHP()-20);
+							for(Enemy e : state.getTheEnemies()){
+								if(state.getID()==attackedID){
+									toHurt=state.returnPlayer();
+								}
+								else if (e.getID()==attackedID){
+									toHurt=e;
+								}
+								for(Enemy en : state.getTheEnemies()){
+									if(en.getID()==id){
+										toHurt.setHP(toHurt.getHP()-en.getWeapon().getDmg());
+									}
 								}
 							}
 						}
-					}*/
+					}
+
 				}catch(IOException e){e.printStackTrace();}
 			}
 		}
@@ -143,28 +140,23 @@ public class Client implements Runnable, Observer{
 			Player player=(Player)arg1;
 			if(out!=null){
 				try{	// 1 = move code. For some reason a string wouldn't work out.
-					/*if(player.getHitByList().size()>0 && !player.hasSentHP()){
-						player.setHasSentHP(true);
-						message=3+","+player.getID()+","+player.getHitByList().size()+",";
-						for(int n=0;n<player.getHitByList().size(); n++){
-							message+=player.getHitByList().get(n);
-							message+=",";
+					if(state.gotHitList().size()>0){
+						//state.setHasSentHP(true);
+						message=2+","+state.getID()+","+state.gotHitList().size()+",";
+						for(Entity e : state.gotHitList()){
+							if(e instanceof Enemy){
+								message+=((Enemy)e).getID();
+								message+=",";
+							}
 						}
 						message+="Filler";
 						toSend=message.getBytes();
-					}
-					else if(player.getAttacking()){
-						toSend=new String(2+","+player.getID()+","+player.getX()+","+player.getY()+
-						","+player.getRotVar()+",Filler").getBytes();
+						state.gotHitList().clear();
 					}
 					else{
-						toSend=new String(1+","+player.getID()+","+player.getX()+","+player.getY()+
-						","+player.getRotVar()+",Filler").getBytes();
-					}*/
-					
-					message ="1,"+state.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getWeapon().isAttacking()+",Filler";
-					toSend = message.getBytes();
-	
+						message ="1,"+state.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getWeapon().isAttacking()+",Filler";
+						toSend = message.getBytes();
+					}
 					out.write(toSend, 0, toSend.length);
 					out.flush();
 				}catch(IOException e){e.printStackTrace();}
