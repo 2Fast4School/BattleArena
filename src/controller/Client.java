@@ -73,7 +73,7 @@ public class Client implements Runnable, Observer{
 					message=new String(receive).trim().split(",");
 					code=Integer.parseInt(message[0].trim());
 					id=Integer.parseInt(message[1]);
-					if(code==1){	// 1 = move code. For some reason a string wouldn't work out.
+					if(code==1){// 1 = move code. 
 						xVal=Integer.parseInt(message[2]);
 						yVal=Integer.parseInt(message[3]);
 						rot=Integer.parseInt(message[4]);
@@ -97,7 +97,7 @@ public class Client implements Runnable, Observer{
 								
 						}
 					}	
-					if(code==2){
+					if(code==2){// 2 = HP-change code
 						Entity toHurt=null;
 						int attackedID;
 						int numberOfIDs=Integer.parseInt(message[2]);
@@ -139,9 +139,8 @@ public class Client implements Runnable, Observer{
 		if(arg1 instanceof Player){
 			Player player=(Player)arg1;
 			if(out!=null){
-				try{	// 1 = move code. For some reason a string wouldn't work out.
-					if(state.gotHitList().size()>0){
-						//state.setHasSentHP(true);
+				try{	
+					if(state.gotHitList().size()>0){// 2 = HP-change code
 						message=2+","+state.getID()+","+state.gotHitList().size()+",";
 						for(Entity e : state.gotHitList()){
 							if(e instanceof Enemy){
@@ -153,7 +152,7 @@ public class Client implements Runnable, Observer{
 						toSend=message.getBytes();
 						state.gotHitList().clear();
 					}
-					else{
+					else{// 1 = move code.
 						message ="1,"+state.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getWeapon().isAttacking()+",Filler";
 						toSend = message.getBytes();
 					}

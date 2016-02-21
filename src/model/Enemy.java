@@ -64,4 +64,5 @@ public class Enemy extends Entity {
 	public void doAttack(){
 		weapon.attack();
 	}
+	public int getMaxHP(){return maxHP;}
 }

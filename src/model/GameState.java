@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.TreeMap;
 
+import javax.swing.JOptionPane;
+
 public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private ArrayList<Entity> objInNode;
@@ -13,7 +15,6 @@ public class GameState extends Observable{
 	private Player player;
 	private int id;
 	private Quadtree quadtree;
-	private boolean hasSentHP=false;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
 	public GameState(int numberOfPlayers, int id){
@@ -59,9 +60,7 @@ public class GameState extends Observable{
 		*/
 		
 	}
-	
 	public void tick(){
-
 		for(Enemy e : getTheEnemies()){
 			if(e.getWeapon().isAttacking()){
 				gameObjects.add(e.getWeapon());
@@ -131,6 +130,5 @@ public class GameState extends Observable{
 	public Player returnPlayer(){return player;}
 	public void setID(int id){this.id=id;}
 	public int getID(){ return id; }
-	public boolean hasSentHP(){return hasSentHP;}
-	public void setHasSentHP(boolean state){hasSentHP=state;}
+	public int getNrOfPlayers(){return numberOfPlayers;}
 }

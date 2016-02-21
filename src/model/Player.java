@@ -129,4 +129,5 @@ public class Player extends Entity{
 	public void doAttack(){
 		weapon.attack();
 	}
+	public int getMaxHP(){return maxHP;}
 }
