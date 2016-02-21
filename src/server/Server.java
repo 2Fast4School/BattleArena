@@ -2,11 +2,12 @@ package server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Scanner;
+
 /**
 * <h1>Server</h1>
 * Server is just that, a server for the game application.
@@ -16,11 +17,13 @@ import java.util.Scanner;
 * This is done by the use of multiple threaded instances of
 * the private class MiniServer, which are stored in an ArrayList
 * so that they can be iterated over.
-* @author  William Björklund
+* @author  William Bjï¿½rklund
 * @version 1.0
 * @since   2016-02-17
 */
-public class Server{
+
+public class Server extends Observable{
+
 	private int numberOfPlayers;
 	private ServerSocket serverSocket;
 	private Scanner scanner;
@@ -50,7 +53,7 @@ public class Server{
 	* It continually listens to the Client it is associated with,
 	* and will forward any messages sent by that Client to all other
 	* clients.
-	* @author  William Björklund
+	* @author  William Bjï¿½rklund
 	* @version 1.0
 	* @since   2016-02-17
 	*/
@@ -82,6 +85,8 @@ public class Server{
 						message=new String(receive).trim().split(",");
 						id=Integer.parseInt(message[1]);
 						sendToClient(receive, id);
+						setChanged();
+						notifyObservers();
 					}catch(IOException e){}
 				}
 			}
