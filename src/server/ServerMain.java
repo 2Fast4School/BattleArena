@@ -15,27 +15,27 @@ import javax.swing.JTextField;
 
 /**
  * <h1>ServerMain</h1>
- * Start class for a dedicated server. Creates a server instance and starts a ServerGUI.
+ * Start class for a dedicated server. Creates a controller, starts a ServerGUI and connect them together.
  * 
  * @author Oscar Hall
  *
  */
 public class ServerMain {
-
-	private static ServerGUI sg = new ServerGUI();
-	private static Server s;
+	
+	private static ServerController sc;
+	private static ServerGUI sg;
 	
 	public static void main(String[] args) {
 		
 		sg = new ServerGUI();
-		//s = new Server();
-	
-	}
-	
-	public void startServer()
-	{
+		sc = new ServerController();
 		
+		sc.addView(sg);
+		sg.addController(sc);
+	
 	}
+	
+	
 	
 
 }

@@ -2,7 +2,6 @@ package server;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Observable;
@@ -12,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -28,10 +28,10 @@ public class ServerGUI implements Observer {
 	private static JComboBox<String> serverIp;
 	private static JTextField serverPort;
 	private static JTextArea infoArea;
+	private static JScrollPane infoScrollPane;
 	private static JPanel buttonArea, serverInfoArea;
 	private static JButton startGameBtn, endGameBtn, chooseMapBtn;
 	
-	private static String ip;
 	private static int port = 7020;
 
 	public ServerGUI() {
@@ -44,13 +44,14 @@ public class ServerGUI implements Observer {
 		serverIp = new JComboBox<String>();
 		serverPort = new JTextField(String.valueOf(port));
 		infoArea = new JTextArea("");
+		infoScrollPane = new JScrollPane(infoArea);
 		startGameBtn = new JButton("Start Game");
 		endGameBtn = new JButton("End Game");
 		chooseMapBtn = new JButton("Choose Map");
 
 		// Add components to mainFrame
 		mainWindow.add(serverInfoArea, BorderLayout.NORTH);
-		mainWindow.add(infoArea);
+		mainWindow.add(infoScrollPane);
 		mainWindow.add(buttonArea, BorderLayout.SOUTH);
 		buttonArea.add(startGameBtn);
 		buttonArea.add(endGameBtn);
@@ -74,58 +75,6 @@ public class ServerGUI implements Observer {
 		mainWindow.setVisible(true);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// add actionListner for start Game button
-		startGameBtn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				infoArea.append("Setting up connections.\n");
-
-				ip = serverIp.getSelectedItem().toString();
-				port = Integer.parseInt(serverPort.getText());
-				Thread t = new Thread(new Runnable() {
-					public void run() {
-						// Start game server
-						//Server s = new Server(numberOfPlayers, ip, port);
-						
-					}
-				});
-				t.start();
-				infoArea.append("Server started on: " + serverIp.getSelectedItem().toString() + ":"
-						+ serverPort.getText() + "\n");
-				startGameBtn.setEnabled(false);
-				endGameBtn.setEnabled(true);
-			}
-
-		});
-
-		// add actionListner for start Game button
-		endGameBtn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				infoArea.append("Kicking players\n");
-
-				infoArea.append("Should close sockets here\n");
-
-				// Change state of buttons
-				startGameBtn.setEnabled(true);
-				endGameBtn.setEnabled(false);
-			}
-
-		});
-
-		// Add action listener for the choose map button
-		chooseMapBtn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				infoArea.append("Open map\n");
-
-			}
-
-		});
-
 	}
 
 	/**
@@ -133,7 +82,22 @@ public class ServerGUI implements Observer {
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
-		infoArea.append(String.valueOf(arg));
+		
+		String[] message = new String((byte[])arg).trim().split(",");
+		int OPcode = Integer.parseInt(message[0]);
+		String id = message[1];
+	
+		//Check if attack OP = 2
+		if(OPcode == 2)
+		{
+			infoArea.append(id + " is attacking!\n");
+			infoArea.setCaretPosition(infoArea.getDocument().getLength());
+		}
+	}
+	
+	public void toTerminal(String text)
+	{
+		infoArea.append(text);
 	}
 
 	/**
@@ -142,7 +106,7 @@ public class ServerGUI implements Observer {
 	 */
 	private void updateIpComboBox() {
 		NetworkHelper n = new NetworkHelper();
-		Iterator i = n.getInterfaces().iterator();
+		Iterator<String> i = n.getInterfaces().iterator();
 		while(i.hasNext())
 			serverIp.addItem(i.next().toString());
 	}
@@ -156,5 +120,29 @@ public class ServerGUI implements Observer {
 	{
 		return Integer.parseInt(serverPort.getText());
 	}
-
+	
+	public void addController(ActionListener controller){
+		System.out.println("View      : adding controller");
+		startGameBtn.addActionListener(controller);	
+		endGameBtn.addActionListener(controller);
+		chooseMapBtn.addActionListener(controller);	
+	} //addController()
+	
+	
+	/**
+	 * Switches enabled state on Start Game button and End Game Button
+	 */
+	public void switchButtonState()
+	{
+		if(startGameBtn.isEnabled())
+		{
+			startGameBtn.setEnabled(false);
+			endGameBtn.setEnabled(true);
+		}
+		else
+		{
+			startGameBtn.setEnabled(true);	
+			endGameBtn.setEnabled(false);
+		}
+	}
 }
