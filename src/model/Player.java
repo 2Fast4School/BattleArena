@@ -12,10 +12,8 @@ import javax.imageio.ImageIO;
  * @author Victor Dahlberg.
  * @version 1.0
  */
-public class Player extends Entity{
-	private final int maxHP=100;
+public class Player extends Unit{
 	private int dx, dy;
-	private Weapon weapon;
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
 	/**
 	 * Constructor.
@@ -28,8 +26,7 @@ public class Player extends Entity{
 	public Player(int x, int y, int w, int h){
 		super(x, y, w, h, true);
 		dx = dy = 0;
-		setHP(maxHP);
-		weapon=new Weapon(this ,8,50);
+		setWeapon(new SweepSword(this, 8, 50));
 		loadImages();
 	}
 	
@@ -116,18 +113,4 @@ public class Player extends Entity{
 	public void setdy(int dy){
 		this.dy = dy;
 	}
-
-	/**
-	 * Returns the Player's Weapon
-	 * @return weapon : Weapon
-	 */
-	public Weapon getWeapon(){return weapon;}
-	
-	/**
-	 * Will start the weapon attack.
-	 */
-	public void doAttack(){
-		weapon.attack();
-	}
-	public int getMaxHP(){return maxHP;}
 }

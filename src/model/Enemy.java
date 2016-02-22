@@ -5,22 +5,19 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Enemy extends Entity {
-	private final int maxHP=100;
-	private Weapon weapon;
+public class Enemy extends Unit {
 	private int ID;
 	
 	public Enemy(int x, int y, int w, int h){
 		super(x, y, w ,h, true);
-		setHP(maxHP);
-		weapon=new Weapon(this,8,50);
+		setWeapon(new SweepSword(this, 8, 50));
+		
+		//Init the enemies Id with -1 which means this enemy object dont have a "human counter-part".
 		setID(-1);
 		loadImages();
 	}
 
-	public void tick() {
-	
-	}
+	public void tick() {}
 	/**
 	 * 
 	 * @return The ID of this enemy.
@@ -47,22 +44,4 @@ public class Enemy extends Entity {
 			sprite = ImageIO.read(new File("res/testa.png"));
 		}catch(IOException e){}	
 	}
-	/**
-	 * Returns the Enemy's Weapon
-	 * @return weapon : Weapon
-	 */
-	public Weapon getWeapon(){return weapon;}
-	/**
-	 * Returns an ArrayList containing the ID:s of all other Enemys hit by
-	 * this Enemy's latest attack
-	 * @return idsHitByAttack : ArrayList(Integer)
-	 */
-	
-	/**
-	 * Initializes the enemies attack.
-	 */
-	public void doAttack(){
-		weapon.attack();
-	}
-	public int getMaxHP(){return maxHP;}
 }

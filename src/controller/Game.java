@@ -87,8 +87,8 @@ public class Game implements Runnable {
 			
 			//Check if the round is over (1 player that hasn't lost)
 			int nrHasLost=0;
-			for(Entity e : GAMESTATE.getList()){
-				if(e.getHasLost()){
+			for(Enemy e : GAMESTATE.getTheEnemies()){
+				if(!e.isAlive()){
 					nrHasLost++;
 				}
 			}
@@ -97,17 +97,12 @@ public class Game implements Runnable {
 				
 				if(option==JOptionPane.YES_OPTION){
 					for(Entity e : GAMESTATE.getList()){	// Simple 'restart'. To be replaced.
-						if(e instanceof Player){
-							((Player)e).setHP(((Player)e).getMaxHP());
+						if(e instanceof Unit){
+							((Unit)e).setHP(((Unit)e).getMAXHP());
 							e.setX((int)(Math.random()*400+200));
 							e.setY((int)(Math.random()*400+200));
+							((Unit)e).revive();
 						}
-						if(e instanceof Enemy){
-							((Enemy)e).setHP(((Enemy)e).getMaxHP());
-							e.setX((int)(Math.random()*400+200));
-							e.setY((int)(Math.random()*400+200));
-						}
-						e.setHasLost(false);
 					}
 				}
 				else if(option==JOptionPane.NO_OPTION || option==JOptionPane.CANCEL_OPTION){

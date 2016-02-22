@@ -12,6 +12,7 @@ import model.Enemy;
 import model.Entity;
 import model.GameState;
 import model.Player;
+import model.Unit;
 /**
 * <h1>Client</h1>
 * Client is the network portion of each client-side application.
@@ -98,7 +99,7 @@ public class Client implements Runnable, Observer{
 						}
 					}	
 					if(code==2){// 2 = HP-change code
-						Entity toHurt=null;
+						Unit toHurt=null;
 						int attackedID;
 						int numberOfIDs=Integer.parseInt(message[2]);
 						for(int n=3;n<(numberOfIDs+3);n++){

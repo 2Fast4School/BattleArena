@@ -61,6 +61,8 @@ public class GameState extends Observable{
 		
 	}
 	public void tick(){
+		
+		//If a weapon is active, i.e attacking, add it to the gameObjects list.
 		for(Enemy e : getTheEnemies()){
 			if(e.getWeapon().isAttacking()){
 				gameObjects.add(e.getWeapon());
@@ -101,11 +103,22 @@ public class GameState extends Observable{
 				player.tick(objInNode);
 				
 			} else if (e instanceof Weapon) {
-				for(Entity Ent : objInNode){
-					if(e.getBounds().intersects(Ent.getBounds()) && Ent instanceof Enemy && !((Weapon) e).getDmgDone()){
-						Ent.setHP(Ent.getHP() - ((Weapon) e).getDmg());
-						((Weapon) e).damageDone();
-						gotHit.add(Ent);
+				
+				Weapon w = (Weapon)e;
+				for(Entity enemy : objInNode){
+					//If the weapon intersects the Entity and the entity is an Enemy and the weapon hasnt already done damage during 1 cycle.
+					if(e.getBounds().intersects(enemy.getBounds()) && enemy instanceof Enemy && !w.getDmgDone()){
+						
+						//Set the enemies new hp to it's old hp minus the damage of the weapon.
+						((Enemy)enemy).setHP(((Enemy)enemy).getHP() - w.getDmg());
+						
+						//Since damage was dealt, set so the weapon can't deal more damage dring this cycle.
+						w.damageDone();
+						
+						//Add the enemy to the list which is used in the Client class.
+						gotHit.add(enemy);
+						
+						//We can't hit more than one object so break the loop if a hit occured.
 						break;
 					}
 				}

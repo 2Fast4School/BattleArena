@@ -34,7 +34,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 	 * @param e : KeyEvent
 	 */
 	public void keyPressed(KeyEvent e) {
-		if(!p.getHasLost()){
+		if(p.isAlive()){
 			if(e.getKeyCode() == KeyEvent.VK_W){
 				p.setdy(-VELOCITY);
 			}
@@ -62,7 +62,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 	 * keyReleased will set the player's x or y velocity to 0, depending on which of the WASD keys is released.
 	 */
 	public void keyReleased(KeyEvent e) {
-		if(!p.getHasLost()){
+		if(p.isAlive()){
 			if(e.getKeyCode() == KeyEvent.VK_W){
 				p.setdy(0);
 			}
@@ -90,7 +90,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 	}
 	
 	public void mouseMoved(MouseEvent e) {
-		if(!p.getHasLost()){
+		if(p.isAlive()){
 			//Calculates the angle between the mouse-pointer and the player's central coordinates.
 			int angle = (int)Math.toDegrees(Math.atan2(e.getY() - p.getCenterY(), e.getX() - p.getCenterX()));
 			
@@ -111,7 +111,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		if(!p.getHasLost()){
+		if(p.isAlive()){
 			if(arg0.getButton()==MouseEvent.BUTTON1){
 				p.doAttack();
 			}

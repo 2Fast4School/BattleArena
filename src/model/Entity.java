@@ -16,7 +16,6 @@ public abstract class Entity{
 	private boolean solid;
 	protected int x, y, w, h, rotation, hp;
 	protected BufferedImage sprite;
-	protected boolean hasLost;
 	
 	/**
 	 * Constructor for Entity. 
@@ -31,7 +30,6 @@ public abstract class Entity{
 	public Entity(int x, int y, int w, int h, boolean solid){
 		this.x = x; this.y = y; this.w = w; this.h = h;
 		this.solid = solid;
-		hasLost=false;
 		sprite = null;
 	}
 	
@@ -147,16 +145,5 @@ public abstract class Entity{
 	 * Abstract class, "handle" the logic in this method in subclasses of Entity.
 	 */
 	public abstract void tick();
-	
-	public int getHP(){ return hp; }
-	public void setHP(int hp){
-		if(hp<=0){
-			hp=0;
-			hasLost=true;
-		}
-		else{this.hp = hp;}
-	}
-	
-	public boolean getHasLost(){return hasLost;}
-	public void setHasLost(boolean state){hasLost=state;}
+
 }
