@@ -2,27 +2,20 @@ package view;
 import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.imageio.ImageIO;
-
-import model.Enemy;
-
 import model.Entity;
 import model.GameState;
-import model.Player;
 import model.Unit;
 import model.Weapon;
+import model.mapObject;
 
 public class GameWindow extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
@@ -99,6 +92,11 @@ public class GameWindow extends Canvas implements Observer{
 				g2d.setColor(Color.black);			
 				g2d.fillRect(e.getX() + (39*unit.getHP()/100) + 1, e.getY() + 50, 1, 7);
 			}
+			/*if(e instanceof mapObject){
+				g2d.setColor(Color.GREEN);
+				g2d.fillRect(e.getX(), e.getY(), e.getWidth(), e.getHeight());
+				
+			}*/
 		}
 		////
 		g2d.dispose();

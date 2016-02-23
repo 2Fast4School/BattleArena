@@ -1,6 +1,7 @@
 
 package model;
 import java.awt.Rectangle;
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.TreeMap;
@@ -13,6 +14,8 @@ public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private ArrayList<Entity> objInNode;
 	private ArrayList<Entity> gotHit;
+	private ArrayList<Entity> spawnPoints;
+	
 	private int numberOfPlayers;
 	private Player player;
 	private int id;
@@ -24,7 +27,9 @@ public class GameState extends Observable{
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		gotHit = new ArrayList<Entity>();
+		spawnPoints = new ArrayList<Entity>();
 		this.id = id;
+		
 		
 		//Add dummy-enemies to start with. These enemies will get initilized with real values one's there's proper info from the server about them.
 		for(int i = 0; i < numberOfPlayers-1; i++){
@@ -39,6 +44,11 @@ public class GameState extends Observable{
 				gameObjects.add(e);
 			}
 		}
+		
+		for(Entity e : map.getSpawnPoints()){
+			spawnPoints.add(e);
+		}
+		System.out.println("Number of spawn points: " + spawnPoints.size());
 
 	}
 	
@@ -55,7 +65,11 @@ public class GameState extends Observable{
 		} return ens;
 	}
 	public void setup(){
-		player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 40, 40);
+		Random randomGenerator = new Random();
+		int temp = randomGenerator.nextInt(spawnPoints.size());
+		
+		player = new Player(spawnPoints.get(temp).getX(), spawnPoints.get(temp).getY(), 40, 40);
+		//player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 40, 40);
 		gameObjects.add(player);
 		
 		//Generate 50^2 16x16 entities

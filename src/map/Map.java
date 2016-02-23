@@ -5,15 +5,18 @@ import java.util.ArrayList;
 
 import model.Entity;
 /**
- * <h1>Enemy</h1>
- * Used to represent other players in the game
+ * <h1>Map</h1>
+ * Object to hold the map-specific objects such as spawnPoints and boundries
  * 
- * @author 
- * @version 1.0 A1
+ * @author Alexander Erenstedt
+ * @version 1.0 A2
  */
 public class Map {
-	private ArrayList<Entity> gameObjects;
-	private BufferedImage background;
+	//All the mapObjects created by MapGenerator except spawnpoints
+	private ArrayList<Entity> gameObjects; 
+	
+	private BufferedImage background;	
+	private ArrayList<Entity> spawnPoints;
 	
 	/**
 	 * Constructor for Map,
@@ -22,6 +25,7 @@ public class Map {
 	public Map(){
 		background = null;
 		gameObjects = new ArrayList<Entity>();
+		spawnPoints = new ArrayList<Entity>();
 	}
 	
 	/**
@@ -37,6 +41,12 @@ public class Map {
 	public void addEntity(Entity e){
 		gameObjects.add(e);
 	}
+	/**
+	 * @param e A normal Entity which is used as a spawnpoint
+	 */
+	public void addSpawnPoint(Entity e){
+		spawnPoints.add(e);
+	}
 	
 	/**
 	 * @return Returns the background as a BufferedImage, could be null
@@ -50,5 +60,11 @@ public class Map {
 	public ArrayList<Entity> getEntities(){
 		return gameObjects;
 	}
+	/**
+	 * @return Returns the spawnpoints of the map
+	 */
 	
+	public ArrayList<Entity> getSpawnPoints(){
+		return spawnPoints;
+	}
 }
