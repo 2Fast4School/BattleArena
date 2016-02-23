@@ -91,12 +91,12 @@ public class MapGenerator { //Implement serialization
 			for(int x = 0; x < width; x++){
 				int rgb = origin.getRGB(x, y);
 				switch(Integer.toHexString(rgb)){
-				case "ff000000": //Black
+				case "ff000000": //Black, represents wall
 					int temp = checkAdjacentToRight(x, y, origin);
 					map.addEntity(new mapObject(x*sizeOfPixel, y*sizeOfPixel, temp*sizeOfPixel, sizeOfPixel));
 					x += temp;
 					break;
-				case "fffff200": //yellow
+				case "fffff200": //yellow, represents spawnpoints
 					map.addSpawnPoint(new spawnPoint(x*sizeOfPixel, y*sizeOfPixel, 1, 1));
 					break;
 				default:
@@ -117,13 +117,13 @@ public class MapGenerator { //Implement serialization
 				System.out.println(Integer.toHexString(rgb));
 				String temp = "";
 				if(Integer.toHexString(rgb).compareTo("ffffffff") == 0) {
-					temp = "white";
+					temp = "white"; 
 				}
-				if(Integer.toHexString(rgb).compareTo("fffff200") == 0) {
-					temp = "white";
+				if(Integer.toHexString(rgb).compareTo("fffff200") == 0) { //Yellow
+					temp = "white"; //Should not be visible to the player
 				}
 				if(Integer.toHexString(rgb).compareTo("ff000000") == 0) {
-					temp = "black";
+					temp = "black"; //Wall
 				}
 				for(int i=0; i < sizeOfPixel; i++){
 					for(int j = 0; j < sizeOfPixel; j++){
