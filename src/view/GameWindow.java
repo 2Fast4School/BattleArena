@@ -4,9 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.imageio.ImageIO;
 
 import model.Entity;
 import model.GameState;
@@ -15,6 +20,15 @@ import model.GameState;
 public class GameWindow extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Entity> gameObjects;
+	private BufferedImage img = null;
+	
+	public GameWindow(){
+		
+	}
+	
+	public GameWindow(BufferedImage img){
+		this.img = img;
+	}
 	
 	public void render(){
 		BufferStrategy bs = this.getBufferStrategy();
@@ -25,9 +39,13 @@ public class GameWindow extends Canvas implements Observer{
 		Graphics g = bs.getDrawGraphics();
 		Graphics2D g2d = (Graphics2D)g;
 		///// Paint method
-		
-		g2d.setColor(Color.WHITE);
-		g2d.fillRect(0, 0, 800, 800);
+		if(img != null){
+			g2d.drawImage(img, null, 0, 0);
+			
+		}else{
+			g2d.setColor(Color.WHITE);
+			g2d.fillRect(0, 0, 800, 800);
+		}
 		for(Entity e : gameObjects){
 			//Graphics 2D object used for rotating sprites.
 

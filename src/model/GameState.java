@@ -3,15 +3,25 @@ package model;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import map.Map;
+
 public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private int numberOfPlayers;
 	private Player player;
 	private int id;
 	
-	public GameState(int numberOfPlayers){
+	public GameState(int numberOfPlayers, Map map){
 		this.numberOfPlayers=numberOfPlayers;
 		gameObjects=new ArrayList<Entity>();
+		
+		//Add all entities from the map to gamestate
+		for(Entity e : map.getEntities()){
+			if(!gameObjects.contains(e)){
+				gameObjects.add(e);
+			}
+		}
+		
 	}
 	
 	public void setup(){
@@ -50,6 +60,12 @@ public class GameState extends Observable{
 		}else {
 			notifyObservers();
 		}		
+	}
+	
+	public void addEntity(Entity e){
+		if(e != null){
+			gameObjects.add(e);
+		}
 	}
 	
 	public ArrayList<Entity> getList(){return gameObjects;}
