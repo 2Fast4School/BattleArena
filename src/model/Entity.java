@@ -27,7 +27,7 @@ public abstract class Entity {
 	 * @param solid Boolean that determines if the Entity will be solid, or able to move through.
 	 */
 	public Entity(int id, int x, int y, int w, int h, boolean solid){
-		this.id=id;this.x = x; this.y = y; this.w = w; this.h = h;
+		this.id=id; this.x = x; this.y = y; this.w = w; this.h = h;
 		this.solid = solid;
 		sprite = null;
 	}

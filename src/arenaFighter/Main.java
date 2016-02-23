@@ -22,7 +22,7 @@ public class Main{
 		
 		for(int n=0;n<numberOfPlayers;n++){
 			JFrame frame = new JFrame();
-			Map map = MapGenerator.generateMap("src/image/background.png");
+			Map map = MapGenerator.generateMap("res/mapBackground.png");
 			GameState state=new GameState(numberOfPlayers, map);
 			GameWindow window=new GameWindow(map.getBackground());
 			Client client = new Client(port, ip, state, n);
