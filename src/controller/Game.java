@@ -87,12 +87,15 @@ public class Game implements Runnable {
 			
 			//Check if the round is over (1 player that hasn't lost)
 			int nrHasLost=0;
+			if(!GAMESTATE.returnPlayer().isAlive()){nrHasLost++;}
 			for(Enemy e : GAMESTATE.getTheEnemies()){
 				if(!e.isAlive()){
 					nrHasLost++;
 				}
 			}
+			
 			if(GAMESTATE.getNrOfPlayers()-nrHasLost==1){ // If the round is over
+				System.out.println("test");
 				int option = JOptionPane.showConfirmDialog(null, "A player won! Play again?", "GameOver", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
 				
 				if(option==JOptionPane.YES_OPTION){

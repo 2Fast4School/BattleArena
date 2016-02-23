@@ -85,8 +85,6 @@ public class Server extends Observable{
 						message=new String(receive).trim().split(",");
 						id=Integer.parseInt(message[1]);
 						sendToClient(receive, id);
-						setChanged();
-						notifyObservers();
 					}catch(IOException e){}
 				}
 			}
@@ -102,6 +100,8 @@ public class Server extends Observable{
 						}catch(IOException e){}
 					}
 			}
+			setChanged();
+			notifyObservers(byt);
 		}
 		
 		public DataOutputStream getOut(){return out;}
