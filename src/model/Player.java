@@ -90,7 +90,7 @@ public class Player extends Unit{
 	private boolean collision(int dx, int dy){
 		Rectangle pNext = new Rectangle(x+dx, y+dy, w, h);
 		for(Entity e : closeObjects){
-			if(pNext.intersects(e.getBounds()) && !(e instanceof Weapon)){
+			if(pNext.intersects(e.getBounds()) && e.isSolid()){
 				return true;
 			}
 			

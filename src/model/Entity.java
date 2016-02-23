@@ -141,6 +141,10 @@ public abstract class Entity{
 		return y+(getHeight()/2);
 	}
 	
+	public boolean isSolid(){
+		return solid;
+	}
+	
 	/**
 	 * Abstract class, "handle" the logic in this method in subclasses of Entity.
 	 */

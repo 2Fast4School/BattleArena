@@ -34,7 +34,7 @@ public class SweepSword extends Weapon{
 		if(!attacking){
 			attacking = true;
 			dmgDone = false;
-			duration = 90;
+			duration = 10;
 			weaponRotation = 225;
 		}
 	}
@@ -55,7 +55,7 @@ public class SweepSword extends Weapon{
 				y = Math.round((float)(owner.getCenterY() + Math.sin(rot)*radius));
 				setX(x);
 				setY(y);
-				weaponRotation += 1; // duration * the weaponrotation base, 1 in this case. must equal 90 for a 90degree swipe.
+				weaponRotation += 9; // duration * the weaponrotation base, 1 in this case. must equal 90 for a 90degree swipe.
 				duration--;
 			}
 		}

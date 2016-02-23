@@ -58,8 +58,8 @@ public class GameWindow extends Canvas implements Observer{
 				g2d.rotate(Math.toRadians(-e.getRotVar()), e.getX(), e.getY());
 				
 				//The weapons hitbox.
-				//g2d.setColor(Color.RED);
-				//g2d.fill(e.getBounds());
+				g2d.setColor(Color.RED);
+				g2d.fill(e.getBounds());
 			}
 			
 			

@@ -88,6 +88,7 @@ public class Server extends Observable{
 					}catch(IOException e){}
 				}
 			}
+			
 		}
 		public void sendToClient(byte[] byt, int id){
 			//Send to all clients, except the one that sent the message. It already knows.
