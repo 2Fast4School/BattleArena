@@ -1,78 +1,95 @@
 package model;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Bow extends Weapon {
 	private int  arrowWidth, arrowHeight;
 	private ArrayList<Arrow> arrows;
 	private int delay;
+	private int damage;
 	
-	public Bow(Unit owner, int arrowWidth, int arrowHeight){
-		super(owner, arrowWidth, arrowHeight, 5);
+	public Bow(Unit owner, int arrowWidth, int arrowHeight, int damage){
+		super(owner, arrowWidth, arrowHeight, damage);
+		this.damage = damage;
 		this.arrowWidth = arrowWidth;
 		this.arrowHeight = arrowHeight;
-		delay = 60;
-		ArrayList<Arrow> arrows = new ArrayList<Arrow>();
+		arrows = new ArrayList<Arrow>();
+		delay = 0;
 	}
+
+	public Rectangle getBounds() {return null;}
 	
-	public ArrayList<Arrow> getActiveArrows(){
-		return arrows;
+	public ArrayList<Arrow> getArrows(){
+		if(arrows.size() != 0){
+			return arrows;
+		} return null;
 	}
 
 	public void tick() {
-		for(Arrow a : arrows){
-			if(a.isAlive()){
-				a.tick();
-			} else {
-				arrows.remove(a);
+		for(Iterator<Arrow> iterator = arrows.iterator(); iterator.hasNext();){
+			Arrow a = iterator.next();
+			if(!a.isAttacking()){
+				iterator.remove();
 			}
-		}	
+		}
 		delay--;
 	}
 
 	
 	public void attack() {
-		if(!attacking){
+		if(delay <= 0){
 			attacking = true;
 			dmgDone = false;
-			double rotation = owner.getRotVar();
-			double dx = Math.cos(Math.toRadians(rotation));
-			double dy = Math.sin(Math.toRadians(rotation));
+			arrows.add(new Arrow(this, owner));
 			delay = 60;
-			arrows.add(new Arrow(owner.getCenterX(), owner.getCenterY(), arrowWidth, arrowHeight, dx, dy, true));
-		} if(delay <= 0){
-			stopAttack();
-		}
-		
+		} 
 	}
 	
-	private class Arrow extends Entity{
+	private class Arrow extends Weapon{
 		private double dx, dy;
 		private int duration;
-		private boolean isAlive;
+		private int rotation;
 		
-		public Arrow(int x, int y, int w, int h, double dx, double dy, boolean solid) {
-			super(x, y, w, h, solid);
-			this.dx = Math.round(dx);
-			this.dy = Math.round(dy);
-			isAlive = true;
-			duration = 100;
+		public Arrow(Bow bow, Unit owner) {
+			super(owner, bow.arrowWidth, bow.arrowHeight, bow.damage);
+			this.dx = Math.round(Math.cos(owner.getRotVar()));
+			this.dy = Math.round(Math.sin(owner.getRotVar()));
+			attack();
 		}
 
 		@Override
 		public void tick() {
-			if(duration <= 0){
-				isAlive = true;
+			if(dmgDone || duration <= 0){
+				stopAttack();
 			} else {
 				this.x += dx;
 				this.y += dy;
+				duration--;
 			}
 		}
 		
-		public boolean isAlive(){
-			return isAlive;
+		public int getRotVar(){
+			return rotation;
+		}
+
+		@Override
+		public void attack() {
+			if(!attacking){
+				rotation = owner.getRotVar();
+				attacking = true;
+				dmgDone = false;
+				duration = 100;
+			}
+		}
+		
+		public Rectangle getBounds(){
+			return (new Rectangle(x, y, w, h));
 		}
 		
 	}
+
+
 
 }

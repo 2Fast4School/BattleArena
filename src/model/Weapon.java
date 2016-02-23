@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 
@@ -8,7 +9,7 @@ import javax.imageio.ImageIO;
 public abstract class Weapon extends Entity{
 	
 	protected boolean attacking, dmgDone;
-	protected Entity owner;
+	protected Unit owner;
 	private int damage;
 	
 	public Weapon(Unit owner, int width, int height, int damage) {
@@ -72,5 +73,7 @@ public abstract class Weapon extends Entity{
 	public boolean isAttacking(){
 		return attacking;
 	}
+	
+	public abstract Rectangle getBounds();
 
 }

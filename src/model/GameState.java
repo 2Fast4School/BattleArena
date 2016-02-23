@@ -2,10 +2,8 @@
 package model;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Observable;
-import java.util.TreeMap;
-
-import javax.swing.JOptionPane;
 
 import map.Map;
 
@@ -75,23 +73,27 @@ public class GameState extends Observable{
 		quadtree.clear();
 		gotHit.clear();
 		
-		//If a weapon is active, i.e attacking, add it to the gameObjects list.
-		for(Enemy e : getTheEnemies()){
-			if(e.getWeapon().isAttacking()){
-				gameObjects.remove(e.getWeapon());
-				gameObjects.add(e.getWeapon());
-			} else {
-				gameObjects.remove(e.getWeapon());
+		ArrayList<Entity> weaponHandler = new ArrayList<Entity>();
+		for(Entity e : gameObjects){
+			if(e instanceof Weapon){
+				weaponHandler.add(e);
 			}
 		}
+		gameObjects.removeAll(weaponHandler);
+		weaponHandler.clear();
 		
-		if(player.getWeapon().isAttacking()){
-			gameObjects.remove(player.getWeapon());
-			gameObjects.add(player.getWeapon());
-		} else {
-			gameObjects.remove(player.getWeapon());
+		for(Entity e : gameObjects){
+			if(e instanceof Unit){
+				Unit unit = (Unit)e;
+				if(unit.getWeapon().isAttacking() && unit.getWeapon() instanceof Bow){
+					Bow w = (Bow)unit.getWeapon();
+					weaponHandler.addAll(w.getArrows());
+				} else if(unit.getWeapon().isAttacking() && unit.getWeapon() instanceof SweepSword){
+					weaponHandler.add(unit.getWeapon());
+				}
+			} 
 		}
-		
+		gameObjects.addAll(weaponHandler);
 		
 		//Insert every object in the quadtree.
 		for(Entity e : gameObjects){
@@ -119,7 +121,7 @@ public class GameState extends Observable{
 		
 				for(Entity enemy : objInNode){
 					//If the weapon intersects the Entity and the entity is an Enemy and the weapon hasnt already done damage during 1 cycle.
-					if(e.getBounds().intersects(enemy.getBounds()) && enemy instanceof Enemy && !w.getDmgDone()){
+					if(w.getBounds().intersects(enemy.getBounds()) && enemy instanceof Enemy && !w.getDmgDone()){
 						
 						//Set the enemies new hp to it's old hp minus the damage of the weapon.
 						((Enemy)enemy).setHP(((Enemy)enemy).getHP() - w.getDmg());

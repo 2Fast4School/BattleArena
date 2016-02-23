@@ -86,7 +86,7 @@ public class Game implements Runnable {
 			lastTime = now;
 			
 			//Check if the round is over (1 player that hasn't lost)
-			int nrHasLost=0;
+			/*int nrHasLost=0;
 			if(!GAMESTATE.returnPlayer().isAlive()){nrHasLost++;}
 			for(Enemy e : GAMESTATE.getTheEnemies()){
 				if(!e.isAlive()){
@@ -113,8 +113,8 @@ public class Game implements Runnable {
 					//Also doesn't send to close down server. (Might not be desired though)
 					System.exit(1);
 				}
-			}
-			else{	// The round isn't over
+			}*/
+			//else{	// The round isn't over
 					
 				//Wait until 1/60 of a second has passed by and then update gamestate.
 				while(delta >= 1){ 
@@ -131,7 +131,7 @@ public class Game implements Runnable {
 					System.out.println("TICKS: "+updates);
 					updates = 0;
 				}
-			}
+			//}
 		}
 		
 		stop();	

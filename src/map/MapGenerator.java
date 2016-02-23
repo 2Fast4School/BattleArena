@@ -81,7 +81,7 @@ public class MapGenerator { //Implement serialization
 		
 		
 		
-		System.out.println(map.getEntities().size());
+		//System.out.println(map.getEntities().size());
 		map.setBackground(background);
 		return map;
 		

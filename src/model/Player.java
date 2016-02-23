@@ -26,7 +26,8 @@ public class Player extends Unit{
 	public Player(int x, int y, int w, int h){
 		super(x, y, w, h);
 		dx = dy = 0;
-		setWeapon(new SweepSword(this, 8, 50));
+		//setWeapon(new SweepSword(this, 8, 50));
+		setWeapon(new Bow(this, 4, 4, 5));
 		loadImages();
 	}
 	

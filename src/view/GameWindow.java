@@ -73,7 +73,8 @@ public class GameWindow extends Canvas implements Observer{
 			if(e instanceof Weapon && ((Weapon) e).isAttacking()){
 				
 				g2d.rotate(Math.toRadians(e.getRotVar()), e.getX(), e.getY());
-				g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
+				//g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
+				g2d.fillRect(e.getX(), e.getY(), e.getWidth(), e.getHeight());
 				g2d.rotate(Math.toRadians(-e.getRotVar()), e.getX(), e.getY());
 				
 				//The weapons hitbox.

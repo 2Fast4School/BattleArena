@@ -86,11 +86,11 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 
 	//Unused
 	public void mouseDragged(MouseEvent e) {
-		if(p.isAlive()){
+		/*if(p.isAlive()){
 			if(e.getButton()==MouseEvent.BUTTON1){
 				p.doAttack();
 			}
-		}
+		}*/
 	}
 	
 	public void mouseMoved(MouseEvent e) {
