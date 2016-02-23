@@ -1,6 +1,8 @@
 package controller;
 
-import model.GameState;
+import javax.swing.JOptionPane;
+
+import model.*;
 
 /**
  * The Game class is in charge of the main game thread.
@@ -83,21 +85,52 @@ public class Game implements Runnable {
 			//set lasttime to now, so we can calculate how long each "loop" takes.
 			lastTime = now;
 			
-			//Wait until 1/60 of a second has passed by and then update gamestate.
-			while(delta >= 1){ 
-				//Update the gamestate.
-				GAMESTATE.tick();
-				updates++;
-				
-				//Decrement the tick with 1. We don't set it to 0 because if we would loose a couple of ticks, we want the next second to tick a few more times than 60.
-				delta--;
+			//Check if the round is over (1 player that hasn't lost)
+			int nrHasLost=0;
+			if(!GAMESTATE.returnPlayer().isAlive()){nrHasLost++;}
+			for(Enemy e : GAMESTATE.getTheEnemies()){
+				if(!e.isAlive()){
+					nrHasLost++;
+				}
 			}
 			
-			//Used to print number of "ticks" the last second.
-			if(System.currentTimeMillis() - timer > 1000){
-				timer += 1000;
-				System.out.println("TICKS: "+updates);
-				updates = 0;
+			if(GAMESTATE.getNrOfPlayers()-nrHasLost==1){ // If the round is over
+				System.out.println("test");
+				int option = JOptionPane.showConfirmDialog(null, "A player won! Play again?", "GameOver", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+				
+				if(option==JOptionPane.YES_OPTION){
+					for(Entity e : GAMESTATE.getList()){	// Simple 'restart'. To be replaced.
+						if(e instanceof Unit){
+							((Unit)e).setHP(((Unit)e).getMAXHP());
+							e.setX((int)(Math.random()*400+200));
+							e.setY((int)(Math.random()*400+200));
+							((Unit)e).revive();
+						}
+					}
+				}
+				else if(option==JOptionPane.NO_OPTION || option==JOptionPane.CANCEL_OPTION){
+					//Probably doesn't work if there's two different computers running clients.
+					//Also doesn't send to close down server. (Might not be desired though)
+					System.exit(1);
+				}
+			}
+			else{	// The round isn't over
+					
+				//Wait until 1/60 of a second has passed by and then update gamestate.
+				while(delta >= 1){ 
+					//Update the gamestate.
+					GAMESTATE.tick();
+					updates++;
+					
+					//Decrement the tick with 1. We don't set it to 0 because if we would loose a couple of ticks, we want the next second to tick a few more times than 60.
+					delta--;
+				}
+				//Used to print number of "ticks" the last second.
+				if(System.currentTimeMillis() - timer > 1000){
+					timer += 1000;
+					System.out.println("TICKS: "+updates);
+					updates = 0;
+				}
 			}
 		}
 		

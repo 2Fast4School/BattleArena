@@ -8,8 +8,6 @@ import javax.swing.JFrame;
 import controller.Client;
 import controller.Game;
 import controller.Input;
-import map.Map;
-import map.MapGenerator;
 import model.GameState;
 import server.Server;
 import view.GameWindow;
@@ -22,9 +20,8 @@ public class Main{
 		
 		for(int n=0;n<numberOfPlayers;n++){
 			JFrame frame = new JFrame();
-			Map map = MapGenerator.generateMap("res/mapBackground.png");
-			GameState state=new GameState(numberOfPlayers, n, map);
-			GameWindow window=new GameWindow(map.getBackground());
+			GameWindow window=new GameWindow();
+			GameState state=new GameState(numberOfPlayers, n);
 			Client client = new Client(port, ip, state, n);
 			Input input = new Input();
 			Game game=new Game(state);
@@ -49,3 +46,5 @@ public class Main{
 		}
 	}
 }
+//ost2
+//ost

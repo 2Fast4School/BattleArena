@@ -41,17 +41,16 @@ public class MapGenerator { //Implement serialization
 			return generateBlankMap();
 		}
 		BufferedImage background = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
-		int k = 1000;
 		Map map = new Map();
 		//Create map boundaries
 			//Top boundary
-			map.addEntity(new Enemy(900, -10, -10, width*sizeOfPixel+20, 10));
+			map.addEntity(new mapObject(-10, -10, width*sizeOfPixel+20, 10));
 			//Left boundary
-			map.addEntity(new Enemy(901, -10, 0, 10, height*sizeOfPixel));
+			map.addEntity(new mapObject(-10, 0, 10, height*sizeOfPixel));
 			//Right boundary
-			map.addEntity(new Enemy(902, width*sizeOfPixel, 0, 10, height*sizeOfPixel));
+			map.addEntity(new mapObject(width*sizeOfPixel, 0, 10, height*sizeOfPixel));
 			//Bottom boundary
-			map.addEntity(new Enemy(903, -10, height*sizeOfPixel, width*sizeOfPixel+20, 10));
+			map.addEntity(new mapObject(-10, height*sizeOfPixel, width*sizeOfPixel+20, 10));
 		
 		//Create map tiles, the format ARGB is used with hexcode
 		//example "ff000000" gives A = ff, R = 00, G = 00, B = 00 which gives black
@@ -60,7 +59,7 @@ public class MapGenerator { //Implement serialization
 				int rgb = origin.getRGB(x, y);
 				switch(Integer.toHexString(rgb)){
 				case "ff000000": //Black
-					map.addEntity(new Enemy(k, x*sizeOfPixel, y*sizeOfPixel, sizeOfPixel,sizeOfPixel));
+					map.addEntity(new mapObject(x*sizeOfPixel, y*sizeOfPixel, sizeOfPixel,sizeOfPixel));
 					System.out.println("Created Enemy at: " + x*sizeOfPixel + "," + y*sizeOfPixel);
 					
 					break;
@@ -76,7 +75,6 @@ public class MapGenerator { //Implement serialization
 					}
 				}
 				System.out.println();
-				k++;
 			}
 			
 		}

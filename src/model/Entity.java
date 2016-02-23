@@ -1,6 +1,8 @@
 package model;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
  * <h1>Entity</h1>
@@ -10,11 +12,10 @@ import java.awt.image.BufferedImage;
  * @author Victor Dahlberg
  * @version 1.0
  */
-public abstract class Entity {
+public abstract class Entity{
 	private boolean solid;
-	protected int id, x, y, w, h, rotation;
-	private BufferedImage sprite;
-	
+	protected int x, y, w, h, rotation, hp;
+	protected BufferedImage sprite;
 	
 	/**
 	 * Constructor for Entity. 
@@ -26,8 +27,9 @@ public abstract class Entity {
 	 * @param h	The height of the Entity
 	 * @param solid Boolean that determines if the Entity will be solid, or able to move through.
 	 */
-	public Entity(int id, int x, int y, int w, int h, boolean solid){
-		this.id=id; this.x = x; this.y = y; this.w = w; this.h = h;
+
+	public Entity(int x, int y, int w, int h, boolean solid){
+		this.x = x; this.y = y; this.w = w; this.h = h;
 		this.solid = solid;
 		sprite = null;
 	}
@@ -45,14 +47,6 @@ public abstract class Entity {
 	 */
 	public void setSprite(BufferedImage sprite){
 		this.sprite = sprite;
-	}
-	
-	/**
-	 * 
-	 * @return ID (int) of the Entity.
-	 */
-	public int getID(){
-		return id;
 	}
 	
 	/**
@@ -110,7 +104,7 @@ public abstract class Entity {
 	 * @param y The y-pos of The Rectangle.
 	 * @return A Rectangle specified by the parameters with the same width and height as the Entity.
 	 */
-	public Rectangle getBounds(int x, int y){
+	public Rectangle getBounds(){
 		return new Rectangle(x, y, w, h);
 	}
 	
@@ -148,8 +142,13 @@ public abstract class Entity {
 		return y+(getHeight()/2);
 	}
 	
+	public boolean isSolid(){
+		return solid;
+	}
+	
 	/**
 	 * Abstract class, "handle" the logic in this method in subclasses of Entity.
 	 */
 	public abstract void tick();
+
 }
