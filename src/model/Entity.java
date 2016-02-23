@@ -14,8 +14,7 @@ import java.util.TreeMap;
  */
 public abstract class Entity{
 	private boolean solid;
-	protected int id, x, y, w, h, rotation;
-	protected int hp;
+	protected int x, y, w, h, rotation, hp;
 	protected BufferedImage sprite;
 	
 	/**
@@ -28,8 +27,8 @@ public abstract class Entity{
 	 * @param h	The height of the Entity
 	 * @param solid Boolean that determines if the Entity will be solid, or able to move through.
 	 */
-	public Entity(int id, int x, int y, int w, int h, boolean solid){
-		this.id=id;this.x = x; this.y = y; this.w = w; this.h = h;
+	public Entity(int x, int y, int w, int h, boolean solid){
+		this.x = x; this.y = y; this.w = w; this.h = h;
 		this.solid = solid;
 		sprite = null;
 	}
@@ -47,14 +46,6 @@ public abstract class Entity{
 	 */
 	public void setSprite(BufferedImage sprite){
 		this.sprite = sprite;
-	}
-	
-	/**
-	 * 
-	 * @return ID (int) of the Entity.
-	 */
-	public int getID(){
-		return id;
 	}
 	
 	/**
@@ -154,32 +145,5 @@ public abstract class Entity{
 	 * Abstract class, "handle" the logic in this method in subclasses of Entity.
 	 */
 	public abstract void tick();
-	
-	/**
-	 * Sets the HP value of the Entity.
-	 * @param hp : int
-	 */
-	public void setHP(int hp){
-		this.hp = hp;
-	}
-	/**
-	 * Returns the HP value of the Entity
-	 * @return hp : int
-	 */
-	public int getHP(){
-		return hp;
-	}
-	
-	/**
-	 * Abstract method used in Player and Enemy.
-	 */
-	public abstract void setAttacking(boolean state);
-	/**
-	 * Abstract method used in Player and Enemy.
-	 */
-	public abstract boolean getAttacking();
-	/**
-	 * Abstract method used in Player and Enemy.
-	 */
-	public abstract Weapon getWeapon();
+
 }

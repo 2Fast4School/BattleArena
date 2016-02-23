@@ -2,11 +2,11 @@ package view;
 import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -15,11 +15,12 @@ import model.Enemy;
 import model.Entity;
 import model.GameState;
 import model.Player;
+import model.Unit;
+import model.Weapon;
 
 public class GameWindow extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Entity> gameObjects;
-	private int attackAnimationStage=0;
 	
 	/**
 	 * The actual drawing of the current GameState
@@ -40,46 +41,44 @@ public class GameWindow extends Canvas implements Observer{
 		g2d.setColor(Color.WHITE);
 		g2d.fillRect(0, 0, 800, 800);
 		for(Entity e : gameObjects){
-			//Graphics 2D object used for rotating sprites.
-			if(e instanceof Player || e instanceof Enemy){
-				//Draw an attack
-					if(e.getAttacking()){
-						attackAnimationStage++;
-						double rot=0;
-						if(attackAnimationStage<6){rot=(Math.PI*2)+Math.PI/8;}
-						else if(attackAnimationStage>=6 && attackAnimationStage<12){rot=(Math.PI*2)+Math.PI/4;}
-						else if(attackAnimationStage>=12 && attackAnimationStage<18){rot=(Math.PI*2)+Math.PI/2;}
-						else if(attackAnimationStage>=18){
-							rot=(Math.PI*2)+Math.PI/2;
-							e.setAttacking(false);
-							attackAnimationStage=0;
-						}
-						g2d.rotate(rot, e.getCenterX(), e.getCenterY());
-						g2d.setColor(Color.BLACK);
-						g2d.fillRect(e.getX()+10, e.getY()+10, e.getWeapon().getWidth(), e.getWeapon().getLength());
-						g2d.rotate(-rot, e.getCenterX(), e.getCenterY());
-					}
-				//Draw the objects visual appearance.
-					g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
-					g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
-					g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
-			}
+
+			if(e instanceof Unit){
+				
+				//Draw a unit
 				g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
 				g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
 				g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
+			} 
 			
-			//Draw the objects "hitbox"
-			g2d.setColor(Color.RED);
-			g2d.drawRect(e.getX(), e.getY(), e.getWidth(), e.getHeight());
+			//If e is a weapon and e is attacking, draw the weapon.
+			if(e instanceof Weapon && ((Weapon) e).isAttacking()){
+				
+				g2d.rotate(Math.toRadians(e.getRotVar()), e.getX(), e.getY());
+				g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
+				g2d.rotate(Math.toRadians(-e.getRotVar()), e.getX(), e.getY());
+				
+				//The weapons hitbox.
+				//g2d.setColor(Color.RED);
+				//g2d.fill(e.getBounds());
+			}
+			
+			
 			//Draw the healthbar if player/enemy
-			if(e instanceof Player || e instanceof Enemy){
+			if(e instanceof Unit){
+				
+				Unit unit = (Unit)e;
 				Stroke oldStroke = g2d.getStroke();
-				g2d.setStroke(new BasicStroke(4));
+				g2d.setStroke(new BasicStroke(1));
+				
 				g2d.setColor(Color.BLACK);
-				g2d.drawRect(e.getX(), e.getY()-20, 60, 20);
+				g2d.drawRect(e.getX(), e.getY()+49, 40, 8);
 				g2d.setStroke(oldStroke);
-				g2d.setColor(Color.RED);
-				g2d.fillRect(e.getX()+2, e.getY()-18, (56*e.getHP()/100), 16);
+				
+				g2d.setColor(Color.GREEN);
+				g2d.fillRect(e.getX()+1, e.getY()+50, (39*unit.getHP()/100), 7);
+				
+				g2d.setColor(Color.black);			
+				g2d.fillRect(e.getX() + (39*unit.getHP()/100) + 1, e.getY() + 50, 1, 7);
 			}
 		}
 		////

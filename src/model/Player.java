@@ -1,27 +1,20 @@
 package model;
 
-import java.awt.image.BufferedImage;
+import java.awt.Rectangle;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.TreeMap;
+
 import javax.imageio.ImageIO;
-import java.awt.Rectangle;
 /**
  * <h1>Player</h1>
  * Player class extends the Entity Class. Used to store the data of YOUR player. Only one player per Game.
  * @author Victor Dahlberg.
  * @version 1.0
  */
-public class Player extends Entity{
-	private final int maxHP=100;
+public class Player extends Unit{
 	private int dx, dy;
-	private boolean attacking;
-	private Weapon weapon;
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
-	private boolean hasSentHP=false;
-	
-	private ArrayList<Integer> idsHitByAttack;
-	
 	/**
 	 * Constructor.
 	 * @param id ID of the entity.
@@ -30,14 +23,11 @@ public class Player extends Entity{
 	 * @param w The player's hitbox-width.
 	 * @param h The player's hitbox height.
 	 */
-	public Player(int id, int x, int y, int w, int h){
-		super(id, x, y, w, h, true);
+	public Player(int x, int y, int w, int h){
+		super(x, y, w, h, true);
 		dx = dy = 0;
-		hp=maxHP;
-		weapon=new Weapon(50,10,20);
+		setWeapon(new SweepSword(this, 8, 50));
 		loadImages();
-		attacking = false;
-		idsHitByAttack=new ArrayList<Integer>();
 	}
 	
 	//Dummy-tick
@@ -61,7 +51,7 @@ public class Player extends Entity{
 	 */
 	public void loadImages(){
 		try{
-			sprite = ImageIO.read(getClass().getResourceAsStream("/Character1.gif"));
+			sprite = ImageIO.read(new File("res/testa.png"));
 		}catch(IOException e){}
 	}
 	
@@ -100,7 +90,7 @@ public class Player extends Entity{
 	private boolean collision(int dx, int dy){
 		Rectangle pNext = new Rectangle(x+dx, y+dy, w, h);
 		for(Entity e : closeObjects){
-			if(pNext.intersects(e.getBounds())){
+			if(pNext.intersects(e.getBounds()) && !(e instanceof Weapon)){
 				return true;
 			}
 			
@@ -123,42 +113,4 @@ public class Player extends Entity{
 	public void setdy(int dy){
 		this.dy = dy;
 	}
-
-	/**
-	 * Sets wether the Player is attacking or not.
-	 * @param state : boolean
-	 */
-	public void setAttacking(boolean state){
-		attacking=state;
-	}
-	/**
-	 * Returns wether the Player is currently attacking
-	 * @return attacking : boolean
-	 */
-	public boolean getAttacking(){
-		return attacking;
-	}
-	/**
-	 * Returns the Player's Weapon
-	 * @return weapon : Weapon
-	 */
-	public Weapon getWeapon(){return weapon;}
-	/**
-	 * Returns an ArrayList containing the ID:s of all other Enemys hit by
-	 * this Player's latest attack
-	 * @return idsHitByAttack : ArrayList(Integer)
-	 */
-	public ArrayList<Integer> getHitByList(){return idsHitByAttack;}
-	/**
-	 * Returns wether the Player has sent out damage to be applied because of an attack.
-	 * It shouldn't be done multiple times, which is determined by true/false.
-	 * @return hasSentHP : boolean
-	 */
-	public boolean hasSentHP(){return hasSentHP;}
-	/**
-	 * Sets wether the Player has sent out damage to be applied because of an attack.
-	 * It shouldn't be done multiple times, which is why we set this to true/false.
-	 * @param state : boolean
-	 */
-	public void setHasSentHP(boolean state){hasSentHP=state;}
 }

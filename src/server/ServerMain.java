@@ -21,9 +21,9 @@ import javax.swing.JTextField;
  *
  */
 public class ServerMain {
-	
 	private static ServerController sc;
 	private static ServerGUI sg;
+
 	
 	public static void main(String[] args) {
 		
