@@ -50,7 +50,7 @@ public class ServerController implements ActionListener {
 		Thread t = new Thread(new Runnable(){
 			public void run(){
 				try {
-					Server s = new Server(2, view.getIpAddress(), view.getPort());
+					Server s = new Server(3, view.getIpAddress(), view.getPort());
 					s.addObserver(view);
 					addModel(s);
 			} catch (IOException e) {
