@@ -14,7 +14,7 @@ public class GameState extends Observable{
 	private int numberOfPlayers;
 	private Player player;
 	private int id;
-	private Quadtree quadtree;
+	private Quadtree quadtree;;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
 	public GameState(int numberOfPlayers, int id){
@@ -26,7 +26,7 @@ public class GameState extends Observable{
 		
 		//Add dummy-enemies to start with. These enemies will get initilized with real values one's there's proper info from the server about them.
 		for(int i = 0; i < numberOfPlayers-1; i++){
-			gameObjects.add(new Enemy(0,0,40,40));
+			gameObjects.add(new Enemy(100,100,40,40));
 		}
 		//Init the quadtree with the size of the screen.
 		quadtree = new Quadtree(new Rectangle(0,0,800,800));
@@ -61,10 +61,14 @@ public class GameState extends Observable{
 		
 	}
 	public void tick(){
+		//Clear the QuadTree every tick.
+		quadtree.clear();
+		gotHit.clear();
 		
 		//If a weapon is active, i.e attacking, add it to the gameObjects list.
 		for(Enemy e : getTheEnemies()){
 			if(e.getWeapon().isAttacking()){
+				gameObjects.remove(e.getWeapon());
 				gameObjects.add(e.getWeapon());
 			} else {
 				gameObjects.remove(e.getWeapon());
@@ -72,15 +76,12 @@ public class GameState extends Observable{
 		}
 		
 		if(player.getWeapon().isAttacking()){
+			gameObjects.remove(player.getWeapon());
 			gameObjects.add(player.getWeapon());
 		} else {
 			gameObjects.remove(player.getWeapon());
 		}
 		
-		
-		//Clear the QuadTree every tick.
-		quadtree.clear();
-		gotHit.clear();
 		
 		//Insert every object in the quadtree.
 		for(Entity e : gameObjects){
@@ -105,6 +106,7 @@ public class GameState extends Observable{
 			} else if (e instanceof Weapon) {
 				
 				Weapon w = (Weapon)e;
+		
 				for(Entity enemy : objInNode){
 					//If the weapon intersects the Entity and the entity is an Enemy and the weapon hasnt already done damage during 1 cycle.
 					if(e.getBounds().intersects(enemy.getBounds()) && enemy instanceof Enemy && !w.getDmgDone()){
@@ -123,8 +125,8 @@ public class GameState extends Observable{
 					}
 				}
 				
-				e.tick();
 				
+				e.tick();
 			} else {
 				e.tick(); //If 'e' isn't the Player. Just tick as usual.
 			}
