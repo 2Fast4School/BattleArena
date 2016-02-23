@@ -68,6 +68,9 @@ public class Server extends Observable{
 			try{
 				in = new DataInputStream(socket.getInputStream());
 				out = new DataOutputStream(socket.getOutputStream());
+				byte[] toSend=new String(0+","+id+",Filler").getBytes();
+				out.write(toSend, 0, toSend.length);
+				out.flush();
 			}catch(IOException e){}
 		}
 

@@ -23,9 +23,9 @@ public class Main{
 		for(int n=0;n<numberOfPlayers;n++){
 			JFrame frame = new JFrame();
 			Map map = MapGenerator.generateMap("res/mapBackground.png", "grass");
-			GameState state=new GameState(numberOfPlayers, n, map);
+			GameState state=new GameState(numberOfPlayers, map);
 			GameWindow window=new GameWindow(map.getBackground());
-			Client client = new Client(port, ip, state, n);
+			Client client = new Client(port, ip, state);
 			Input input = new Input();
 			Game game=new Game(state);
 			

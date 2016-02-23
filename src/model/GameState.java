@@ -22,13 +22,12 @@ public class GameState extends Observable{
 	private Quadtree quadtree;;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
-	public GameState(int numberOfPlayers, int id, Map map){
+	public GameState(int numberOfPlayers, Map map){
 		this.numberOfPlayers=numberOfPlayers;
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		gotHit = new ArrayList<Entity>();
 		spawnPoints = new ArrayList<Entity>();
-		this.id = id;
 		
 		
 		//Add dummy-enemies to start with. These enemies will get initilized with real values one's there's proper info from the server about them.

@@ -32,12 +32,10 @@ public class Client implements Runnable, Observer{
 	private GameState state;
 	private int id;
 	
-	public Client(int port, String ip, GameState state, int id){
-		this.id=id;
+	public Client(int port, String ip, GameState state){
 		this.port=port;
 		this.ip=ip;
 		this.state=state;
-		state.setID(id);
 	}
 
 	/**
@@ -74,6 +72,10 @@ public class Client implements Runnable, Observer{
 					message=new String(receive).trim().split(",");
 					code=Integer.parseInt(message[0].trim());
 					id=Integer.parseInt(message[1]);
+					if(code==0){//ID-set code
+						this.id=id;
+						state.setID(id);
+					}
 					if(code==1){// 1 = move code. 
 						xVal=Integer.parseInt(message[2]);
 						yVal=Integer.parseInt(message[3]);
