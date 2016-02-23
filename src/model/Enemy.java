@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-
+/**
+ * Model to store info of an Enemy. Enemies should only contain information about the other Players.
+ * @author Victor Dahlberg
+ *
+ */
 public class Enemy extends Unit {
 	private int ID;
 	/**
@@ -16,7 +20,7 @@ public class Enemy extends Unit {
 	 * @param h	The height of the Enemy
 	 */
 	public Enemy(int x, int y, int w, int h){
-		super(x, y, w ,h, true);
+		super(x, y, w ,h);
 		setWeapon(new SweepSword(this, 8, 50));
 		
 		//Init the enemies Id with -1 which means this enemy object dont have a "human counter-part".
@@ -24,6 +28,7 @@ public class Enemy extends Unit {
 		loadImages();
 	}
 
+	
 	public void tick() {}
 	/**
 	 * 

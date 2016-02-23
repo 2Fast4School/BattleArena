@@ -142,6 +142,10 @@ public abstract class Entity{
 		return y+(getHeight()/2);
 	}
 	
+	/**
+	 * 
+	 * @return true if the Entity is solid. Otherwise false.
+	 */
 	public boolean isSolid(){
 		return solid;
 	}

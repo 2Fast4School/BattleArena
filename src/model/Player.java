@@ -24,7 +24,7 @@ public class Player extends Unit{
 	 * @param h The player's hitbox height.
 	 */
 	public Player(int x, int y, int w, int h){
-		super(x, y, w, h, true);
+		super(x, y, w, h);
 		dx = dy = 0;
 		setWeapon(new SweepSword(this, 8, 50));
 		loadImages();
