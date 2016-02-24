@@ -54,11 +54,16 @@ public class Bow extends Weapon {
 		
 		public Arrow(Bow bow, Unit owner) {
 			super(owner, bow.arrowWidth, bow.arrowHeight, bow.damage);
-			v = 6;
+			v = 10;
+			
 			rotation = owner.getRotVar() - 90;
+			if(rotation <= 0)
+				rotation += 360;
+			
 			System.out.println(rotation);
-			dx = Math.round( v * Math.cos(Math.toRadians(rotation)));
-			dy = Math.round( v * Math.sin(Math.toRadians(rotation)));
+			System.out.println(Math.toRadians(rotation));
+			dx =  v * Math.cos(Math.toRadians(rotation));
+			dy =  v * Math.sin(Math.toRadians(rotation));
 			attack();
 		}
 
@@ -89,7 +94,6 @@ public class Bow extends Weapon {
 		
 		public Rectangle getBounds(){
 			return (new Rectangle(x - w , y - w, 2*w, 2*w));
-			
 		}
 		
 	}

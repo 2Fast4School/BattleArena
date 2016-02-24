@@ -15,7 +15,7 @@ import server.Server;
 import view.GameWindow;
 
 public class Main{
-	private static final int numberOfPlayers=1;
+	private static final int numberOfPlayers=2;
 	private static final String ip = "127.0.0.1";
 	private static final int port=7020;
 	public static void main(String[] args){
@@ -25,7 +25,7 @@ public class Main{
 			Map map = MapGenerator.generateMap("res/mapBackground.png");
 			GameState state=new GameState(numberOfPlayers, n, map);
 			GameWindow window=new GameWindow(map.getBackground());
-			//Client client = new Client(port, ip, state, n);
+			Client client = new Client(port, ip, state, n);
 			Input input = new Input();
 			Game game=new Game(state);
 			
@@ -38,14 +38,14 @@ public class Main{
 			window.addKeyListener(input);
 			window.addMouseListener(input);
 			window.addMouseMotionListener(input);
-			//state.addObserver(client);
+			state.addObserver(client);
 			state.addObserver(window);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.pack();
 			frame.setVisible(true);
 			
 			game.start();
-			//new Thread(client).start();
+			new Thread(client).start();
 		}
 	}
 }
