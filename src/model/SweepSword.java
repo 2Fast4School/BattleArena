@@ -25,8 +25,8 @@ public class SweepSword extends Weapon{
 	 * @param width The width of the weapon / weapon-sprite.
 	 * @param height The height of the weapon/weapon-sprite.
 	 */
-	public SweepSword(Unit owner, int width, int height){
-		super(owner, width, height, 5);
+	public SweepSword(Unit owner, int width, int height, int damage){
+		super(owner, width, height, damage);
 		radius = (owner.getHeight() / 2);
 	}
 	

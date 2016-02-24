@@ -21,7 +21,6 @@ public class Enemy extends Unit {
 	 */
 	public Enemy(int x, int y, int w, int h){
 		super(x, y, w ,h);
-		setWeapon(new SweepSword(this, 8, 50));
 		
 		//Init the enemies Id with -1 which means this enemy object dont have a "human counter-part".
 		setID(-1);
@@ -53,7 +52,7 @@ public class Enemy extends Unit {
 	 */
 	public void loadImages(){
 		try{
-			sprite = ImageIO.read(new File("res/testa.png"));
+			sprite = ImageIO.read(new File("testa.png"));
 		}catch(IOException e){}	
 	}
 }

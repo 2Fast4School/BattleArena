@@ -8,15 +8,18 @@ public class Bow extends Weapon {
 	private int  arrowWidth, arrowHeight;
 	private ArrayList<Arrow> arrows;
 	private int delay;
-	private int damage;
 	
 	public Bow(Unit owner, int arrowWidth, int arrowHeight, int damage){
 		super(owner, 0, 0, damage);
-		this.damage = damage;
 		this.arrowWidth = arrowWidth;
 		this.arrowHeight = arrowHeight;
 		arrows = new ArrayList<Arrow>();
 		delay = 0;
+	}
+	
+	public void stopAttack(){
+		arrows.clear();
+		dmgDone = false;
 	}
 
 	public Rectangle getBounds() {return (new Rectangle(owner.getCenterX(),owner.getCenterY(),0,0));}
@@ -53,7 +56,7 @@ public class Bow extends Weapon {
 		private int rotation;
 		
 		public Arrow(Bow bow, Unit owner) {
-			super(owner, bow.arrowWidth, bow.arrowHeight, bow.damage);
+			super(owner, bow.arrowWidth, bow.arrowHeight, bow.getDmg());
 			v = 10;
 			
 			rotation = owner.getRotVar() - 90;

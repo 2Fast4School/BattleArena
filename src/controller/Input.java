@@ -52,6 +52,10 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 				p.setdx(VELOCITY);
 			}
 			
+			if(e.getKeyCode() == KeyEvent.VK_Q){
+				p.switchWeapon();
+			}
+			
 			//Force shut down the game.
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 				System.exit(1);

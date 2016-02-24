@@ -8,7 +8,7 @@ package model;
 public abstract class Unit extends Entity{
 	private final int MAXHP = 100;
 	private int hp;
-	private Weapon weapon;
+	private Weapon weapon, secWeapon;
 	private boolean alive;
 	
 	/**
@@ -22,6 +22,15 @@ public abstract class Unit extends Entity{
 		super(x, y, w, h, true);
 		hp = MAXHP;
 		alive = true;
+		weapon = new SweepSword(this, 8, 50, 5);
+		secWeapon = new Bow(this, 4, 20, 5);
+	}
+	
+	public void switchWeapon(){
+		weapon.stopAttack();
+		Weapon tempWep = weapon;
+		weapon = secWeapon;
+		secWeapon = tempWep;
 	}
 
 	/**
@@ -36,9 +45,9 @@ public abstract class Unit extends Entity{
 	 * 
 	 * @param weapon Give the unit this weapon.
 	 */
-	public void setWeapon(Weapon weapon){
+	/*public void setWeapon(Weapon weapon){
 		this.weapon = weapon;
-	}
+	}*/
 	
 	/**
 	 * 
