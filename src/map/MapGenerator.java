@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
  * @author Alexander Erenstedt
  * @version 1.0 A2
  */
-public class MapGenerator { //Implement serialization
+public class MapGenerator { //Perhaps implement serialization
 	private static final int sizeOfPixel = 16;
 	/**
 	 * Enormous method which generates entities as boundaries in the Map object it returns
@@ -26,46 +26,24 @@ public class MapGenerator { //Implement serialization
 	 * @param type The desired type of the map generated
 	 * @return The map it created
 	 */
-	public static Map generateMap(String fileName, String type){
-		//Should be in support methods
-		BufferedImage backgroundType = null;
-		switch(type){
-			case "grass":
-				try {
-				   backgroundType = ImageIO.read(new File("res/grass.png"));
-				} catch (IOException e) {
-				    e.printStackTrace();
-				    backgroundType = null;
-				}
-				break;
-			default:
-				backgroundType = null;
-				break;
-		}
-		//Also should be in support methods
-		BufferedImage rock;
-		try {
-			   rock = ImageIO.read(new File("res/rock.png"));
-			} catch (IOException e) {
-			    e.printStackTrace();
-			    rock = null;
-			}
+	public static Map generateMap(BufferedImage logicMap, String type){
 		
-		//More support methods
-		BufferedImage origin;
+		
+		//The different images used
+		BufferedImage standardBackground = null;
+		BufferedImage wallBackground = null;
+		
 		try {
-		    origin = ImageIO.read(new File(fileName));
-		} catch (IOException e) {
+			standardBackground = ImageIO.read(new File("res/" + type + "/standardBackground.png"));
+			wallBackground = ImageIO.read(new File("res/" + type + "/wall.png"));
+			
+		} catch (IOException e) {	
 		    e.printStackTrace();
-		    return generateBlankMap();
 		}
 		
-		//Safety first bitches
-		if(origin == null){
-			return generateBlankMap();
-		}
-		int height = origin.getHeight();
-		int width = origin.getWidth();
+		
+		int height = logicMap.getHeight();
+		int width = logicMap.getWidth();
 		if(height != 50 || width != 50){ //Temp limit, generates 800x800 map.
 			return generateBlankMap();
 		}
@@ -76,24 +54,24 @@ public class MapGenerator { //Implement serialization
 		
 		//Create map boundaries
 			//Top boundary
-			map.addEntity(new mapObject(-10, -10, width*sizeOfPixel+20, 10));
+			map.addEntity(new WallTile(-10, -10, width*sizeOfPixel+20, 10));
 			//Left boundary
-			map.addEntity(new mapObject(-10, 0, 10, height*sizeOfPixel));
+			map.addEntity(new WallTile(-10, 0, 10, height*sizeOfPixel));
 			//Right boundary
-			map.addEntity(new mapObject(width*sizeOfPixel, 0, 10, height*sizeOfPixel));
+			map.addEntity(new WallTile(width*sizeOfPixel, 0, 10, height*sizeOfPixel));
 			//Bottom boundary
-			map.addEntity(new mapObject(-10, height*sizeOfPixel, width*sizeOfPixel+20, 10));
+			map.addEntity(new WallTile(-10, height*sizeOfPixel, width*sizeOfPixel+20, 10));
 		
 		//Possibly more support methods......
 		//Create mapObjects based on pixels, the format ARGB is used with hexcode
 		//example "ff000000" gives A = ff, R = 00, G = 00, B = 00 which gives black
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
-				int rgb = origin.getRGB(x, y);
+				int rgb = logicMap.getRGB(x, y);
 				switch(Integer.toHexString(rgb)){
 				case "ff000000": //Black, represents wall
-					int temp = checkAdjacentToRight(x, y, origin);
-					map.addEntity(new mapObject(x*sizeOfPixel, y*sizeOfPixel, temp*sizeOfPixel, sizeOfPixel));
+					int temp = checkAdjacentToRight(x, y, logicMap);
+					map.addEntity(new WallTile(x*sizeOfPixel, y*sizeOfPixel, temp*sizeOfPixel, sizeOfPixel));
 					x += temp;
 					break;
 				case "fffff200": //yellow, represents spawnpoints
@@ -113,27 +91,36 @@ public class MapGenerator { //Implement serialization
 		//Paint the background
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
-				int rgb = origin.getRGB(x, y);
-				System.out.println(Integer.toHexString(rgb));
+				int rgb = logicMap.getRGB(x, y);
+				//System.out.println(Integer.toHexString(rgb));
 				String temp = "";
 				if(Integer.toHexString(rgb).compareTo("ffffffff") == 0) {
-					temp = "white"; 
+					temp = "standardPath"; 
 				}
 				if(Integer.toHexString(rgb).compareTo("fffff200") == 0) { //Yellow
-					temp = "white"; //Should not be visible to the player
+					temp = "standardPath"; //Should not be visible to the player
 				}
 				if(Integer.toHexString(rgb).compareTo("ff000000") == 0) {
-					temp = "black"; //Wall
+					temp = "wall"; //Wall
 				}
 				for(int i=0; i < sizeOfPixel; i++){
 					for(int j = 0; j < sizeOfPixel; j++){
 						switch(temp){
-						case "white":							
-							background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), backgroundType.getRGB(i, j));
-							break;
-						case "black":
-							background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), rock.getRGB(i, j));
-							break;
+						case "standardPath":							
+							if(standardBackground != null){
+								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), standardBackground.getRGB(i, j));
+								break;
+							}else{
+								temp="getrektfaggot";
+							}
+							
+						case "wall":
+							if(wallBackground != null){
+								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), wallBackground.getRGB(i, j));
+								break;
+							}else{
+								temp="getrektfaggot";
+							}
 						default:
 							background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), rgb);
 							break;

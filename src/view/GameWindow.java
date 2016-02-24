@@ -15,7 +15,7 @@ import model.Entity;
 import model.GameState;
 import model.Unit;
 import model.Weapon;
-import model.mapObject;
+import model.WallTile;
 
 public class GameWindow extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;

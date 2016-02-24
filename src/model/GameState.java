@@ -14,7 +14,7 @@ public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private ArrayList<Entity> objInNode;
 	private ArrayList<Entity> gotHit;
-	private ArrayList<Entity> spawnPoints;
+	private ArrayList<spawnPoint> spawnPoints;
 	
 	private int numberOfPlayers;
 	private Player player;
@@ -27,7 +27,7 @@ public class GameState extends Observable{
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		gotHit = new ArrayList<Entity>();
-		spawnPoints = new ArrayList<Entity>();
+		spawnPoints = new ArrayList<spawnPoint>();
 		
 		
 		//Add dummy-enemies to start with. These enemies will get initilized with real values one's there's proper info from the server about them.
@@ -44,7 +44,7 @@ public class GameState extends Observable{
 			}
 		}
 		
-		for(Entity e : map.getSpawnPoints()){
+		for(spawnPoint e : map.getSpawnPoints()){
 			spawnPoints.add(e);
 		}
 		System.out.println("Number of spawn points: " + spawnPoints.size());
@@ -65,11 +65,15 @@ public class GameState extends Observable{
 	}
 	public void setup(){
 		Random randomGenerator = new Random();
-		int temp = randomGenerator.nextInt(spawnPoints.size());
 		
-		player = new Player(spawnPoints.get(temp).getX(), spawnPoints.get(temp).getY(), 40, 40);
+		
+		int spawnPointIndex = randomGenerator.nextInt(spawnPoints.size());
+		spawnPoints.get(spawnPointIndex).setUsed();
+		player = new Player(spawnPoints.get(spawnPointIndex).getX(), spawnPoints.get(spawnPointIndex).getY(), 40, 40);
 		//player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 40, 40);
 		gameObjects.add(player);
+		
+		
 		
 		//Generate 50^2 16x16 entities
 		/*
@@ -171,6 +175,7 @@ public class GameState extends Observable{
 	
 	public ArrayList<Entity> gotHitList(){return gotHit;}
 	public ArrayList<Entity> getList(){return gameObjects;}
+	public ArrayList<spawnPoint> getSpawns(){return spawnPoints;}
 	public Player returnPlayer(){return player;}
 	public void setID(int id){this.id=id;}
 	public int getID(){ return id; }

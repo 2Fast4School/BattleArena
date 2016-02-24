@@ -1,8 +1,11 @@
 package arenaFighter;
 
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import controller.Client;
@@ -17,12 +20,23 @@ import view.GameWindow;
 public class Main{
 	private static final int numberOfPlayers = 2;
 	private static final String ip = "127.0.0.1";
-	private static final int port=1337;
+	private static final int port=7020;
 	public static void main(String[] args){
 		
 		for(int n=0;n<numberOfPlayers;n++){
 			JFrame frame = new JFrame();
-			Map map = MapGenerator.generateMap("res/mapBackground.png", "grass");
+			
+		
+			BufferedImage logicMap;
+			try {
+			    logicMap = ImageIO.read(new File("res/mapBackground.png"));
+			} catch (IOException e) {
+			    e.printStackTrace();
+			    logicMap = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
+			}
+			
+			
+			Map map = MapGenerator.generateMap(logicMap, "lava");
 			GameState state=new GameState(numberOfPlayers, map);
 			GameWindow window=new GameWindow(map.getBackground());
 			Client client = new Client(port, ip, state);

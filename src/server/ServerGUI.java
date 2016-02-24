@@ -32,7 +32,7 @@ public class ServerGUI implements Observer {
 	private static JPanel buttonArea, serverInfoArea;
 	private static JButton startGameBtn, endGameBtn, chooseMapBtn;
 	
-	private static int port = 1337;
+	private static int port = 7020;
 
 	public ServerGUI() {
 		mainWindow = new JFrame("Battle Arena Dedicated Server");

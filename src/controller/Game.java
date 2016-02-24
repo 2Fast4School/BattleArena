@@ -107,6 +107,9 @@ public class Game implements Runnable {
 							((Unit)e).revive();
 						}
 					}
+					for(spawnPoint sp : GAMESTATE.getSpawns()){
+						sp.reset();
+					}
 				}
 				else if(option==JOptionPane.NO_OPTION || option==JOptionPane.CANCEL_OPTION){
 					//Probably doesn't work if there's two different computers running clients.

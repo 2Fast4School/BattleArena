@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import model.Entity;
+import model.spawnPoint;
 /**
  * <h1>Map</h1>
  * Object to hold the map-specific objects such as spawnPoints and boundries
@@ -16,7 +17,7 @@ public class Map {
 	private ArrayList<Entity> gameObjects; 
 	
 	private BufferedImage background;	
-	private ArrayList<Entity> spawnPoints;
+	private ArrayList<spawnPoint> spawnPoints;
 	
 	/**
 	 * Constructor for Map,
@@ -25,7 +26,7 @@ public class Map {
 	public Map(){
 		background = null;
 		gameObjects = new ArrayList<Entity>();
-		spawnPoints = new ArrayList<Entity>();
+		spawnPoints = new ArrayList<spawnPoint>();
 	}
 	
 	/**
@@ -44,7 +45,7 @@ public class Map {
 	/**
 	 * @param e A normal Entity which is used as a spawnpoint
 	 */
-	public void addSpawnPoint(Entity e){
+	public void addSpawnPoint(spawnPoint e){
 		spawnPoints.add(e);
 	}
 	
@@ -64,7 +65,7 @@ public class Map {
 	 * @return Returns the spawnpoints of the map
 	 */
 	
-	public ArrayList<Entity> getSpawnPoints(){
+	public ArrayList<spawnPoint> getSpawnPoints(){
 		return spawnPoints;
 	}
 }
