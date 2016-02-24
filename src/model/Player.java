@@ -90,10 +90,13 @@ public class Player extends Unit{
 	private boolean collision(int dx, int dy){
 		Rectangle pNext = new Rectangle(x+dx, y+dy, w, h);
 		for(Entity e : closeObjects){
-			if(pNext.intersects(e.getBounds()) && e.isSolid()){
-				return true;
-			}
-			
+			if(pNext.intersects(e.getBounds())){
+				if(e instanceof DamageTile){
+					hp -= ((DamageTile) e).getDmg();
+				} else if(e.isSolid()){
+					return true;
+				}
+			} 
 		}
 		return false;
 	}
@@ -112,5 +115,13 @@ public class Player extends Unit{
 	 */
 	public void setdy(int dy){
 		this.dy = dy;
+	}
+	
+	public int getdx(){
+		return dx;
+	}
+	
+	public int getdy(){
+		return dy;
 	}
 }

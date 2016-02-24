@@ -2,7 +2,7 @@ package model;
 
 public abstract class Unit extends Entity{
 	private final int MAXHP = 100;
-	private int hp;
+	protected int hp;
 	private Weapon weapon;
 	private boolean alive;
 	

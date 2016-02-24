@@ -1,13 +1,14 @@
 package map;
 
-import model.*;
-
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import model.DamageTile;
+import model.WallTile;
+import model.spawnPoint;
 
 /**
  * <h1>MapGenerator</h1>
@@ -38,6 +39,7 @@ public class MapGenerator { //Perhaps implement serialization
 			standardBackground = ImageIO.read(new File("res/" + type + "/standardBackground.png"));
 			wallBackground = ImageIO.read(new File("res/" + type + "/wall.png"));
 			damageTileBackground = ImageIO.read(new File("res/" + type + "/damageTileBackground.png"));
+			
 		} catch (IOException e) {	
 		    e.printStackTrace();
 		}
@@ -55,38 +57,39 @@ public class MapGenerator { //Perhaps implement serialization
 		
 		//Create map boundaries
 			//Top boundary
-			map.addEntity(new WallTile(-10, -10, width*sizeOfPixel+20, 10));
+			map.addTile(new WallTile(-10, -10, width*sizeOfPixel+20, 10));
 			//Left boundary
-			map.addEntity(new WallTile(-10, 0, 10, height*sizeOfPixel));
+			map.addTile(new WallTile(-10, 0, 10, height*sizeOfPixel));
 			//Right boundary
-			map.addEntity(new WallTile(width*sizeOfPixel, 0, 10, height*sizeOfPixel));
+			map.addTile(new WallTile(width*sizeOfPixel, 0, 10, height*sizeOfPixel));
 			//Bottom boundary
-			map.addEntity(new WallTile(-10, height*sizeOfPixel, width*sizeOfPixel+20, 10));
+			map.addTile(new WallTile(-10, height*sizeOfPixel, width*sizeOfPixel+20, 10));
 		
 		//Possibly more support methods......
 		//Create mapObjects based on pixels, the format ARGB is used with hexcode
 		//example "ff000000" gives A = ff, R = 00, G = 00, B = 00 which gives black
+		int temp;
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
 				int rgb = logicMap.getRGB(x, y);
 				switch(Integer.toHexString(rgb)){
 				case "ff000000": //Black, represents wall
-					int temp = checkAdjacentToRight(x, y, logicMap);
-					map.addEntity(new WallTile(x*sizeOfPixel, y*sizeOfPixel, temp*sizeOfPixel, sizeOfPixel));
+					temp = checkAdjacentToRight(x, y, logicMap);
+					map.addTile(new WallTile(x*sizeOfPixel, y*sizeOfPixel, temp*sizeOfPixel, sizeOfPixel));
 					x += temp;
 					break;
 				case "fffff200": //yellow, represents spawnpoints
 					map.addSpawnPoint(new spawnPoint(x*sizeOfPixel, y*sizeOfPixel, 1, 1));
 					break;
-				case "ffed1c24": // red, damagetiles
-					map.addEntity(new DamageTile(x*sizeOfPixel, y*sizeOfPixel, 1, 1));
+				case "ffed1c24":
+					//temp = checkAdjacentToRight(x, y, logicMap);
+					map.addTile(new DamageTile(x*sizeOfPixel, y*sizeOfPixel, 1*sizeOfPixel, sizeOfPixel));
 					break;
 				default:
-					
 					break;
 				}
 				
-				System.out.println(Integer.toHexString(rgb));
+				//System.out.println(Integer.toHexString(rgb));
 			
 			}
 			
@@ -97,29 +100,28 @@ public class MapGenerator { //Perhaps implement serialization
 			for(int x = 0; x < width; x++){
 				int rgb = logicMap.getRGB(x, y);
 				//System.out.println(Integer.toHexString(rgb));
-				String temp = "";
+				String tileType = "";
 				if(Integer.toHexString(rgb).compareTo("ffffffff") == 0) {
-					temp = "standardPath"; 
+					tileType = "standardPath"; 
 				}
 				if(Integer.toHexString(rgb).compareTo("fffff200") == 0) { //Yellow
-					temp = "standardPath"; //Should not be visible to the player
+					tileType = "standardPath"; //Should not be visible to the player
 				}
 				if(Integer.toHexString(rgb).compareTo("ff000000") == 0) {
-					temp = "wall"; //Wall
+					tileType = "wall"; //Wall
 				}
-				
 				if(Integer.toHexString(rgb).compareTo("ffed1c24") == 0) {
-					temp = "damage"; //damageTile
+					tileType = "damage";
 				}
 				for(int i=0; i < sizeOfPixel; i++){
 					for(int j = 0; j < sizeOfPixel; j++){
-						switch(temp){
+						switch(tileType){
 						case "standardPath":							
 							if(standardBackground != null){
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), standardBackground.getRGB(i, j));
 								break;
 							}else{
-								temp="getrektfaggot";
+								tileType="getrektfaggot";
 							}
 							
 						case "wall":
@@ -127,14 +129,14 @@ public class MapGenerator { //Perhaps implement serialization
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), wallBackground.getRGB(i, j));
 								break;
 							}else{
-								temp="getrektfaggot";
+								tileType="getrektfaggot";
 							}
 						case "damage":
 							if(damageTileBackground != null){
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), damageTileBackground.getRGB(i, j));
 								break;
 							}else{
-								temp ="getrektfaggot";
+								tileType="getrektfaggot";
 							}
 						default:
 							background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), rgb);
@@ -145,7 +147,7 @@ public class MapGenerator { //Perhaps implement serialization
 			}
 		}
 		
-		System.out.println(map.getEntities().size());
+		System.out.println(map.getTiles().size());
 		map.setBackground(background);
 		return map;
 		
@@ -170,7 +172,7 @@ public class MapGenerator { //Perhaps implement serialization
 	 */
 	private static int checkAdjacentToRight(int x, int y, BufferedImage img){
 		int rgb = img.getRGB(x, y);
-		if(rgb == img.getRGB(x+1, y) && x+1 < img.getWidth()){
+		if(rgb == img.getRGB(x+1, y) && x+1 <= img.getWidth()){
 			int temp = checkAdjacentToRight(x+1, y, img)+1 ;
 			return temp;
 		}

@@ -1,12 +1,10 @@
 
 package model;
 import java.awt.Rectangle;
-import java.util.Random;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Observable;
-import java.util.TreeMap;
-
-import javax.swing.JOptionPane;
+import java.util.Random;
 
 import map.Map;
 
@@ -20,6 +18,7 @@ public class GameState extends Observable{
 	private Player player;
 	private int id;
 	private Quadtree quadtree;;
+	private Map map = null;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
 	public GameState(int numberOfPlayers, Map map){
@@ -28,6 +27,7 @@ public class GameState extends Observable{
 		objInNode = new ArrayList<Entity>();
 		gotHit = new ArrayList<Entity>();
 		spawnPoints = new ArrayList<spawnPoint>();
+		this.map = map;
 		
 		
 		//Add dummy-enemies to start with. These enemies will get initilized with real values one's there's proper info from the server about them.
@@ -38,7 +38,7 @@ public class GameState extends Observable{
 		quadtree = new Quadtree(new Rectangle(0,0,800,800));
 		
 		//Add all entities from the map to gamestate
-		for(Entity e : map.getEntities()){
+		for(Entity e : map.getTiles()){
 			if(!gameObjects.contains(e)){
 				gameObjects.add(e);
 			}
@@ -180,4 +180,7 @@ public class GameState extends Observable{
 	public void setID(int id){this.id=id;}
 	public int getID(){ return id; }
 	public int getNrOfPlayers(){return numberOfPlayers;}
+	public BufferedImage getBackground(){
+		return map.getBackground();
+	}
 }

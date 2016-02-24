@@ -38,7 +38,7 @@ public class Main{
 			
 			Map map = MapGenerator.generateMap(logicMap, "lava");
 			GameState state=new GameState(numberOfPlayers, map);
-			GameWindow window=new GameWindow(map.getBackground());
+			GameWindow window=new GameWindow();
 			Client client = new Client(port, ip, state);
 			Input input = new Input();
 			Game game=new Game(state);
