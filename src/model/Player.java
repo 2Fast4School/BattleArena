@@ -92,7 +92,7 @@ public class Player extends Unit{
 		for(Entity e : closeObjects){
 			if(pNext.intersects(e.getBounds())){
 				if(e instanceof DamageTile){
-					hp -= ((DamageTile) e).getDmg();
+					this.setHP(this.getHP()-((DamageTile) e).getDmg());
 				} else if(e.isSolid()){
 					return true;
 				}
