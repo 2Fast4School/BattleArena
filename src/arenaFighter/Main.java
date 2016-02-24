@@ -36,7 +36,7 @@ public class Main{
 			}
 			
 			
-			Map map = MapGenerator.generateMap(logicMap, "lava");
+			Map map = MapGenerator.generateMap(logicMap, "grass");
 			GameState state=new GameState(numberOfPlayers, map);
 			GameWindow window=new GameWindow(map.getBackground());
 			Client client = new Client(port, ip, state);
@@ -47,7 +47,7 @@ public class Main{
 			input.setup(state.returnPlayer());
 			
 			frame.add(window);
-			frame.setPreferredSize(new Dimension(800, 800));
+			frame.setPreferredSize(new Dimension(822, 822));
 			
 			window.addKeyListener(input);
 			window.addMouseListener(input);
