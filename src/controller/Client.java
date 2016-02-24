@@ -20,7 +20,7 @@ import model.Unit;
 * DataOutput, and DataInput streams. Client implements the Observer 
 * interface, and it's an observer to GameState from which it receives
 * messages if there is information that needs to be sent to other clients.
-* @author  William Bjï¿½rklund
+* @author  William Björklund
 * @version 1.0
 * @since   2016-02-17
 */

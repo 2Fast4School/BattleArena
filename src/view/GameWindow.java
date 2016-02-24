@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import controller.GameInput;
+import controller.PreGameInput;
 import model.Entity;
 import model.GameState;
 import model.Unit;
@@ -22,8 +24,10 @@ public class GameWindow extends Canvas implements Observer{
 	private ArrayList<Entity> gameObjects;
 	private BufferedImage img = null;
 	
-	public GameWindow(){
-		
+	public GameWindow(GameInput gameInput){
+		addKeyListener(gameInput);
+		addMouseListener(gameInput);
+		addMouseMotionListener(gameInput);
 	}
 	
 	public GameWindow(BufferedImage img){
