@@ -32,11 +32,12 @@ public class MapGenerator { //Perhaps implement serialization
 		//The different images used
 		BufferedImage standardBackground = null;
 		BufferedImage wallBackground = null;
+		BufferedImage damageTileBackground = null;
 		
 		try {
 			standardBackground = ImageIO.read(new File("res/" + type + "/standardBackground.png"));
 			wallBackground = ImageIO.read(new File("res/" + type + "/wall.png"));
-			
+			damageTileBackground = ImageIO.read(new File("res/" + type + "/damageTileBackground.png"));
 		} catch (IOException e) {	
 		    e.printStackTrace();
 		}
@@ -77,12 +78,15 @@ public class MapGenerator { //Perhaps implement serialization
 				case "fffff200": //yellow, represents spawnpoints
 					map.addSpawnPoint(new spawnPoint(x*sizeOfPixel, y*sizeOfPixel, 1, 1));
 					break;
+				case "ffed1c24": // red, damagetiles
+					map.addEntity(new DamageTile(x*sizeOfPixel, y*sizeOfPixel, 1, 1));
+					break;
 				default:
 					
 					break;
 				}
 				
-				//System.out.println(Integer.toHexString(rgb));
+				System.out.println(Integer.toHexString(rgb));
 			
 			}
 			
@@ -103,6 +107,10 @@ public class MapGenerator { //Perhaps implement serialization
 				if(Integer.toHexString(rgb).compareTo("ff000000") == 0) {
 					temp = "wall"; //Wall
 				}
+				
+				if(Integer.toHexString(rgb).compareTo("ffed1c24") == 0) {
+					temp = "damage"; //damageTile
+				}
 				for(int i=0; i < sizeOfPixel; i++){
 					for(int j = 0; j < sizeOfPixel; j++){
 						switch(temp){
@@ -120,6 +128,13 @@ public class MapGenerator { //Perhaps implement serialization
 								break;
 							}else{
 								temp="getrektfaggot";
+							}
+						case "damage":
+							if(damageTileBackground != null){
+								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), damageTileBackground.getRGB(i, j));
+								break;
+							}else{
+								temp ="getrektfaggot";
 							}
 						default:
 							background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), rgb);
