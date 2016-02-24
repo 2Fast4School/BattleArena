@@ -85,9 +85,8 @@ public class Server extends Observable{
 				if(in!=null){
 					try{
 						in.read(receive, 0, receive.length);
-						
 						message=new String(receive).trim().split(",");
-						System.out.println("message[1] is: " + message[1] );
+						//System.out.println("message[1] is: " + message[1] );
 						id=Integer.parseInt(message[1]);
 						sendToClient(receive, id);
 					}catch(IOException e){

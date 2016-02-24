@@ -8,7 +8,7 @@ public class WallTile extends Tile {
 
 
 	public void tick() {
-		System.out.println("Dålig OO-design.");
+		//System.out.println("Dålig OO-design.");
 	}
 
 	

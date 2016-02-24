@@ -11,7 +11,7 @@ import map.Map;
 public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private ArrayList<Entity> objInNode;
-	private ArrayList<Entity> gotHit;
+	private Enemy gotHit;
 	private ArrayList<spawnPoint> spawnPoints;
 	
 	private int numberOfPlayers;
@@ -25,7 +25,7 @@ public class GameState extends Observable{
 		this.numberOfPlayers=numberOfPlayers;
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
-		gotHit = new ArrayList<Entity>();
+		gotHit = null;
 		spawnPoints = new ArrayList<spawnPoint>();
 		this.map = map;
 		
@@ -47,7 +47,7 @@ public class GameState extends Observable{
 		for(spawnPoint e : map.getSpawnPoints()){
 			spawnPoints.add(e);
 		}
-		System.out.println("Number of spawn points: " + spawnPoints.size());
+		//System.out.println("Number of spawn points: " + spawnPoints.size());
 
 	}
 	
@@ -90,7 +90,7 @@ public class GameState extends Observable{
 	public void tick(){
 		//Clear the QuadTree every tick.
 		quadtree.clear();
-		gotHit.clear();
+		gotHit=null;
 		
 		//If a weapon is active, i.e attacking, add it to the gameObjects list.
 		for(Enemy e : getTheEnemies()){
@@ -145,7 +145,7 @@ public class GameState extends Observable{
 						w.damageDone();
 						
 						//Add the enemy to the list which is used in the Client class.
-						gotHit.add(enemy);
+						gotHit=(Enemy)enemy;
 						
 						//We can't hit more than one object so break the loop if a hit occured.
 						break;
@@ -173,7 +173,7 @@ public class GameState extends Observable{
 		}
 	}
 	
-	public ArrayList<Entity> gotHitList(){return gotHit;}
+	public Enemy gotHit(){return gotHit;}
 	public ArrayList<Entity> getList(){return gameObjects;}
 	public ArrayList<spawnPoint> getSpawns(){return spawnPoints;}
 	public Player returnPlayer(){return player;}
