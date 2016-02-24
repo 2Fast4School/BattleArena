@@ -68,22 +68,26 @@ public class MapGenerator { //Perhaps implement serialization
 		//Possibly more support methods......
 		//Create mapObjects based on pixels, the format ARGB is used with hexcode
 		//example "ff000000" gives A = ff, R = 00, G = 00, B = 00 which gives black
-		int temp;
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
+				int temp = 0;
 				int rgb = logicMap.getRGB(x, y);
 				switch(Integer.toHexString(rgb)){
 				case "ff000000": //Black, represents wall
 					temp = checkAdjacentToRight(x, y, logicMap);
+
 					map.addTile(new WallTile(x*sizeOfPixel, y*sizeOfPixel, temp*sizeOfPixel, sizeOfPixel));
+
 					x += temp;
 					break;
 				case "fffff200": //yellow, represents spawnpoints
 					map.addSpawnPoint(new spawnPoint(x*sizeOfPixel, y*sizeOfPixel, 1, 1));
 					break;
+
 				case "ffed1c24":
-					//temp = checkAdjacentToRight(x, y, logicMap);
-					map.addTile(new DamageTile(x*sizeOfPixel, y*sizeOfPixel, 1*sizeOfPixel, sizeOfPixel));
+					temp = checkAdjacentToRight(x, y, logicMap);
+					map.addTile(new DamageTile(x*sizeOfPixel, y*sizeOfPixel, temp*sizeOfPixel, sizeOfPixel));
+
 					break;
 				default:
 					break;
@@ -171,8 +175,10 @@ public class MapGenerator { //Perhaps implement serialization
 	 * @return Returns the number of adjacent pixels to the right
 	 */
 	private static int checkAdjacentToRight(int x, int y, BufferedImage img){
+		int width = img.getWidth();
 		int rgb = img.getRGB(x, y);
-		if(rgb == img.getRGB(x+1, y) && x+1 <= img.getWidth()){
+
+		if(x+1 < width && rgb == img.getRGB(x+1, y)){
 			int temp = checkAdjacentToRight(x+1, y, img)+1 ;
 			return temp;
 		}
