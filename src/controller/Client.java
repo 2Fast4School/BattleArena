@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import model.Enemy;
 import model.Entity;
@@ -24,18 +25,22 @@ import model.Unit;
 * @version 1.0
 * @since   2016-02-17
 */
-public class Client implements Runnable, Observer{
+public class Client implements Observer{
 	private int port;
 	private String ip;
 	private DataOutputStream out;
 	private DataInputStream in;
 	private GameState state;
 	private int id;
+	private LinkedBlockingQueue<String[]> messageBuffer;
 	
 	public Client(int port, String ip, GameState state){
 		this.port=port;
 		this.ip=ip;
 		this.state=state;
+		messageBuffer=new LinkedBlockingQueue<String[]>();
+		new MessageHandler().start();
+		new ServerListener().start();
 	}
 
 	/**
@@ -49,31 +54,55 @@ public class Client implements Runnable, Observer{
 	* to what sort of reaction is desired, and the ID which player sent
 	* the message. These are always read. Further information might be
 	* sent depending on which OP-CODE it is.*/
-	@Override
-	public void run() {
-		if(out==null){
-			try{
-				Socket socket=new Socket(ip, port);
-				out=new DataOutputStream(socket.getOutputStream());
-				in=new DataInputStream(socket.getInputStream());
-			}catch(UnknownHostException f){}
-			catch(IOException e){e.printStackTrace();}
+		
+	/**
+	* Client is notified when there is information that needs
+	* to be sent to other clients. Depending on the parameters
+	* sent with this notification, a correct OP-CODE will be
+	* chosen for the message.
+	* @param arg0 : GameState 
+	* @param arg1 : Player/null
+	*/
+	
+	private class ServerListener extends Thread{
+		public void run(){
+			while(true){
+				if(out==null){
+					try{
+						Socket socket=new Socket(ip, port);
+						out=new DataOutputStream(socket.getOutputStream());
+						in=new DataInputStream(socket.getInputStream());
+					}catch(UnknownHostException f){}
+					catch(IOException e){e.printStackTrace();}
+				}
+				String message[];
+				byte[] receive=new byte[1024];
+				if(in!=null){
+					try{
+						in.read(receive, 0, receive.length);
+						message=new String(receive).trim().split(",");
+						messageBuffer.add(message);
+					}catch(IOException e){e.printStackTrace();}
+				}
+			}
 		}
-		
-		String message[];
-		int code,id,xVal,yVal,rot;
-		boolean at;
-		
-		byte[] receive=new byte[1024];
-		while(true){
-			if(in!=null){
-				try{
-					in.read(receive, 0, receive.length);
-					message=new String(receive).trim().split(",");
+	}
+	
+	private class MessageHandler extends Thread{
+		public void run(){
+			String message[]=null;
+			int id=-1;
+			int code,xVal,yVal,rot,identity;
+			boolean at;
+			while(true){
+				if(messageBuffer.size()>0){
+					try{
+						message=messageBuffer.take();
+					}catch(InterruptedException e){}
 					code=Integer.parseInt(message[0].trim());
-					id=Integer.parseInt(message[1]);
+					identity=Integer.parseInt(message[1]);
 					if(code==0){//ID-set code
-						this.id=id;
+						id=identity;
 						state.setID(id);
 					}
 					if(code==1){// 1 = move code. 
@@ -121,20 +150,11 @@ public class Client implements Runnable, Observer{
 							}
 						}
 					}
-
-				}catch(IOException e){e.printStackTrace();}
+				}
 			}
 		}
 	}
 	
-	/**
-	* Client is notified when there is information that needs
-	* to be sent to other clients. Depending on the parameters
-	* sent with this notification, a correct OP-CODE will be
-	* chosen for the message.
-	* @param arg0 : GameState 
-	* @param arg1 : Player/null
-	*/
 	@Override
 	public void update(Observable arg0, Object arg1){
 		String message;

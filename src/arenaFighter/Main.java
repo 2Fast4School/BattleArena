@@ -15,7 +15,7 @@ import server.Server;
 import view.GameWindow;
 
 public class Main{
-	private static final int numberOfPlayers = 2;
+	private static final int numberOfPlayers = 3;
 	private static final String ip = "127.0.0.1";
 	private static final int port=1337;
 	public static void main(String[] args){
@@ -45,7 +45,6 @@ public class Main{
 			frame.setVisible(true);
 			
 			game.start();
-			new Thread(client).start();
 		}
 	}
 }
