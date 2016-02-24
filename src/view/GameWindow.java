@@ -67,11 +67,13 @@ public class GameWindow extends Canvas implements Observer{
 				g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
 				g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
 				g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
+				
 			} 
 			
 			//If e is a weapon and e is attacking, draw the weapon.
 			if(e instanceof Weapon && ((Weapon) e).isAttacking()){
 				
+				g2d.setColor(Color.black);
 				g2d.rotate(Math.toRadians(e.getRotVar()), e.getX(), e.getY());
 				//g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
 				g2d.fillRect(e.getX(), e.getY(), e.getWidth(), e.getHeight());

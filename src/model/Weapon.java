@@ -13,7 +13,7 @@ public abstract class Weapon extends Entity{
 	private int damage;
 	
 	public Weapon(Unit owner, int width, int height, int damage) {
-		super(owner.getCenterX(), owner.getCenterY(), width, height, true);
+		super(owner.getCenterX(), owner.getCenterY(), width, height, false);
 		this.owner = owner;
 		attacking = false;
 		this.damage = damage;

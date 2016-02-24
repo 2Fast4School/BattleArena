@@ -85,11 +85,16 @@ public class GameState extends Observable{
 		for(Entity e : gameObjects){
 			if(e instanceof Unit){
 				Unit unit = (Unit)e;
-				if(unit.getWeapon().isAttacking() && unit.getWeapon() instanceof Bow){
-					Bow w = (Bow)unit.getWeapon();
-					weaponHandler.addAll(w.getArrows());
-				} else if(unit.getWeapon().isAttacking() && unit.getWeapon() instanceof SweepSword){
-					weaponHandler.add(unit.getWeapon());
+				Weapon w = unit.getWeapon();
+				if(w.isAttacking() && w instanceof Bow){
+					//Bow w = (Bow)unit.getWeapon();
+					weaponHandler.add(w);
+					if(((Bow)w).getArrows() != null){
+						weaponHandler.addAll(((Bow) w).getArrows());
+					}
+					
+				} else if(w.isAttacking() && w instanceof SweepSword){
+					weaponHandler.add(w);
 				}
 			} 
 		}

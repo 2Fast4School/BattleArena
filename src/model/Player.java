@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import javax.imageio.ImageIO;
  */
 public class Player extends Unit{
 	private int dx, dy;
+	public int  tx, ty;
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
 	/**
 	 * Constructor.
@@ -25,10 +27,15 @@ public class Player extends Unit{
 	 */
 	public Player(int x, int y, int w, int h){
 		super(x, y, w, h);
-		dx = dy = 0;
+		dx = dy = tx = ty = 0;
 		//setWeapon(new SweepSword(this, 8, 50));
-		setWeapon(new Bow(this, 4, 4, 5));
+		setWeapon(new Bow(this, 3, 17, 5));
 		loadImages();
+	}
+	
+	public void setTarget(Point tar){
+		tx = tar.x;
+		ty = tar.y;
 	}
 	
 	//Dummy-tick
@@ -39,9 +46,25 @@ public class Player extends Unit{
 	 * @param closeObjects Possible object the Player can collide with.
 	 */
 	public void tick(ArrayList<Entity> closeObjects){
+		//Calculates the angle between the mouse-pointer and the player's central coordinates.
+		int angle = (int) Math.round(Math.toDegrees(Math.atan2(ty - getCenterY(), tx - getCenterX())));
+		
+		/*
+		 * We need to add 90 degrees because for us, 0 degrees angle is straight up,
+		 * but we calculate it as if it were to the right. Think about the unit circle, (SE Enhetscirkeln).
+		 */
+		angle += 90;
+		
+		//Instead of using negative angles, we just add 360 degrees to get the positive value of the same angle.
+		if(angle < 0){
+			angle += 360;
+		}
+		
+		setRotVar(angle);
 		this.closeObjects.clear();
 		this.closeObjects.addAll(closeObjects);
 		move(dx, dy);
+
 	}
 	
 	/**
