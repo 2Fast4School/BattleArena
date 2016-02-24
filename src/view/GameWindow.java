@@ -13,22 +13,15 @@ import java.util.Observer;
 
 import model.Entity;
 import model.GameState;
+import model.Tile;
 import model.Unit;
 import model.Weapon;
-import model.WallTile;
 
 public class GameWindow extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Entity> gameObjects;
 	private BufferedImage img = null;
 	
-	public GameWindow(){
-		
-	}
-	
-	public GameWindow(BufferedImage img){
-		this.img = img;
-	}
 	
 	/**
 	 * The actual drawing of the current GameState
@@ -60,6 +53,20 @@ public class GameWindow extends Canvas implements Observer{
 				g2d.rotate(Math.toRadians(e.getRotVar()), e.getCenterX(), e.getCenterY());
 				g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
 				g2d.rotate(Math.toRadians(-e.getRotVar()), e.getCenterX(), e.getCenterY());
+				
+				Unit unit = (Unit)e;
+				Stroke oldStroke = g2d.getStroke();
+				g2d.setStroke(new BasicStroke(1));
+				
+				g2d.setColor(Color.BLACK);
+				g2d.drawRect(e.getX(), e.getY()+49, 40, 8);
+				g2d.setStroke(oldStroke);
+				
+				g2d.setColor(Color.GREEN);
+				g2d.fillRect(e.getX()+1, e.getY()+50, (39*unit.getHP()/100), 7);
+				
+				g2d.setColor(Color.black);			
+				g2d.fillRect(e.getX() + (39*unit.getHP()/100) + 1, e.getY() + 50, 1, 7);
 			} 
 			
 			//If e is a weapon and e is attacking, draw the weapon.
@@ -76,21 +83,9 @@ public class GameWindow extends Canvas implements Observer{
 			
 			
 			//Draw the healthbar if player/enemy
-			if(e instanceof Unit){
+			if(e instanceof Tile){
+				g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
 				
-				Unit unit = (Unit)e;
-				Stroke oldStroke = g2d.getStroke();
-				g2d.setStroke(new BasicStroke(1));
-				
-				g2d.setColor(Color.BLACK);
-				g2d.drawRect(e.getX(), e.getY()+49, 40, 8);
-				g2d.setStroke(oldStroke);
-				
-				g2d.setColor(Color.GREEN);
-				g2d.fillRect(e.getX()+1, e.getY()+50, (39*unit.getHP()/100), 7);
-				
-				g2d.setColor(Color.black);			
-				g2d.fillRect(e.getX() + (39*unit.getHP()/100) + 1, e.getY() + 50, 1, 7);
 			}
 			/*if(e instanceof mapObject){
 				g2d.setColor(Color.GREEN);
@@ -114,6 +109,7 @@ public class GameWindow extends Canvas implements Observer{
 		if(arg0 instanceof GameState){
 			GameState state = (GameState)arg0;
 			gameObjects = state.getList();
+			img = state.getBackground();
 			render();
 		}
 	}
