@@ -1,9 +1,10 @@
 package server;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Scanner;
@@ -22,29 +23,33 @@ import java.util.Scanner;
 * @since   2016-02-17
 */
 
-public class Server extends Observable{
+public class Server extends Observable implements Runnable{
 
-	private int numberOfPlayers;
-	private ServerSocket serverSocket;
+	private DatagramSocket serverSocket;
 	private Scanner scanner;
-	private ArrayList<MiniServer> servers;
+	private DatagramPacket packet;
+	private byte[] receive;
+	private String[] message;
+	private int idToGiveClient=0;
+	private ArrayList<ClientInfo> clients;
 	
-	public Server(int numberOfPlayers, String ip, int port) throws IOException{
-		this.numberOfPlayers=numberOfPlayers;
+	public Server(String ip, int port) throws IOException{
 		String serverIP=ip;
 		int serverPort=port;
-		
-		servers=new ArrayList<MiniServer>();
-
-		/*Wait for all the clients and connect them. They are handled by a separate thread object each(MiniServer)*/
-		serverSocket=new ServerSocket(serverPort);
-		for(int n=0;n<numberOfPlayers;n++){
-			Socket clientSocket=serverSocket.accept();
-			MiniServer mini=new MiniServer(clientSocket,n);
-			servers.add(mini);
-			mini.start();
+		serverSocket=new DatagramSocket(7020);
+		clients=new ArrayList<ClientInfo>();
+	}
+	/*Lyssnar alltid efter medelanden. Skapar ny tråd för att hantera mottaget medelande
+	 *Detta medelanden kan vara Request to join server(Code==0)*/
+	public void run(){
+		while(true){
+			receive=new byte[1024];
+			packet=new DatagramPacket(receive, receive.length);
+			try{
+				serverSocket.receive(packet);
+			}catch(IOException e){}
+			new Thread(new packetHandler(receive)).start();
 		}
-		serverSocket.close();
 	}
 
 	/**
@@ -57,62 +62,69 @@ public class Server extends Observable{
 	* @version 1.0
 	* @since   2016-02-17
 	*/
-	private class MiniServer extends Thread{
-		Socket socket;
-		DataInputStream in;
-		DataOutputStream out;
-		int id;
-		public MiniServer(Socket socket, int id){
-			this.socket=socket;
-			this.id=id;
-			try{
-				in = new DataInputStream(socket.getInputStream());
-				out = new DataOutputStream(socket.getOutputStream());
-				byte[] toSend=new String(0+","+id+",Filler").getBytes();
-				out.write(toSend, 0, toSend.length);
-				out.flush();
-			}catch(IOException e){}
-		}
 
+	private class packetHandler extends Thread{
+		private byte[] bMessage;
+		
+		public packetHandler(byte[] bMessage){
+			this.bMessage=bMessage;
+		}
+		
+		/*Om code==0, skicka initialize medelande som ger ID till avsändaren.
+		 *Annars, vidarebefodra medelandet till all -utom- avsändaren.*/
 		public void run(){
-			int code;
-			int id;
-			int posX;
-			int posY;
-			byte[] receive=new byte[1024];
-			String[] message;
-			while(true){
-				if(in!=null){
-					try{
-						in.read(receive, 0, receive.length);
-						message=new String(receive).trim().split(",");
-						//System.out.println("message[1] is: " + message[1] );
-						id=Integer.parseInt(message[1]);
-						sendToClient(receive, id);
-					}catch(IOException e){
-						
+			String[] sMessage;
+			byte[] sendMessage;
+			int code,port,id;
+			String ip;
+			InetAddress inetAddress=null;
+			DatagramPacket sendPacket=null;
+			DatagramSocket sendSocket=null;
+			
+			try{
+				sendSocket=new DatagramSocket();
+			}catch(SocketException e){e.printStackTrace();}
+			
+			sMessage=new String(bMessage).trim().split(",");
+			code=Integer.parseInt(sMessage[0]);
+			
+			if(code==0){	// Initial connect. Store the IP and Port so we can itterate over the map to send to all later.
+				ip=sMessage[1];	// Also send a return message to acknowledge the connection..and return an ID.
+				port=Integer.parseInt(sMessage[2]);
+				clients.add(new ClientInfo(idToGiveClient, port, ip));
+				try{
+					inetAddress = InetAddress.getByName(ip);
+				}catch(UnknownHostException e){}
+				sendMessage=new String(0+","+idToGiveClient+",Filler").getBytes();
+				sendPacket = new DatagramPacket(sendMessage, sendMessage.length, inetAddress, port);
+			}
+			else{
+				id=Integer.parseInt(sMessage[1]);
+				for(ClientInfo client : clients){
+					if(id!=client.getID()){
+						try{
+							sendPacket=new DatagramPacket(bMessage, bMessage.length, InetAddress.getByName(client.getIP()), client.getPort());
+						}catch(IOException e){e.printStackTrace();}
 					}
 				}
 			}
-			
+			try{
+				sendSocket.send(sendPacket);
+			}catch(IOException e){e.printStackTrace();}
 		}
-		public void sendToClient(byte[] byt, int id){
-			//Send to all clients, except the one that sent the message. It already knows.
-			// This is why the id is extracted from the message.
-			for(MiniServer server : servers){
-					if(id!=server.getID()){
-						try{
-							server.getOut().write(byt, 0, byt.length);
-							server.getOut().flush();
-						}catch(IOException e){}
-					}
-			}
-			setChanged();
-			notifyObservers(byt);
+	}
+	private class ClientInfo{
+		private int id;
+		private int port;
+		private String ip;
+		public ClientInfo(int id, int port, String ip){
+			this.id=id;
+			this.port=port;
+			this.ip=ip;
 		}
-		
-		public DataOutputStream getOut(){return out;}
 		public int getID(){return id;}
+		public int getPort(){return port;}
+		public String getIP(){return ip;}
 	}
 }
 
