@@ -1,8 +1,6 @@
 package model;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.TreeMap;
 
 /**
  * <h1>Entity</h1>

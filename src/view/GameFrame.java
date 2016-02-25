@@ -5,10 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
-
 import controller.GameInput;
 import controller.PreGameInput;
 
@@ -45,11 +41,11 @@ public class GameFrame extends JFrame {
 				
 	}
 	
-	private void switchToGameWindow() {
-		contentPane.remove(preGameWindow);
+	public void switchToGameWindow() {
+		//contentPane.remove(preGameWindow);
 		contentPane.add(gameWindow);
 		// Lägg till lyssnare till gameWindow
-		GameInput gameInput = new GameInput();
+		//GameInput gameInput = new GameInput();
 		// Starta spel
 	}
 }

@@ -1,31 +1,16 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.SwingConstants;
-import java.awt.Color;
 import java.awt.Font;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import java.awt.Container;
-
 import controller.PreGameInput;
 
 public class PreGameWindow extends JPanel{
@@ -39,9 +24,7 @@ public class PreGameWindow extends JPanel{
 	private JButton settingsBtn;
 	private JButton quitBtn;
 	
-	private JDialog connectDialog;
-	public JTextField ipTextField;
-	private JButton ipConnectBtn;
+	private ConnectDialog connectDialog;
 	
 	public PreGameWindow(GameFrame frame) {
 		this.frame = frame;
@@ -80,7 +63,7 @@ public class PreGameWindow extends JPanel{
 		connectGameBtn.setActionCommand("connectGameBtn");
 		connectGameBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				showConnectbyIP();
+				ConnectDialog connectDialog = new ConnectDialog(frame);
 			}
 		});
 		add(connectGameBtn);
@@ -115,40 +98,6 @@ public class PreGameWindow extends JPanel{
 		// method - Create game
 		
 		// method - Connect by IP
-	public void showConnectbyIP() {
-		
-		
-		JDialog connectDialog = new JDialog();
-		connectDialog.setTitle("Connect by IP");
-		connectDialog.setLayout(null);
-		connectDialog.setAlwaysOnTop(true);
-		connectDialog.setLocation(300, 300);
-		connectDialog.setPreferredSize(new Dimension(200, 200));		
-		connectDialog.pack();
-		connectDialog.setVisible(true);
-		
-		// Connect button over the IP textfield
-		JButton ipConnectBtn = new JButton("Connect");
-		ipConnectBtn.setBounds(20, 20, 111, 21);
-		ipConnectBtn.setActionCommand("ipConnectBtn");
-		//ipConnectBtn.addActionListener(preGameInput);
-		ipConnectBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println(arg0.getActionCommand() + ": " + ipTextField.getText());
-			}
-		});
-		ipConnectBtn.setVisible(true);
-
-		ipTextField = new JTextField();
-		ipTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		ipTextField.setText("127.0.0.1");
-		ipTextField.setBounds(20, 45, 111, 21);
-		ipTextField.setColumns(10);
-		
-		connectDialog.add(ipConnectBtn);
-		connectDialog.add(ipTextField);
-		
-	}
 	
 	public void toggleToolTips(Boolean toggleToolTips) {
 		if (toggleToolTips) {

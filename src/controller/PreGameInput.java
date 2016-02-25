@@ -3,9 +3,7 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
-
+import server.ServerMain;
 import view.PreGameWindow;
 
 public class PreGameInput implements ActionListener {
@@ -18,22 +16,22 @@ public class PreGameInput implements ActionListener {
 		System.out.println(e.getActionCommand());
 		switch (e.getActionCommand()) {
 		case "createGameBtn":
-			
+			ServerMain.main(null);
 			break;
 		case "connectGameBtn":
-			
+
 			break;
 		case "findGameBtn":
-			
+
 			break;
 		case "settingsBtn":
-			System.out.println(preGameWindow.ipTextField.getText());
+
 			break;
 		case "quitBtn":
-			
+
 			break;
 		case "dialogConnectBtn":
-			
+
 			break;
 		default:
 			System.out.println("Annat");
@@ -45,5 +43,4 @@ public class PreGameInput implements ActionListener {
 		// Settings
 		// Quit
 	}
-
 }

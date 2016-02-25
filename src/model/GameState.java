@@ -4,10 +4,6 @@ import java.awt.Rectangle;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Observable;
-import java.util.TreeMap;
-
-import javax.swing.JOptionPane;
-
 import map.Map;
 
 public class GameState extends Observable{

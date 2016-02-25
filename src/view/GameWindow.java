@@ -12,26 +12,23 @@ import java.util.Observable;
 import java.util.Observer;
 
 import controller.GameInput;
-import controller.PreGameInput;
 import model.Entity;
 import model.GameState;
 import model.Unit;
 import model.Weapon;
-import model.mapObject;
 
 public class GameWindow extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Entity> gameObjects;
 	private BufferedImage img = null;
+	private GameInput gameInput;
 	
-	public GameWindow(GameInput gameInput){
+	public GameWindow(GameInput gameInput, BufferedImage img){
+		this.img = img;
+		this.gameInput = gameInput;
 		addKeyListener(gameInput);
 		addMouseListener(gameInput);
 		addMouseMotionListener(gameInput);
-	}
-	
-	public GameWindow(BufferedImage img){
-		this.img = img;
 	}
 	
 	/**
