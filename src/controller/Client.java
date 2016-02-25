@@ -1,18 +1,15 @@
 package controller;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
 
-import model.Enemy;
-import model.Entity;
 import model.GameState;
-import model.Player;
-import model.Unit;
 /**
 * <h1>Client</h1>
 * Client is the network portion of each client-side application.
@@ -27,15 +24,18 @@ import model.Unit;
 public class Client implements Runnable, Observer{
 	private int port;
 	private String ip;
-	private DataOutputStream out;
-	private DataInputStream in;
 	private GameState state;
 	private int id;
+	private DatagramSocket clientSocket;
 	
 	public Client(int port, String ip, GameState state){
 		this.port=port;
 		this.ip=ip;
 		this.state=state;
+		id=-1;
+		try{
+			clientSocket=new DatagramSocket(port);
+		}catch(SocketException e){}
 	}
 
 	/**
@@ -51,79 +51,51 @@ public class Client implements Runnable, Observer{
 	* sent depending on which OP-CODE it is.*/
 	@Override
 	public void run() {
-		if(out==null){
-			try{
-				Socket socket=new Socket(ip, port);
-				out=new DataOutputStream(socket.getOutputStream());
-				in=new DataInputStream(socket.getInputStream());
-			}catch(UnknownHostException f){}
-			catch(IOException e){e.printStackTrace();}
-		}
-		
-		String message[];
-		int code,identity,xVal,yVal,rot;
-		boolean at;
-		
-		byte[] receive=new byte[1024];
+		DatagramSocket sendSocket;
 		while(true){
-			if(in!=null){
+			if(id==-1){	// Skicka Initialize request en gång.
 				try{
-					in.read(receive, 0, receive.length);
-					message=new String(receive).trim().split(",");
-					code=Integer.parseInt(message[0].trim());
-					identity=Integer.parseInt(message[1]);
-					if(code==0){//ID-set code
-						id=identity;
-						state.setID(identity);
-					}
-					if(code==1){// 1 = move code. 
-						xVal=Integer.parseInt(message[2]);
-						yVal=Integer.parseInt(message[3]);
-						rot=Integer.parseInt(message[4]);
-						at=Boolean.parseBoolean(message[5]);
-								
-						for(Enemy e : state.getTheEnemies()){
-									
-							if(e.getID() == identity || e.getID() == -1){
-								
-								e.setX(xVal);
-								e.setY(yVal);
-								e.setRotVar(rot);
-								if(at){
-									e.doAttack();
-								}
-								
-								if(e.getID() == -1){
-									e.setID(identity);
-								}
-							}
-								
-						}
-					}	
-					if(code==2){// 2 = HP-change code
-						Unit toHurt=null;
-						int attackedID=Integer.parseInt(message[2]);
-						System.out.println(attackedID);
-						System.out.println(id);
-						if(id==attackedID){
-							toHurt=state.returnPlayer();
-						}
-						else{
-							for(Enemy e : state.getTheEnemies()){
-								if(e.getID()==attackedID){
-									toHurt=e;
-								}
-							}
-						}
-						//if(toHurt==null){System.out.println("Yeh");}
-						for(Enemy en : state.getTheEnemies()){
-							if(en.getID()==identity){
-								toHurt.setHP(toHurt.getHP()-en.getWeapon().getDmg());
-							}
-						}
-					}
-
-				}catch(IOException e){e.printStackTrace();}
+					sendSocket=new DatagramSocket();
+					byte[] sendMessage=new String(0+","+InetAddress.getLocalHost().getHostAddress()+","+port).getBytes();
+					InetAddress iAddress=InetAddress.getByName(ip);
+					DatagramPacket packet=new DatagramPacket(sendMessage, sendMessage.length, iAddress, 7020);
+					sendSocket.send(packet);
+					sendSocket.close();
+				}catch(UnknownHostException e){e.printStackTrace();}
+				catch(IOException e){e.printStackTrace();}
+				id--;
+			}
+			else{	// Annars lyssna efter medelanden, som hanteras i separata trådar.
+				byte[] receiveMessage=new byte[1024];
+				DatagramPacket receivePacket=new DatagramPacket(receiveMessage, receiveMessage.length);
+				if(receivePacket!=null){
+					try{
+						clientSocket.receive(receivePacket);
+					}catch(IOException e){}
+					new Thread(new PacketHandler(receiveMessage)).start();
+				}
+			}
+		}
+	}
+	
+	private class PacketHandler extends Thread{
+		private byte[] bMessage; 
+		public PacketHandler(byte[] bMessage){
+			this.bMessage=bMessage;
+		}
+		public void run(){
+			String[] sMessage=new String(bMessage).trim().split(",");
+			int code=Integer.parseInt(sMessage[0]);
+			int identity=Integer.parseInt(sMessage[1]);
+			if(code==0){
+				id=identity;
+				state.setID(identity);
+			}
+			else if(code==1){
+				System.out.println("move");
+			}
+			else if(code==2){
+				System.out.println("HP");
 			}
 		}
 	}
@@ -140,7 +112,7 @@ public class Client implements Runnable, Observer{
 	public void update(Observable arg0, Object arg1){
 		String message;
 		byte[] toSend;
-		if(arg1 instanceof Player){
+		/*if(arg1 instanceof Player){
 			Player player=(Player)arg1;
 			if(out!=null){
 				try{	
@@ -159,6 +131,6 @@ public class Client implements Runnable, Observer{
 					out.flush();
 				}catch(IOException e){e.printStackTrace();}
 			}
-		}
+		}*/
 	}				
 }

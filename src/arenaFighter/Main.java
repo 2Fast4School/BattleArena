@@ -20,7 +20,7 @@ import view.GameWindow;
 public class Main{
 	private static final int numberOfPlayers = 2;
 	private static final String ip = "127.0.0.1";
-	private static final int port=7020;
+	private static final int port=1555;
 	public static void main(String[] args){
 		
 		for(int n=0;n<numberOfPlayers;n++){

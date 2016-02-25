@@ -36,7 +36,7 @@ public class Server extends Observable implements Runnable{
 	public Server(String ip, int port) throws IOException{
 		String serverIP=ip;
 		int serverPort=port;
-		serverSocket=new DatagramSocket(7020);
+		serverSocket=new DatagramSocket(port);
 		clients=new ArrayList<ClientInfo>();
 	}
 	/*Lyssnar alltid efter medelanden. Skapar ny tråd för att hantera mottaget medelande
