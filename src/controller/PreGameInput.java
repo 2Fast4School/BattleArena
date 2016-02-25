@@ -8,7 +8,7 @@ import javax.swing.event.AncestorListener;
 
 import view.PreGameWindow;
 
-public class PreGameInput implements ActionListener, AncestorListener {
+public class PreGameInput implements ActionListener {
 	private PreGameWindow preGameWindow;
 	public PreGameInput(PreGameWindow preGameWindow) {
 		this.preGameWindow = preGameWindow;
@@ -21,13 +21,13 @@ public class PreGameInput implements ActionListener, AncestorListener {
 			
 			break;
 		case "connectGameBtn":
-			preGameWindow.showConnectDialogue();
+			
 			break;
 		case "findGameBtn":
 			
 			break;
 		case "settingsBtn":
-			
+			System.out.println(preGameWindow.ipTextField.getText());
 			break;
 		case "quitBtn":
 			
@@ -36,7 +36,7 @@ public class PreGameInput implements ActionListener, AncestorListener {
 			
 			break;
 		default:
-			
+			System.out.println("Annat");
 			break;
 		}
 		// Create game
@@ -44,21 +44,6 @@ public class PreGameInput implements ActionListener, AncestorListener {
 		// Find a game
 		// Settings
 		// Quit
-	}
-
-	@Override
-	public void ancestorAdded(AncestorEvent e) {
-		System.out.println(e.toString());
-	}
-
-	@Override
-	public void ancestorMoved(AncestorEvent e) {
-		System.out.println(e.toString());
-	}
-
-	@Override
-	public void ancestorRemoved(AncestorEvent e) {
-		System.out.println(e.toString());
 	}
 
 }
