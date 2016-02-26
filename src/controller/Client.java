@@ -8,7 +8,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Scanner;
 
 import model.Enemy;
 import model.GameState;
@@ -59,7 +58,8 @@ public class Client implements Runnable, Observer{
 	@Override
 	public void run() {
 		String sdata;
-		int id = 0, newx = 0, newy = 0;
+		int id = 0, newx = 0, newy = 0, rot = 0;
+		boolean attacking;
 		byte[] data = new byte[1024];
 		DatagramPacket pkt;
 		while(true){
@@ -74,21 +74,36 @@ public class Client implements Runnable, Observer{
 			
 			sdata = new String(pkt.getData());
 			String[] d = sdata.split(",");
+			
+			
 			int code = Integer.parseInt(d[0].trim());
+			id = Integer.parseInt(d[1]);
+			newx = Integer.parseInt(d[2]); newy = Integer.parseInt(d[3]);  rot = Integer.parseInt(d[4]); attacking = Boolean.parseBoolean(d[5]);
 			switch(code){
 				case 1:
-					id = Integer.parseInt(d[1]);
-					newx = Integer.parseInt(d[2]);
-					newy = Integer.parseInt(d[3]);
+					//UNIMPLEMENTED
 					break;
+				case 2:	
+					// UNIMPLEMENTED
+					break;
+					
 				default:
 					break;
 			}
 			
 			for(Enemy n : state.getTheEnemies()){
-				if(id == n.getID()){
-					n.setX(newx);
-					n.setY(newy);
+				if(id == n.getID() || n.getID() == -1){
+					
+					if(n.getID() == -1){
+						n.setID(id);
+					}
+					
+					n.setX(newx); n.setY(newy); n.setRotVar(rot);
+					
+					//Funger inte just nu..
+					if(attacking){
+						n.doAttack();
+					}
 				}
 			}
 		}
@@ -96,6 +111,7 @@ public class Client implements Runnable, Observer{
 	
 	
 	public void requestConnection(){
+		//OPCODE 0 is initpacket. server responds with your id.
 		String sdata = Integer.toString(0)+",FILL";
 		byte[] data = sdata.getBytes();
 		DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
@@ -109,7 +125,6 @@ public class Client implements Runnable, Observer{
 			socket.receive(pkt);
 			sdata = new String(pkt.getData());
 			String d[] = sdata.split(",");
-			System.out.println(d[0].trim());
 			state.setID(Integer.parseInt(d[0].trim()));
 			
 		} catch (IOException e) {
@@ -134,26 +149,24 @@ public class Client implements Runnable, Observer{
 		if(arg1 instanceof Player){
 			Player player=(Player)arg1;
 			Enemy enemy = state.gotHit();
-			String sdata;
+			String sdata = ","+state.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getWeapon().isAttacking();
 			byte[] data;
 			
 			
 			//hp-change OPCODE:2
 			if(enemy != null) {
-				sdata = 2+","+state.getID()+","+enemy.getID();
-				System.out.println("hp");
-				data = sdata.getBytes();
-				
-				
+				sdata = 2+sdata;
+				sdata += ","+enemy.getID();
 			} else {
-				System.out.println("move");
-				sdata = 1+","+state.getID()+","+player.getX()+","+player.getY()+",FILL";
-				data = sdata.getBytes();
+				//Regular / move OPCODE:1
+				sdata = 1+sdata;
 			}
+			
+			data = sdata.getBytes();
 			
 			DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
 			try {
-				System.out.println("sending");
+				//System.out.println("sending");
 				socket.send(pkt);
 			} catch (IOException e) {}
 		}

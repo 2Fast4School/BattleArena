@@ -92,7 +92,6 @@ public class Server extends Observable implements Runnable{
 				byte[] buf = temp.getBytes();
 				clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
 				pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
-				
 				try {
 					skt.send(pkt);
 				} catch (IOException e) {
@@ -102,12 +101,11 @@ public class Server extends Observable implements Runnable{
 			} else {
 				
 				int idToSkip = Integer.parseInt(d[1]);
-				System.out.println(idToSkip);
 				for(ClientInfo c : clients){
 					
 					if(c.getID() != idToSkip){
-						
 						try {
+							pkt = new DatagramPacket(pkt.getData(), pkt.getLength(), c.getIP(), c.getPort());
 							skt.send(pkt);
 						} catch (IOException e) {
 							e.printStackTrace();
