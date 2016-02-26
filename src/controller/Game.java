@@ -95,7 +95,6 @@ public class Game implements Runnable {
 			}
 			
 			if(GAMESTATE.getNrOfPlayers()-nrHasLost==1){ // If the round is over
-				System.out.println("test");
 				int option = JOptionPane.showConfirmDialog(null, "A player won! Play again?", "GameOver", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
 				
 				if(option==JOptionPane.YES_OPTION){
@@ -131,7 +130,7 @@ public class Game implements Runnable {
 				//Used to print number of "ticks" the last second.
 				if(System.currentTimeMillis() - timer > 1000){
 					timer += 1000;
-					System.out.println("TICKS: "+updates);
+					//System.out.println("TICKS: "+updates);
 					updates = 0;
 				}
 			}

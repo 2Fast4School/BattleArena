@@ -61,7 +61,7 @@ public class Client implements Runnable, Observer{
 		}
 		
 		String message[];
-		int code,id,xVal,yVal,rot;
+		int code,identity,xVal,yVal,rot;
 		boolean at;
 		
 		byte[] receive=new byte[1024];
@@ -71,10 +71,10 @@ public class Client implements Runnable, Observer{
 					in.read(receive, 0, receive.length);
 					message=new String(receive).trim().split(",");
 					code=Integer.parseInt(message[0].trim());
-					id=Integer.parseInt(message[1]);
+					identity=Integer.parseInt(message[1]);
 					if(code==0){//ID-set code
-						this.id=id;
-						state.setID(id);
+						id=identity;
+						state.setID(identity);
 					}
 					if(code==1){// 1 = move code. 
 						xVal=Integer.parseInt(message[2]);
@@ -84,7 +84,7 @@ public class Client implements Runnable, Observer{
 								
 						for(Enemy e : state.getTheEnemies()){
 									
-							if(e.getID() == id || e.getID() == -1){
+							if(e.getID() == identity || e.getID() == -1){
 								
 								e.setX(xVal);
 								e.setY(yVal);
@@ -94,7 +94,7 @@ public class Client implements Runnable, Observer{
 								}
 								
 								if(e.getID() == -1){
-									e.setID(id);
+									e.setID(identity);
 								}
 							}
 								
@@ -102,22 +102,23 @@ public class Client implements Runnable, Observer{
 					}	
 					if(code==2){// 2 = HP-change code
 						Unit toHurt=null;
-						int attackedID;
-						int numberOfIDs=Integer.parseInt(message[2]);
-						for(int n=3;n<(numberOfIDs+3);n++){
-							attackedID=Integer.parseInt(message[n]);
+						int attackedID=Integer.parseInt(message[2]);
+						System.out.println(attackedID);
+						System.out.println(id);
+						if(id==attackedID){
+							toHurt=state.returnPlayer();
+						}
+						else{
 							for(Enemy e : state.getTheEnemies()){
-								if(state.getID()==attackedID){
-									toHurt=state.returnPlayer();
-								}
-								else if (e.getID()==attackedID){
+								if(e.getID()==attackedID){
 									toHurt=e;
 								}
-								for(Enemy en : state.getTheEnemies()){
-									if(en.getID()==id){
-										toHurt.setHP(toHurt.getHP()-en.getWeapon().getDmg());
-									}
-								}
+							}
+						}
+						//if(toHurt==null){System.out.println("Yeh");}
+						for(Enemy en : state.getTheEnemies()){
+							if(en.getID()==identity){
+								toHurt.setHP(toHurt.getHP()-en.getWeapon().getDmg());
 							}
 						}
 					}
@@ -143,17 +144,12 @@ public class Client implements Runnable, Observer{
 			Player player=(Player)arg1;
 			if(out!=null){
 				try{	
-					if(state.gotHitList().size()>0){// 2 = HP-change code
-						message=2+","+state.getID()+","+state.gotHitList().size()+",";
-						for(Entity e : state.gotHitList()){
-							if(e instanceof Enemy){
-								message+=((Enemy)e).getID();
-								message+=",";
-							}
-						}
-						message+="Filler";
+					Enemy enemy=state.gotHit();
+					if(enemy!=null){// 2 = HP-change code
+						int enID=state.gotHit().getID();
+						message=2+","+id+","+enID+",Filler";
 						toSend=message.getBytes();
-						state.gotHitList().clear();
+						//enemy=null;
 					}
 					else{// 1 = move code.
 						message ="1,"+state.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getWeapon().isAttacking()+",Filler";

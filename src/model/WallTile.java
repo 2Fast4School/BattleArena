@@ -8,6 +8,7 @@ public class WallTile extends Tile {
 
 
 	public void tick() {
+
 	}
 
 	
