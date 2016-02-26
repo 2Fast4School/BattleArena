@@ -20,7 +20,7 @@ import view.GameWindow;
 public class Main{
 	private static final int numberOfPlayers = 2;
 	private static final String ip = "127.0.0.1";
-	private static final int port=1555;
+	private static final int port=5050;
 	public static void main(String[] args){
 		
 		for(int n=0;n<numberOfPlayers;n++){
@@ -40,6 +40,7 @@ public class Main{
 			GameState state=new GameState(numberOfPlayers, map);
 			GameWindow window=new GameWindow();
 			Client client = new Client(port, ip, state);
+			client.requestConnection();
 			Input input = new Input();
 			Game game=new Game(state);
 			

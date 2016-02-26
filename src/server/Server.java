@@ -25,30 +25,31 @@ import java.util.Scanner;
 
 public class Server extends Observable implements Runnable{
 
-	private DatagramSocket serverSocket;
-	private Scanner scanner;
+	private DatagramSocket revSkt;
 	private DatagramPacket packet;
 	private byte[] receive;
-	private String[] message;
 	private int idToGiveClient=0;
 	private ArrayList<ClientInfo> clients;
+	private Thread t;
 	
-	public Server(String ip, int port) throws IOException{
-		String serverIP=ip;
-		int serverPort=port;
-		serverSocket=new DatagramSocket(port);
+	public Server(int port) throws IOException{
+		revSkt=new DatagramSocket(port);
 		clients=new ArrayList<ClientInfo>();
 	}
-	/*Lyssnar alltid efter medelanden. Skapar ny tråd för att hantera mottaget medelande
+	/*Lyssnar alltid efter medelanden. Skapar ny trï¿½d fï¿½r att hantera mottaget medelande
 	 *Detta medelanden kan vara Request to join server(Code==0)*/
 	public void run(){
+		System.out.println("runnig");
 		while(true){
 			receive=new byte[1024];
 			packet=new DatagramPacket(receive, receive.length);
-			try{
-				serverSocket.receive(packet);
-			}catch(IOException e){}
-			new Thread(new packetHandler(receive)).start();
+			try {
+				revSkt.receive(packet);
+				new Thread(new PacketHandler(packet)).start();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -63,68 +64,87 @@ public class Server extends Observable implements Runnable{
 	* @since   2016-02-17
 	*/
 
-	private class packetHandler extends Thread{
-		private byte[] bMessage;
+	private class PacketHandler implements Runnable{
+		DatagramPacket pkt = null;
+		DatagramSocket skt = null;
+		String d[];
+		int code, id;
 		
-		public packetHandler(byte[] bMessage){
-			this.bMessage=bMessage;
+		public PacketHandler(DatagramPacket pkt){
+			this.pkt = pkt;
+			
+			String data = new String(pkt.getData());
+			d = data.split(",");
+			code = Integer.parseInt(d[0].trim());
+			try {
+				skt = new DatagramSocket();
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
-		/*Om code==0, skicka initialize medelande som ger ID till avsändaren.
-		 *Annars, vidarebefodra medelandet till all -utom- avsändaren.*/
 		public void run(){
-			String[] sMessage;
-			byte[] sendMessage;
-			int code,port,id;
-			String ip;
-			InetAddress inetAddress=null;
-			DatagramPacket sendPacket=null;
-			DatagramSocket sendSocket=null;
-			
-			try{
-				sendSocket=new DatagramSocket();
-			}catch(SocketException e){e.printStackTrace();}
-			
-			sMessage=new String(bMessage).trim().split(",");
-			code=Integer.parseInt(sMessage[0]);
-			
-			if(code==0){	// Initial connect. Store the IP and Port so we can itterate over the map to send to all later.
-				ip=sMessage[1];	// Also send a return message to acknowledge the connection..and return an ID.
-				port=Integer.parseInt(sMessage[2]);
-				clients.add(new ClientInfo(idToGiveClient, port, ip));
-				try{
-					inetAddress = InetAddress.getByName(ip);
-				}catch(UnknownHostException e){}
-				sendMessage=new String(0+","+idToGiveClient+",Filler").getBytes();
-				sendPacket = new DatagramPacket(sendMessage, sendMessage.length, inetAddress, port);
-			}
-			else{
-				id=Integer.parseInt(sMessage[1]);
-				for(ClientInfo client : clients){
-					if(id!=client.getID()){
-						try{
-							sendPacket=new DatagramPacket(bMessage, bMessage.length, InetAddress.getByName(client.getIP()), client.getPort());
-						}catch(IOException e){e.printStackTrace();}
+			if(code == 0){
+				
+				idToGiveClient += 1;
+				String temp = Integer.toString(idToGiveClient)+",FILL";
+				byte[] buf = temp.getBytes();
+				clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
+				pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
+				
+				try {
+					skt.send(pkt);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			} else {
+				
+				int idToSkip = Integer.parseInt(d[1]);
+				System.out.println(idToSkip);
+				for(ClientInfo c : clients){
+					
+					if(c.getID() != idToSkip){
+						
+						try {
+							skt.send(pkt);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
-			try{
-				sendSocket.send(sendPacket);
-			}catch(IOException e){e.printStackTrace();}
+			
+			if(skt != null){
+				skt.close();
+			}
 		}
 	}
+	
 	private class ClientInfo{
-		private int id;
+		private InetAddress ip;
 		private int port;
-		private String ip;
-		public ClientInfo(int id, int port, String ip){
-			this.id=id;
-			this.port=port;
-			this.ip=ip;
+		private int id;
+
+		
+		public ClientInfo(InetAddress ip, int port, int id){
+			this.ip = ip;
+			this.port = port;
+			this.id = id;
 		}
-		public int getID(){return id;}
-		public int getPort(){return port;}
-		public String getIP(){return ip;}
+		
+		public InetAddress getIP(){
+			return ip;
+		}
+		
+		public int getPort(){
+			return port;
+		}
+		
+		public int getID(){
+			return id;
+		}
 	}
 }
 
