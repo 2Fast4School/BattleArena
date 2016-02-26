@@ -47,18 +47,16 @@ public class ServerController implements ActionListener {
 	 */
 	public void startServer()
 	{
-		Thread t = new Thread(new Runnable(){
-			public void run(){
-				try {
-					Server s = new Server(view.getIpAddress(), view.getPort());
-					s.addObserver(view);
-					addModel(s);
-			} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		t.start();
+		try {
+			Server s = new Server(5050);
+			s.addObserver(view);
+			addModel(s);
+			new Thread(s).start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		view.toTerminal("Starting server on " + view.getIpAddress() + ":" + view.getPort() + "\n");
 	}//startServer()
 }

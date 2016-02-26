@@ -1,6 +1,12 @@
 package controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -9,33 +15,44 @@ import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
 
+import model.Enemy;
 import model.GameState;
+import model.Message;
+import model.Player;
 /**
 * <h1>Client</h1>
-* Client is the network portion of each client-side application.
-* It has access to a socket towards the Server, and the related
-* DataOutput, and DataInput streams. Client implements the Observer 
-* interface, and it's an observer to GameState from which it receives
-* messages if there is information that needs to be sent to other clients.
-* @author  William Bjï¿½rklund
-* @version 1.0
-* @since   2016-02-17
+* Client is the class which is responsible for sending packets including player information to the server and listen for incoming packets from the Server.
+* @author  William Bjï¿½rklund / Victor Dahlberg
+* @version 2.0
+* @since   2016-02-26
 */
 public class Client implements Runnable, Observer{
-	private int port;
-	private String ip;
+	private int srvport;
+	private InetAddress srvip;
 	private GameState state;
 	private int id;
-	private DatagramSocket clientSocket;
+	private DatagramSocket socket;
+	private int streamPort;
 	
-	public Client(int port, String ip, GameState state){
-		this.port=port;
-		this.ip=ip;
-		this.state=state;
-		id=-1;
-		try{
-			clientSocket=new DatagramSocket(port);
-		}catch(SocketException e){}
+	/** The Constructor opens a DatagramSocket on an empty port.
+	 * 
+	 * @param srvport The port which the server listens on.
+	 * @param srvip The server's ip in form of a String.
+	 * @param state The GameState which should be updated when a packet is received.
+	 */
+	public Client(int srvport, String srvip, GameState state, int streamPort){
+		this.srvport = srvport;
+		this.state = state;
+		this.streamPort=streamPort;
+		id = -1;
+		
+		try {
+			this.srvip = InetAddress.getByName(srvip);
+			socket = new DatagramSocket();
+		} 
+		
+		catch (UnknownHostException e1) {} 
+		catch (SocketException e) {}
 	}
 
 	/**
@@ -51,54 +68,100 @@ public class Client implements Runnable, Observer{
 	* sent depending on which OP-CODE it is.*/
 	@Override
 	public void run() {
-		DatagramSocket sendSocket;
+		String sdata;
+		int id = 0, newx = 0, newy = 0, rot = 0;
+		boolean attacking;
+		byte[] data = new byte[1024];
+		DatagramPacket pkt;
+		
+		
 		while(true){
-			if(id==-1){	// Skicka Initialize request en gång.
-				try{
-					sendSocket=new DatagramSocket();
-					byte[] sendMessage=new String(0+","+InetAddress.getLocalHost().getHostAddress()+","+port).getBytes();
-					InetAddress iAddress=InetAddress.getByName(ip);
-					DatagramPacket packet=new DatagramPacket(sendMessage, sendMessage.length, iAddress, 7020);
-					sendSocket.send(packet);
-					sendSocket.close();
-				}catch(UnknownHostException e){e.printStackTrace();}
-				catch(IOException e){e.printStackTrace();}
-				id--;
+			pkt = new DatagramPacket(data, data.length);
+			
+			try {
+				socket.receive(pkt);
+			} catch (IOException e) {
+				System.out.println("error");
+				e.printStackTrace();
 			}
-			else{	// Annars lyssna efter medelanden, som hanteras i separata trådar.
-				byte[] receiveMessage=new byte[1024];
-				DatagramPacket receivePacket=new DatagramPacket(receiveMessage, receiveMessage.length);
-				if(receivePacket!=null){
-					try{
-						clientSocket.receive(receivePacket);
-					}catch(IOException e){}
-					new Thread(new PacketHandler(receiveMessage)).start();
+			
+			int byteCount = pkt.getLength();
+		    ByteArrayInputStream receiveStream = new ByteArrayInputStream(data);
+		    try{
+		    	ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(receiveStream));
+			    Object o = is.readObject();
+			    is.close();
+			    Message aMessage=(Message)o;
+			    
+			    int code=aMessage.getCode();
+			    newx=aMessage.getXPos();id=aMessage.getID();newy=aMessage.getYPos();
+			    rot=aMessage.getRotVar();attacking=aMessage.getAttacking();
+			    for(Enemy n : state.getTheEnemies()){
+					if(id == n.getID() || n.getID() == -1){
+						
+						if(n.getID() == -1){
+							n.setID(id);
+						}
+						
+						n.setX(newx); n.setY(newy); n.setRotVar(rot);
+						
+						//Funger inte just nu..
+						if(attacking){
+							n.doAttack();
+						}
+					}
 				}
-			}
+		    }catch(ClassNotFoundException e){e.printStackTrace();}
+		    catch(IOException f){f.getStackTrace();}
 		}
 	}
 	
-	private class PacketHandler extends Thread{
-		private byte[] bMessage; 
-		public PacketHandler(byte[] bMessage){
-			this.bMessage=bMessage;
+	
+	/**
+	 * This method sends an "init-packet" to the server and waits for a response.
+	 * The Init-packet has OP-CODE: 0. Server knows this OP-code is a request and responds to the client which sent the packet with an id.
+	 * This is the id given to client.
+	 * This method will wait 10s for an init packet from the server.
+	 */
+	public void requestConnection(){
+		//OPCODE 0 is initpacket. server responds with your id.
+		Message message=new Message(0);
+		
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream(streamPort/2);	// Kanske måste vara unik?
+		try{
+			ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
+			os.flush();
+			os.writeObject(message);
+			os.flush();
+		}catch(IOException e){}
+		byte[] data = byteStream.toByteArray();
+		
+		DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
+		
+		try {
+			socket.send(pkt);
+			
+			byte []buf = new byte[1024];
+			pkt = new DatagramPacket(buf, buf.length);
+			socket.setSoTimeout(10000);
+			socket.receive(pkt);
+			
+			int byteCount = pkt.getLength();
+		    ByteArrayInputStream receiveStream = new ByteArrayInputStream(buf);
+		    ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(receiveStream));
+		    try{
+			    Object o = is.readObject();
+			    is.close();
+			    Message aMessage=(Message)o;
+				state.setID(aMessage.getID());
+		    }catch(ClassNotFoundException e){e.printStackTrace();}
+		} catch (IOException e) {
+			System.out.println("couldnt connect");
 		}
-		public void run(){
-			String[] sMessage=new String(bMessage).trim().split(",");
-			int code=Integer.parseInt(sMessage[0]);
-			int identity=Integer.parseInt(sMessage[1]);
-			if(code==0){
-				id=identity;
-				state.setID(identity);
-			}
-			else if(code==1){
-				System.out.println("move");
-			}
-			else if(code==2){
-				System.out.println("HP");
-			}
-		}
+		
 	}
+	
+		
 	
 	/**
 	* Client is notified when there is information that needs
@@ -110,27 +173,39 @@ public class Client implements Runnable, Observer{
 	*/
 	@Override
 	public void update(Observable arg0, Object arg1){
-		String message;
-		byte[] toSend;
-		/*if(arg1 instanceof Player){
+
+		if(arg1 instanceof Player){
 			Player player=(Player)arg1;
-			if(out!=null){
-				try{	
-					Enemy enemy=state.gotHit();
-					if(enemy!=null){// 2 = HP-change code
-						int enID=state.gotHit().getID();
-						message=2+","+id+","+enID+",Filler";
-						toSend=message.getBytes();
-						//enemy=null;
-					}
-					else{// 1 = move code.
-						message ="1,"+state.getID()+","+player.getX()+","+player.getY()+","+player.getRotVar()+","+player.getWeapon().isAttacking()+",Filler";
-						toSend = message.getBytes();
-					}
-					out.write(toSend, 0, toSend.length);
-					out.flush();
-				}catch(IOException e){e.printStackTrace();}
+			Enemy enemy = state.gotHit();
+			Message message=new Message(state.getID(),player.getX(),player.getY()
+					,player.getRotVar(), player.getWeapon().isAttacking());
+			byte[] data;
+		
+			//hp-change OPCODE:2
+			if(enemy != null) {
+				message.setCode(2);
+				message.setEnemeyID(enemy.getID());
+			} else {
+				//Regular / move OPCODE:1
+				message.setCode(1);
 			}
-		}*/
-	}				
-}
+
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream(streamPort);	// Kanske måste vara unik?
+			try{
+				ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
+				os.flush();
+				os.writeObject(message);
+				os.flush();
+				os.close();
+			}catch(IOException e){}
+			data=byteStream.toByteArray();
+		
+			
+			DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
+			try {
+				//System.out.println("sending");
+				socket.send(pkt);
+			} catch (IOException e) {}
+		}
+	}
+}				

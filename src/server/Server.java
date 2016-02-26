@@ -1,5 +1,11 @@
 package server;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -9,122 +15,192 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Scanner;
 
+import model.Message;
+
 /**
 * <h1>Server</h1>
 * Server is just that, a server for the game application.
 * This Server doesn't hold any actual game information 
-* of it's own, instead it listens to the clients, and forwards
-* the messages they send to the other clients.<p>
-* This is done by the use of multiple threaded instances of
-* the private class MiniServer, which are stored in an ArrayList
-* so that they can be iterated over.
-* @author  William Bjï¿½rklund
-* @version 1.0
-* @since   2016-02-17
+* of it's own, instead it listens for packets, and forwards
+* them <p>
+* Every packet is handled by it's own thread in the private class PacketHandler.
+* The server stores information about all the connected clients in an ArrayList of ClientInfo.
+* ClientInfo is also a private class.
+* @author  William Bjï¿½rklund / Victor Dahlberg
+* @version 2.0
+* @since   2016-02-26
 */
 
 public class Server extends Observable implements Runnable{
-
-	private DatagramSocket serverSocket;
-	private Scanner scanner;
+	private DatagramSocket revSkt;
 	private DatagramPacket packet;
 	private byte[] receive;
-	private String[] message;
 	private int idToGiveClient=0;
 	private ArrayList<ClientInfo> clients;
+	private int streamPortNR=8000;
 	
-	public Server(String ip, int port) throws IOException{
-		String serverIP=ip;
-		int serverPort=port;
-		serverSocket=new DatagramSocket(port);
+	/**
+	 * Creates a DatagramSocket bount to a specific port. The Server listens for packets on this port.
+	 * @param port The port which the server should listen to.
+	 * @throws IOException Socket could not be created on that port.
+	 */
+	public Server(int port) throws IOException{
+		revSkt=new DatagramSocket(port);
 		clients=new ArrayList<ClientInfo>();
 	}
-	/*Lyssnar alltid efter medelanden. Skapar ny tråd för att hantera mottaget medelande
-	 *Detta medelanden kan vara Request to join server(Code==0)*/
+	
+
+	/**
+	 * Listens for packets and every time a packet is received it starts a new Thread of a new object of Packethandler.
+	 * The only thing run does is listens for incoming packets and the distribute the work to Packethandler which actually does something with the received packet.
+	 */
 	public void run(){
+
 		while(true){
 			receive=new byte[1024];
 			packet=new DatagramPacket(receive, receive.length);
-			try{
-				serverSocket.receive(packet);
-			}catch(IOException e){}
-			new Thread(new packetHandler(receive)).start();
+			try {
+				revSkt.receive(packet);
+				new Thread(new PacketHandler(packet, receive, streamPortNR)).start();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(streamPortNR<9000){
+				streamPortNR++;
+			}
+			else{
+				streamPortNR=8000;
+			}
 		}
 	}
 
 	/**
-	* <h1>MiniServer</h1>
+	* <h1>PacketHandler</h1>
 	* MiniServer is a private class to Server, and it's threaded.
 	* It continually listens to the Client it is associated with,
 	* and will forward any messages sent by that Client to all other
 	* clients.
-	* @author  William Bjï¿½rklund
+	* 
+	* Each time a packet is received, a packethandler is created and started.
+	* The packet handler then reads the OP-CODE of the packet and the ID of the pakcket, i.e who it came from.
+	* It then depending on OP-CODE and ID responds or forward the packet.
+	* 
+	* Create only one PacketHandler per packet.
+	* 
+	* @author  William Bjï¿½rklund / Victor Dahlberg
 	* @version 1.0
-	* @since   2016-02-17
+	* @since   2016-02-26
 	*/
 
-	private class packetHandler extends Thread{
-		private byte[] bMessage;
+	private class PacketHandler implements Runnable{
+		DatagramPacket pkt = null;
+		DatagramSocket skt = null;
+		String d[];
+		int code, id;
+		byte[] buf;
+		int streamPortNR;
 		
-		public packetHandler(byte[] bMessage){
-			this.bMessage=bMessage;
+		/**
+		 * 
+		 * @param pkt The DatagramPacket to be handled.
+		 */
+		public PacketHandler(DatagramPacket pkt, byte[] buf, int streamPortNR){
+			this.pkt = pkt;
+			this.buf = buf;
+			this.streamPortNR=streamPortNR;
+			int byteCount = pkt.getLength();
+		    ByteArrayInputStream receiveStream = new ByteArrayInputStream(buf);
+		    try{
+			    ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(receiveStream));
+			    Object o = is.readObject();
+			    is.close();
+			    Message aMessage=(Message)o;
+			    code=aMessage.getCode();
+			    id=aMessage.getID();
+		    }catch(ClassNotFoundException e){e.printStackTrace();}
+		    catch(IOException f){f.getStackTrace();}
+		    try{
+		    	skt = new DatagramSocket();
+		    }catch(SocketException e){e.getStackTrace();}
 		}
 		
-		/*Om code==0, skicka initialize medelande som ger ID till avsändaren.
-		 *Annars, vidarebefodra medelandet till all -utom- avsändaren.*/
+		/**
+		 * Depending on the OP-CODE. Responds or forwards the packet.
+		 */
 		public void run(){
-			String[] sMessage;
-			byte[] sendMessage;
-			int code,port,id;
-			String ip;
-			InetAddress inetAddress=null;
-			DatagramPacket sendPacket=null;
-			DatagramSocket sendSocket=null;
-			
-			try{
-				sendSocket=new DatagramSocket();
-			}catch(SocketException e){e.printStackTrace();}
-			
-			sMessage=new String(bMessage).trim().split(",");
-			code=Integer.parseInt(sMessage[0]);
-			
-			if(code==0){	// Initial connect. Store the IP and Port so we can itterate over the map to send to all later.
-				ip=sMessage[1];	// Also send a return message to acknowledge the connection..and return an ID.
-				port=Integer.parseInt(sMessage[2]);
-				clients.add(new ClientInfo(idToGiveClient, port, ip));
+			if(code == 0){
+				idToGiveClient += 1;
+				String temp = Integer.toString(idToGiveClient)+",FILL";
+				Message message=new Message(0, idToGiveClient);
+				
+				ByteArrayOutputStream byteStream = new ByteArrayOutputStream(streamPortNR);
 				try{
-					inetAddress = InetAddress.getByName(ip);
-				}catch(UnknownHostException e){}
-				sendMessage=new String(0+","+idToGiveClient+",Filler").getBytes();
-				sendPacket = new DatagramPacket(sendMessage, sendMessage.length, inetAddress, port);
-			}
-			else{
-				id=Integer.parseInt(sMessage[1]);
-				for(ClientInfo client : clients){
-					if(id!=client.getID()){
-						try{
-							sendPacket=new DatagramPacket(bMessage, bMessage.length, InetAddress.getByName(client.getIP()), client.getPort());
-						}catch(IOException e){e.printStackTrace();}
+					ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
+					os.flush();
+					os.writeObject(message);
+					os.flush();
+				}catch(IOException e){}
+				byte[] buff = byteStream.toByteArray();
+				
+				clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
+				pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
+				try {
+					skt.send(pkt);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			} else {
+				int idToSkip = id;
+				for(ClientInfo c : clients){
+					if(c.getID() != idToSkip){
+						try {
+							pkt = new DatagramPacket(pkt.getData(), pkt.getLength(), c.getIP(), c.getPort());
+							skt.send(pkt);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
-			try{
-				sendSocket.send(sendPacket);
-			}catch(IOException e){e.printStackTrace();}
+			if(skt != null){
+				skt.close();
+			}
 		}
 	}
+	
+	/**
+	 * A very simple class to store IP, Port and ID of a specific client.
+	 * Every client will most likely listen on different ports.
+	 * @author William BjÃ¶rklund / Victor Dahlberg
+	 * @version 1.0
+	 * @since 2016-02-26
+	 *
+	 */
 	private class ClientInfo{
-		private int id;
+		private InetAddress ip;
 		private int port;
-		private String ip;
-		public ClientInfo(int id, int port, String ip){
-			this.id=id;
-			this.port=port;
-			this.ip=ip;
+		private int id;
+
+		
+		public ClientInfo(InetAddress ip, int port, int id){
+			this.ip = ip;
+			this.port = port;
+			this.id = id;
 		}
-		public int getID(){return id;}
-		public int getPort(){return port;}
-		public String getIP(){return ip;}
+		
+		public InetAddress getIP(){
+			return ip;
+		}
+		
+		public int getPort(){
+			return port;
+		}
+		
+		public int getID(){
+			return id;
+		}
 	}
 }
 
