@@ -4,10 +4,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Observable;
-import java.util.Scanner;
 
 /**
 * <h1>Server</h1>
@@ -29,7 +29,7 @@ public class Server extends Observable implements Runnable{
 	private DatagramPacket packet;
 	private byte[] receive;
 	private int idToGiveClient=0;
-	private ArrayList<ClientInfo> clients;
+	private List<ClientInfo> clients;
 	
 	/**
 	 * Creates a DatagramSocket bount to a specific port. The Server listens for packets on this port.
@@ -38,7 +38,7 @@ public class Server extends Observable implements Runnable{
 	 */
 	public Server(int port) throws IOException{
 		revSkt=new DatagramSocket(port);
-		clients=new ArrayList<ClientInfo>();
+		clients=Collections.synchronizedList(new ArrayList<ClientInfo>());
 	}
 	
 
@@ -113,7 +113,9 @@ public class Server extends Observable implements Runnable{
 				idToGiveClient += 1;
 				String temp = Integer.toString(idToGiveClient)+",FILL";
 				byte[] buf = temp.getBytes();
+				
 				clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
+				
 				pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
 				try {
 					skt.send(pkt);
@@ -124,6 +126,7 @@ public class Server extends Observable implements Runnable{
 			} else {
 				
 				int idToSkip = Integer.parseInt(d[1]);
+				
 				for(ClientInfo c : clients){
 					
 					if(c.getID() != idToSkip){
