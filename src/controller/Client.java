@@ -14,14 +14,10 @@ import model.GameState;
 import model.Player;
 /**
 * <h1>Client</h1>
-* Client is the network portion of each client-side application.
-* It has access to a socket towards the Server, and the related
-* DataOutput, and DataInput streams. Client implements the Observer 
-* interface, and it's an observer to GameState from which it receives
-* messages if there is information that needs to be sent to other clients.
-* @author  William Bj�rklund
-* @version 1.0
-* @since   2016-02-17
+* Client is the class which is responsible for sending packets including player information to the server and listen for incoming packets from the Server.
+* @author  William Bj�rklund / Victor Dahlberg
+* @version 2.0
+* @since   2016-02-26
 */
 public class Client implements Runnable, Observer{
 	private int srvport;
@@ -30,6 +26,12 @@ public class Client implements Runnable, Observer{
 	private int id;
 	private DatagramSocket socket;
 	
+	/** The Constructor opens a DatagramSocket on an empty port.
+	 * 
+	 * @param srvport The port which the server listens on.
+	 * @param srvip The server's ip in form of a String.
+	 * @param state The GameState which should be updated when a packet is received.
+	 */
 	public Client(int srvport, String srvip, GameState state){
 		this.srvport = srvport;
 		this.state = state;
@@ -62,6 +64,8 @@ public class Client implements Runnable, Observer{
 		boolean attacking;
 		byte[] data = new byte[1024];
 		DatagramPacket pkt;
+		
+		
 		while(true){
 			pkt = new DatagramPacket(data, data.length);
 			
@@ -79,17 +83,6 @@ public class Client implements Runnable, Observer{
 			int code = Integer.parseInt(d[0].trim());
 			id = Integer.parseInt(d[1]);
 			newx = Integer.parseInt(d[2]); newy = Integer.parseInt(d[3]);  rot = Integer.parseInt(d[4]); attacking = Boolean.parseBoolean(d[5]);
-			switch(code){
-				case 1:
-					//UNIMPLEMENTED
-					break;
-				case 2:	
-					// UNIMPLEMENTED
-					break;
-					
-				default:
-					break;
-			}
 			
 			for(Enemy n : state.getTheEnemies()){
 				if(id == n.getID() || n.getID() == -1){
@@ -110,6 +103,12 @@ public class Client implements Runnable, Observer{
 	}
 	
 	
+	/**
+	 * This method sends an "init-packet" to the server and waits for a response.
+	 * The Init-packet has OP-CODE: 0. Server knows this OP-code is a request and responds to the client which sent the packet with an id.
+	 * This is the id given to client.
+	 * This method will wait 10s for an init packet from the server.
+	 */
 	public void requestConnection(){
 		//OPCODE 0 is initpacket. server responds with your id.
 		String sdata = Integer.toString(0)+",FILL";

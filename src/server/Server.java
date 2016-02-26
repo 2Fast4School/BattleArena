@@ -13,14 +13,14 @@ import java.util.Scanner;
 * <h1>Server</h1>
 * Server is just that, a server for the game application.
 * This Server doesn't hold any actual game information 
-* of it's own, instead it listens to the clients, and forwards
-* the messages they send to the other clients.<p>
-* This is done by the use of multiple threaded instances of
-* the private class MiniServer, which are stored in an ArrayList
-* so that they can be iterated over.
-* @author  William Bj�rklund
-* @version 1.0
-* @since   2016-02-17
+* of it's own, instead it listens for packets, and forwards
+* them <p>
+* Every packet is handled by it's own thread in the private class PacketHandler.
+* The server stores information about all the connected clients in an ArrayList of ClientInfo.
+* ClientInfo is also a private class.
+* @author  William Bj�rklund / Victor Dahlberg
+* @version 2.0
+* @since   2016-02-26
 */
 
 public class Server extends Observable implements Runnable{
@@ -30,16 +30,24 @@ public class Server extends Observable implements Runnable{
 	private byte[] receive;
 	private int idToGiveClient=0;
 	private ArrayList<ClientInfo> clients;
-	private Thread t;
 	
+	/**
+	 * Creates a DatagramSocket bount to a specific port. The Server listens for packets on this port.
+	 * @param port The port which the server should listen to.
+	 * @throws IOException Socket could not be created on that port.
+	 */
 	public Server(int port) throws IOException{
 		revSkt=new DatagramSocket(port);
 		clients=new ArrayList<ClientInfo>();
 	}
-	/*Lyssnar alltid efter medelanden. Skapar ny tr�d f�r att hantera mottaget medelande
-	 *Detta medelanden kan vara Request to join server(Code==0)*/
+	
+
+	/**
+	 * Listens for packets and every time a packet is received it starts a new Thread of a new object of Packethandler.
+	 * The only thing run does is listens for incoming packets and the distribute the work to Packethandler which actually does something with the received packet.
+	 */
 	public void run(){
-		System.out.println("runnig");
+
 		while(true){
 			receive=new byte[1024];
 			packet=new DatagramPacket(receive, receive.length);
@@ -54,14 +62,21 @@ public class Server extends Observable implements Runnable{
 	}
 
 	/**
-	* <h1>MiniServer</h1>
+	* <h1>PacketHandler</h1>
 	* MiniServer is a private class to Server, and it's threaded.
 	* It continually listens to the Client it is associated with,
 	* and will forward any messages sent by that Client to all other
 	* clients.
-	* @author  William Bj�rklund
+	* 
+	* Each time a packet is received, a packethandler is created and started.
+	* The packet handler then reads the OP-CODE of the packet and the ID of the pakcket, i.e who it came from.
+	* It then depending on OP-CODE and ID responds or forward the packet.
+	* 
+	* Create only one PacketHandler per packet.
+	* 
+	* @author  William Bj�rklund / Victor Dahlberg
 	* @version 1.0
-	* @since   2016-02-17
+	* @since   2016-02-26
 	*/
 
 	private class PacketHandler implements Runnable{
@@ -70,6 +85,10 @@ public class Server extends Observable implements Runnable{
 		String d[];
 		int code, id;
 		
+		/**
+		 * 
+		 * @param pkt The DatagramPacket to be handled.
+		 */
 		public PacketHandler(DatagramPacket pkt){
 			this.pkt = pkt;
 			
@@ -77,6 +96,7 @@ public class Server extends Observable implements Runnable{
 			d = data.split(",");
 			code = Integer.parseInt(d[0].trim());
 			try {
+				//Create a new datagramsocket on an open port.
 				skt = new DatagramSocket();
 			} catch (SocketException e) {
 				// TODO Auto-generated catch block
@@ -84,6 +104,9 @@ public class Server extends Observable implements Runnable{
 			}
 		}
 		
+		/**
+		 * Depending on the OP-CODE. Responds or forwards the packet.
+		 */
 		public void run(){
 			if(code == 0){
 				
@@ -120,6 +143,14 @@ public class Server extends Observable implements Runnable{
 		}
 	}
 	
+	/**
+	 * A very simple class to store IP, Port and ID of a specific client.
+	 * Every client will most likely listen on different ports.
+	 * @author William Björklund / Victor Dahlberg
+	 * @version 1.0
+	 * @since 2016-02-26
+	 *
+	 */
 	private class ClientInfo{
 		private InetAddress ip;
 		private int port;
