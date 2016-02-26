@@ -47,10 +47,10 @@ public class MapGenerator { //Perhaps implement serialization
 		
 		int height = logicMap.getHeight();
 		int width = logicMap.getWidth();
-		if(height != 50 || width != 50){ //Temp limit, generates 800x800 map.
+		/*if(height != 50 || width != 50){ //Temp limit, generates 800x800 map.
 			return generateBlankMap();
-		}
-		BufferedImage background = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
+		}*/
+		BufferedImage background = new BufferedImage(logicMap.getWidth()*sizeOfPixel, logicMap.getHeight()*sizeOfPixel, BufferedImage.TYPE_INT_ARGB);
 		Map map = new Map();
 		
 		//More support methods...

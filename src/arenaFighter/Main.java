@@ -29,14 +29,14 @@ public class Main{
 		
 			BufferedImage logicMap;
 			try {
-			    logicMap = ImageIO.read(new File("res/mapBackground.png"));
+			    logicMap = ImageIO.read(new File("res/logicMap.png"));
 			} catch (IOException e) {
 			    e.printStackTrace();
 			    logicMap = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
 			}
 			
 			
-			Map map = MapGenerator.generateMap(logicMap, "grass");
+			Map map = MapGenerator.generateMap(logicMap, "lava");
 			GameState state=new GameState(numberOfPlayers, map);
 			GameWindow window=new GameWindow();
 			Client client = new Client(port, ip, state);
@@ -47,7 +47,7 @@ public class Main{
 			input.setup(state.returnPlayer());
 			
 			frame.add(window);
-			frame.setPreferredSize(new Dimension(822, 822));
+			frame.setPreferredSize(new Dimension(logicMap.getWidth()*16, logicMap.getHeight()*16));
 			
 			window.addKeyListener(input);
 			window.addMouseListener(input);
