@@ -23,7 +23,7 @@ import model.Player;
 /**
 * <h1>Client</h1>
 * Client is the class which is responsible for sending packets including player information to the server and listen for incoming packets from the Server.
-* @author  William Bj�rklund / Victor Dahlberg
+* @author  William Bjorklund / Victor Dahlberg
 * @version 2.0
 * @since   2016-02-26
 */
@@ -89,19 +89,33 @@ public class Client implements Runnable, Observer{
 				Message receiveMessage=new Message();
 				receiveMessage.readExternal(oIn);
 				
-				int code=receiveMessage.getCode();
+				int code=receiveMessage.getCode();int enemyID=receiveMessage.getEnemeyID();
 				id=receiveMessage.getID();newx=receiveMessage.getXPos();newy=receiveMessage.getYPos();
 				rot=receiveMessage.getRotVar();attacking=receiveMessage.getAttacking();
+				int playerHP=receiveMessage.getPlayerHP();
 				
 				for(Enemy n : state.getTheEnemies()){
 					if(id == n.getID()){
 						n.setX(newx); n.setY(newy); n.setRotVar(rot);
 						
+						if(playerHP!=-1){
+							n.setHP(playerHP);
+						}
 						//Funger inte just nu..
-						if(attacking){
+						if(attacking && !n.getHasAttacked()){
+							n.setHasAttacked(true);
 							n.doAttack();
 						}
+						else if(!attacking){
+							n.setHasAttacked(false);
+						}
 					}
+					else if(enemyID==n.getID()){
+						n.setHP(receiveMessage.getEnemyHP());
+					}
+				}
+				if(enemyID==state.getID()){
+					state.returnPlayer().setHP(receiveMessage.getEnemyHP());
 				}
 			}catch(IOException e){}
 			catch(ClassNotFoundException f){}
@@ -168,16 +182,17 @@ public class Client implements Runnable, Observer{
 			Message message=new Message(state.getID(),player.getX(),player.getY(),player.getRotVar(),
 					player.getWeapon().isAttacking());
 
+			message.setPlayerHP(player.getHP());
+
 			//hp-change OPCODE:2
 			if(enemy != null) {
 				message.setCode(2);
 				message.setEnemyID(enemy.getID());
+				message.setEnemyHP(enemy.getHP());
 			} else {
 				//Regular / move OPCODE:1
 				message.setCode(1);
 			}
-			
-
 			
 			try{
 				ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);

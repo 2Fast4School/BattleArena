@@ -5,9 +5,9 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 public class Message implements Externalizable{
-	int code=-1;int id;int xPos;int yPos;int rotVar;
+	int code=-1;int id;int xPos;int yPos;int rotVar;int playerHP=-1;
 	boolean attacking;
-	int enemyID=-1;
+	int enemyID=-1;int enemyHP=-1;
 	int maxNrPlayers=-1;
 	public Message(){
 		
@@ -27,6 +27,10 @@ public class Message implements Externalizable{
 	public void setEnemyID(int enemyID){this.enemyID=enemyID;}
 	public int getMaxNrPlayers(){return maxNrPlayers;}
 	public void setMaxNrPlayers(int maxNrPlayers){this.maxNrPlayers=maxNrPlayers;}
+	public void setEnemyHP(int enemyHP){this.enemyHP=enemyHP;}
+	public int getEnemyHP(){return enemyHP;}
+	public int getPlayerHP(){return playerHP;}
+	public void setPlayerHP(int playerHP){this.playerHP=playerHP;}
 	
 	@Override
 	public void readExternal(ObjectInput arg0) throws IOException, ClassNotFoundException {
@@ -38,6 +42,8 @@ public class Message implements Externalizable{
 		attacking=arg0.readBoolean();
 		enemyID=arg0.readInt();
 		maxNrPlayers=arg0.readInt();
+		enemyHP=arg0.readInt();
+		playerHP=arg0.readInt();
 	}
 	@Override
 	public void writeExternal(ObjectOutput arg0) throws IOException {
@@ -49,5 +55,7 @@ public class Message implements Externalizable{
 		arg0.writeBoolean(attacking);
 		arg0.writeInt(enemyID);
 		arg0.writeInt(maxNrPlayers);;
+		arg0.writeInt(enemyHP);
+		arg0.writeInt(playerHP);
 	}
 }

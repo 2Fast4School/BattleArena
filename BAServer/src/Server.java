@@ -18,12 +18,12 @@ import java.util.Observable;
 * <h1>Server</h1>
 * Server is just that, a server for the game application.
 * This Server doesn't hold any actual game information 
-* of it's own, instead it listens for packets, and forwards
-* them <p>
+* of it's own, instead it listens for DatagramPackets, and forwards
+* them. In other words it works by UDP <p>
 * Every packet is handled by it's own thread in the private class PacketHandler.
 * The server stores information about all the connected clients in an ArrayList of ClientInfo.
 * ClientInfo is also a private class.
-* @author  William Bj�rklund / Victor Dahlberg
+* @author  William Bjorklund / Victor Dahlberg
 * @version 2.0
 * @since   2016-02-26
 */
