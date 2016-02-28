@@ -107,7 +107,7 @@ public class Game implements Runnable {
 						}
 					}
 					for(spawnPoint sp : GAMESTATE.getSpawns()){
-						sp.reset();
+						sp.setUnused();
 					}
 				}
 				else if(option==JOptionPane.NO_OPTION || option==JOptionPane.CANCEL_OPTION){
