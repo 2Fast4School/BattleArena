@@ -27,7 +27,6 @@ public abstract class Entity{
 	 * @param h	The height of the Entity
 	 * @param solid Boolean that determines if the Entity will be solid, or able to move through.
 	 */
-
 	public Entity(int x, int y, int w, int h, boolean solid){
 		this.x = x; this.y = y; this.w = w; this.h = h;
 		this.solid = solid;

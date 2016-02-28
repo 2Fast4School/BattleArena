@@ -12,10 +12,10 @@ import model.spawnPoint;
 
 /**
  * <h1>MapGenerator</h1>
- * Class used to generate the map based on a image
- * 
- * @author Alexander Erenstedt
- * @version 1.0 A2
+ * Class used to generate the map based on a logicMap(BufferedImage), a theme 
+ * and the size of which each pixel in the logicMap should represent
+ * @author Alexander Erenstedt - Modified 02-28-16
+ * @version 1.0
  */
 public class MapGenerator { //Perhaps implement serialization
 	/**
@@ -27,8 +27,6 @@ public class MapGenerator { //Perhaps implement serialization
 	 * @return The map it created
 	 */
 	public static Map generateMap(BufferedImage logicMap, String type, int sizeOfPixel){
-		
-		
 		//The different images used
 		BufferedImage standardTileBackground = null;
 		BufferedImage wallTileBackground = null;
@@ -49,7 +47,6 @@ public class MapGenerator { //Perhaps implement serialization
 		int width = logicMap.getWidth();
 		BufferedImage background = new BufferedImage(logicMap.getWidth()*sizeOfPixel, logicMap.getHeight()*sizeOfPixel, BufferedImage.TYPE_INT_ARGB);
 		Map map = new Map();
-		
 		//Create map boundaries so that you can't leave the map
 			//Top boundary
 			map.addTile(new WallTile(-10, -10, width*sizeOfPixel+20, 10));
@@ -73,7 +70,7 @@ public class MapGenerator { //Perhaps implement serialization
 					x += temp; //Used so skip the pixels the optimization method created
 					break;
 				case "fffff200": //yellow, represents spawnpoints
-					map.addSpawnPoint(new spawnPoint(x*sizeOfPixel, y*sizeOfPixel, 1, 1));
+					map.addSpawnPoint(new spawnPoint(x*sizeOfPixel, y*sizeOfPixel));
 					break;
 				case "ffed1c24": //red, represent a damageTile
 					temp = checkAdjacentToRight(x, y, logicMap); 
@@ -85,6 +82,7 @@ public class MapGenerator { //Perhaps implement serialization
 				//System.out.println(Integer.toHexString(rgb));
 			}
 		}
+		
 		//Paint the background
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
@@ -135,29 +133,20 @@ public class MapGenerator { //Perhaps implement serialization
 				}
 			}
 		}
+		
 		//prints the number of entities created
 		System.out.println(map.getTiles().size()+map.getSpawnPoints().size()); 
 		map.setBackground(background);
 		return map;
-		
 	}
-	/**
-	 * Method used to create a empty map if something went wrong in generateMap
-	 * @return Empty Map with white background
-	 */
-	public static Map generateBlankMap(int x, int y){
-		Map map = new Map();
-		map.setBackground(new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB));;
-		return map;
 	
-	}
 	/**
 	 * A recursive function to check if the pixel to the right is adjacent
 	 * is used to optimize the creation of entities in MapGenerator.
 	 * @param x The x-coord of the pixel comparing to
 	 * @param y	The y-coord of the pixel comparing to
 	 * @param img The img used to compare
-	 * @return Returns the number of adjacent pixels to the right
+	 * @return Returns the number of adjacent pixels to the right with the same color
 	 */
 	private static int checkAdjacentToRight(int x, int y, BufferedImage img){
 		int width = img.getWidth();
@@ -168,17 +157,5 @@ public class MapGenerator { //Perhaps implement serialization
 			return temp;
 		}
 		return 1;
-	}
-	
-	/*private static void paintBackground(int x, int y, BufferedImage origin, BufferedImage background){
-		for(int i=0; i < sizeOfPixel; i++){
-			for(int j = 0; j < sizeOfPixel; j++){
-				origin.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), background.getRGB(i, j));				
-			}
-		}
-		//return origin;
-	}*/
-	
-	
-	
+	}	
 }

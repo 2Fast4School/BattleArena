@@ -8,15 +8,12 @@ import model.Tile;
 import model.spawnPoint;
 /**
  * <h1>Map</h1>
- * Object to hold the map-specific objects such as spawnPoints and boundries
- * 
- * @author Alexander Erenstedt
- * @version 1.0
+ * Object to hold the map-specific objects such as spawnPoints and boundaries
+ * @author Alexander Erenstedt - Modified: 28-02-16 
+ * @version 1.0 
  */
 public class Map {
-	//All the mapObjects created by MapGenerator except spawnpoints
 	private ArrayList<Tile> tiles; 
-	
 	private BufferedImage background;	
 	private ArrayList<spawnPoint> spawnPoints;
 	
@@ -43,6 +40,7 @@ public class Map {
 	public void addTile(Tile e){
 		tiles.add(e);
 	}
+	
 	/**
 	 * @param e Adds spawnpoints
 	 */
@@ -56,16 +54,17 @@ public class Map {
 	public BufferedImage getBackground(){
 		return background;
 	}
+	
 	/**
 	 * @return The array of the Map:s entities
 	 */
 	public ArrayList<Tile> getTiles(){
 		return tiles;
 	}
+	
 	/**
 	 * @return Returns the spawnpoints of the map
 	 */
-	
 	public ArrayList<spawnPoint> getSpawnPoints(){
 		return spawnPoints;
 	}
