@@ -11,7 +11,7 @@ import model.spawnPoint;
  * Object to hold the map-specific objects such as spawnPoints and boundries
  * 
  * @author Alexander Erenstedt
- * @version 1.0 A2
+ * @version 1.0
  */
 public class Map {
 	//All the mapObjects created by MapGenerator except spawnpoints
@@ -44,10 +44,10 @@ public class Map {
 		tiles.add(e);
 	}
 	/**
-	 * @param e A normal Entity which is used as a spawnpoint
+	 * @param e Adds spawnpoints
 	 */
-	public void addSpawnPoint(spawnPoint e){
-		spawnPoints.add(e);
+	public void addSpawnPoint(spawnPoint sp){
+		spawnPoints.add(sp);
 	}
 	
 	/**

@@ -18,26 +18,26 @@ import model.spawnPoint;
  * @version 1.0 A2
  */
 public class MapGenerator { //Perhaps implement serialization
-	private static final int sizeOfPixel = 16;
 	/**
 	 * Enormous method which generates entities as boundaries in the Map object it returns
 	 * and paints the background depending on the parameter type.
-	 * Don't try to understand it, please... ;)
-	 * @param fileName The filename of the image the map should be based on
-	 * @param type The desired type of the map generated
+	 * @param The logicMap which will be used to create walls and such
+	 * @param type The desired theme of the map generated
+	 * @param sizeOfPixel The size each pixel in the logicMap should represent in the game view (16 or 8)
 	 * @return The map it created
 	 */
-	public static Map generateMap(BufferedImage logicMap, String type){
+	public static Map generateMap(BufferedImage logicMap, String type, int sizeOfPixel){
 		
 		
 		//The different images used
-		BufferedImage standardBackground = null;
-		BufferedImage wallBackground = null;
+		BufferedImage standardTileBackground = null;
+		BufferedImage wallTileBackground = null;
 		BufferedImage damageTileBackground = null;
 		
+		//If the read failed they will be null and be painted as the colorcode on the background
 		try {
-			standardBackground = ImageIO.read(new File("res/" + type + "/standardBackground.png"));
-			wallBackground = ImageIO.read(new File("res/" + type + "/wall.png"));
+			standardTileBackground = ImageIO.read(new File("res/" + type + "/standardBackground.png"));
+			wallTileBackground = ImageIO.read(new File("res/" + type + "/wall.png"));
 			damageTileBackground = ImageIO.read(new File("res/" + type + "/damageTileBackground.png"));
 			
 		} catch (IOException e) {	
@@ -47,15 +47,10 @@ public class MapGenerator { //Perhaps implement serialization
 		
 		int height = logicMap.getHeight();
 		int width = logicMap.getWidth();
-		/*if(height != 50 || width != 50){ //Temp limit, generates 800x800 map.
-			return generateBlankMap();
-		}*/
 		BufferedImage background = new BufferedImage(logicMap.getWidth()*sizeOfPixel, logicMap.getHeight()*sizeOfPixel, BufferedImage.TYPE_INT_ARGB);
 		Map map = new Map();
 		
-		//More support methods...
-		
-		//Create map boundaries
+		//Create map boundaries so that you can't leave the map
 			//Top boundary
 			map.addTile(new WallTile(-10, -10, width*sizeOfPixel+20, 10));
 			//Left boundary
@@ -65,82 +60,72 @@ public class MapGenerator { //Perhaps implement serialization
 			//Bottom boundary
 			map.addTile(new WallTile(-10, height*sizeOfPixel, width*sizeOfPixel+20, 10));
 		
-		//Possibly more support methods......
 		//Create mapObjects based on pixels, the format ARGB is used with hexcode
 		//example "ff000000" gives A = ff, R = 00, G = 00, B = 00 which gives black
-		for(int y = 0; y < height; y++){
-			for(int x = 0; x < width; x++){
+		for(int y = 0; y < height; y++){ //Need to loop in "wrong" order for the checkAdjacentToRIght to work
+			for(int x = 0; x < width; x++){ 
 				int temp = 0;
 				int rgb = logicMap.getRGB(x, y);
 				switch(Integer.toHexString(rgb)){
 				case "ff000000": //Black, represents wall
-					temp = checkAdjacentToRight(x, y, logicMap);
-
+					temp = checkAdjacentToRight(x, y, logicMap); 
 					map.addTile(new WallTile(x*sizeOfPixel, y*sizeOfPixel, temp*sizeOfPixel, sizeOfPixel));
-
-					x += temp;
+					x += temp; //Used so skip the pixels the optimization method created
 					break;
 				case "fffff200": //yellow, represents spawnpoints
 					map.addSpawnPoint(new spawnPoint(x*sizeOfPixel, y*sizeOfPixel, 1, 1));
 					break;
-
-				case "ffed1c24":
-					temp = checkAdjacentToRight(x, y, logicMap);
+				case "ffed1c24": //red, represent a damageTile
+					temp = checkAdjacentToRight(x, y, logicMap); 
 					map.addTile(new DamageTile(x*sizeOfPixel, y*sizeOfPixel, temp*sizeOfPixel, sizeOfPixel));
-
 					break;
 				default:
 					break;
 				}
-				
 				//System.out.println(Integer.toHexString(rgb));
-			
 			}
-			
 		}
-		//More.
 		//Paint the background
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
 				int rgb = logicMap.getRGB(x, y);
 				//System.out.println(Integer.toHexString(rgb));
 				String tileType = "";
-				if(Integer.toHexString(rgb).compareTo("ffffffff") == 0) {
-					tileType = "standardPath"; 
+				if(Integer.toHexString(rgb).compareTo("ffffffff") == 0) { //white
+					tileType = "standard"; 
 				}
 				if(Integer.toHexString(rgb).compareTo("fffff200") == 0) { //Yellow
-					tileType = "standardPath"; //Should not be visible to the player
+					tileType = "standard"; //Should not be visible to the player
 				}
-				if(Integer.toHexString(rgb).compareTo("ff000000") == 0) {
+				if(Integer.toHexString(rgb).compareTo("ff000000") == 0) { //Black
 					tileType = "wall"; //Wall
 				}
-				if(Integer.toHexString(rgb).compareTo("ffed1c24") == 0) {
+				if(Integer.toHexString(rgb).compareTo("ffed1c24") == 0) { //Wall
 					tileType = "damage";
 				}
 				for(int i=0; i < sizeOfPixel; i++){
 					for(int j = 0; j < sizeOfPixel; j++){
 						switch(tileType){
-						case "standardPath":							
-							if(standardBackground != null){
-								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), standardBackground.getRGB(i, j));
+						case "standard": //Paints the standardBackground 					
+							if(standardTileBackground != null){
+								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), standardTileBackground.getRGB(i, j));
 								break;
 							}else{
-								tileType="getrektfaggot";
+								tileType="donotmatchondis";
 							}
-							
 						case "wall":
-							if(wallBackground != null){
-								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), wallBackground.getRGB(i, j));
+							if(wallTileBackground != null){
+								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), wallTileBackground.getRGB(i, j));
 								break;
 							}else{
-								tileType="getrektfaggot";
+								tileType="onotmatchondis";
 							}
 						case "damage":
 							if(damageTileBackground != null){
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), damageTileBackground.getRGB(i, j));
 								break;
 							}else{
-								tileType="getrektfaggot";
+								tileType="onotmatchondis";
 							}
 						default:
 							background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), rgb);
@@ -150,8 +135,8 @@ public class MapGenerator { //Perhaps implement serialization
 				}
 			}
 		}
-		
-		System.out.println(map.getTiles().size());
+		//prints the number of entities created
+		System.out.println(map.getTiles().size()+map.getSpawnPoints().size()); 
 		map.setBackground(background);
 		return map;
 		
@@ -160,9 +145,9 @@ public class MapGenerator { //Perhaps implement serialization
 	 * Method used to create a empty map if something went wrong in generateMap
 	 * @return Empty Map with white background
 	 */
-	private static Map generateBlankMap(){
+	public static Map generateBlankMap(int x, int y){
 		Map map = new Map();
-		map.setBackground(new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB));;
+		map.setBackground(new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB));;
 		return map;
 	
 	}

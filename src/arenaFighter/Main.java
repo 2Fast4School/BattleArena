@@ -1,6 +1,7 @@
 package arenaFighter;
 
 import java.awt.Dimension;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class Main{
 			}
 			
 			
-			Map map = MapGenerator.generateMap(logicMap, "lava");
+			Map map = MapGenerator.generateMap(logicMap, "desert", 16);
 			GameState state=new GameState(numberOfPlayers, map);
 			GameWindow window=new GameWindow();
 			Client client = new Client(port, ip, state);
@@ -47,7 +48,7 @@ public class Main{
 			input.setup(state.returnPlayer());
 			
 			frame.add(window);
-			frame.setPreferredSize(new Dimension(logicMap.getWidth()*16, logicMap.getHeight()*16));
+			frame.setPreferredSize(new Dimension(logicMap.getWidth()*16+22, logicMap.getHeight()*16+56));//Have to use constants (22 and 56) for some odd reason
 			
 			window.addKeyListener(input);
 			window.addMouseListener(input);

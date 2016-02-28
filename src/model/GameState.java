@@ -35,7 +35,7 @@ public class GameState extends Observable{
 			gameObjects.add(new Enemy(100,100,40,40));
 		}
 		//Init the quadtree with the size of the screen.
-		quadtree = new Quadtree(new Rectangle(0,0,800,800));
+		quadtree = new Quadtree(new Rectangle(0,0,map.getBackground().getWidth(),map.getBackground().getHeight()));
 		
 		//Add all entities from the map to gamestate
 		for(Entity e : map.getTiles()){
