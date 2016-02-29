@@ -18,7 +18,7 @@ import model.Player;
  * 
  */
 
-public class Input implements KeyListener, MouseListener, MouseMotionListener{
+public class GameInput implements KeyListener, MouseListener, MouseMotionListener{
 	private Player p;
 	private final int VELOCITY = 2;
 
@@ -85,14 +85,17 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 
 	//Unused
 	public void mouseDragged(MouseEvent e) {
-
-		if(e.getButton()==MouseEvent.BUTTON1){
-			p.doAttack();
+		//System.out.println(e.toString());
+		if(p.isAlive()){
+			if(e.getButton()==MouseEvent.BUTTON1){
+				p.doAttack();
+			}
 		}
 
 	}
 	
 	public void mouseMoved(MouseEvent e) {
+		//System.out.println(e.toString());
 		if(p.isAlive()){
 			//Calculates the angle between the mouse-pointer and the player's central coordinates.
 			int angle = (int)Math.toDegrees(Math.atan2(e.getY() - p.getCenterY(), e.getX() - p.getCenterX()));
@@ -114,7 +117,6 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-
 		if(arg0.getButton()==MouseEvent.BUTTON1){
 			p.doAttack();
 		}
@@ -123,7 +125,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		
+		//System.out.println(arg0.toString());
 	}
 
 	@Override
@@ -133,7 +135,11 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-				
+		if(p.isAlive()){
+			if(arg0.getButton()==MouseEvent.BUTTON1){
+				p.doAttack();
+			}
+		}
 	}
 
 	@Override
