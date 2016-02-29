@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import arenaFighter.Main;
+import controller.Client;
 import controller.GameInput;
 import controller.PreGameInput;
 
@@ -15,6 +16,7 @@ public class GameFrame extends JFrame {
 	private GameWindow gameWindow;
 	private PreGameInput preGameInput;
 	private GameInput gameInput;
+	private Client client;
 	
 	public GameFrame(String frameName) {
 		super(frameName);
@@ -47,7 +49,7 @@ public class GameFrame extends JFrame {
 		
 		gameWindow=window;
 		add(window);
-		new LobbyDialog(this);
+		new LobbyDialog(this, client);
 		//Main.runClient();
 		//Main.startGame();
 		// Lägg till lyssnare till gameWindow
@@ -62,5 +64,5 @@ public class GameFrame extends JFrame {
 	public void toolsTipsEnable(boolean enable) {
 		preGameWindow.toggleToolTips(enable);
 	}
-
+	public void setClient(Client client){this.client=client;}
 }

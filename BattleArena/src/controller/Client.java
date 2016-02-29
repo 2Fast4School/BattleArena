@@ -47,7 +47,7 @@ public class Client implements Runnable, Observer{
 		this.srvport = srvport;
 		this.state = state;
 		this.map = map;
-		ready=true;
+		ready=false;
 		
 		try {
 			this.srvip = InetAddress.getByName(srvip);

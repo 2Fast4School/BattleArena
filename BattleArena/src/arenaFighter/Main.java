@@ -45,6 +45,7 @@ public class Main{
 		input = new GameInput();
 		game=new Game(state);
 	
+		frame.setClient(client);
 		//frame.add(window);
 		frame.switchToGameWindow(window);
 		
@@ -64,7 +65,6 @@ public class Main{
 	public static void requestConnection(){
 		client.requestConnection();
 		input.setup(state.returnPlayer());
-		//frame.setTitle(""+state.getID());
 	}
 	public static void runClient(){
 		new Thread(client).start();

@@ -13,9 +13,11 @@ public class LobbyDialogInput extends JDialog implements ActionListener {
 	private LobbyDialog lobbyDialog;
 	private GameFrame frame;
 	private boolean alreadyPressed;
-	public LobbyDialogInput(GameFrame frame, LobbyDialog lobbyDialog) {
+	private Client client;
+	public LobbyDialogInput(Client client, GameFrame frame, LobbyDialog lobbyDialog) {
 		this.lobbyDialog = lobbyDialog;
 		this.frame = frame;
+		this.client=client;
 		alreadyPressed=false;
 	}
 	@Override
@@ -25,19 +27,17 @@ public class LobbyDialogInput extends JDialog implements ActionListener {
 		case "chckbxReady":
 			if(!alreadyPressed){
 				alreadyPressed=true;
-				//System.out.println("Nu jävlar är jag redo(?)");
 				lobbyDialog.readyUp(1);
-				/*
-				 * Denna if statement måste bytas ut. Igentligen ska server/client komminucera, och spelet startas
-				 * om nrReady=MaxPlayers, eller liknande!!
-				 * */
+				
 				if(lobbyDialog.getIsReady()==1){
 					lobbyDialog.countDown(0);
 				}
 			}
 			else{
+				alreadyPressed=false;
 				lobbyDialog.readyUp(-1);
 			}
+			client.setReady(alreadyPressed);
 			break;
 		default:
 

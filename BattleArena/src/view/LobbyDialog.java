@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import arenaFighter.Main;
+import controller.Client;
 import controller.LobbyDialogInput;
 
 public class LobbyDialog extends JDialog {
@@ -28,14 +29,16 @@ public class LobbyDialog extends JDialog {
 	private JLabel lblNewLabel_1;
 	private BufferedImage mapImage;
 	private int numberReady;
+	private Client client;
 	
-	public LobbyDialog(GameFrame frame) {
+	public LobbyDialog(GameFrame frame, Client client) {
 		this.frame = frame;
+		this.client=client;
 		numberReady=0;
 		initDialog();
 	}
 	public void initDialog() {
-		LobbyDialogInput lobbyDialogInput = new LobbyDialogInput(frame, this);
+		LobbyDialogInput lobbyDialogInput = new LobbyDialogInput(client, frame, this);
 		setTitle("Lobby");
 		setLayout(null);
 		setLocation(160, 160);
