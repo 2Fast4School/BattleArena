@@ -16,6 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+
+import arenaFighter.Main;
 import controller.LobbyDialogInput;
 
 public class LobbyDialog extends JDialog {
@@ -25,8 +27,11 @@ public class LobbyDialog extends JDialog {
 	private JPanel contentPane;
 	private JLabel lblNewLabel_1;
 	private BufferedImage mapImage;
+	private int numberReady;
+	
 	public LobbyDialog(GameFrame frame) {
 		this.frame = frame;
+		numberReady=0;
 		initDialog();
 	}
 	public void initDialog() {
@@ -84,6 +89,7 @@ public class LobbyDialog extends JDialog {
 	
 	public void countDown(int counter) {
 		if (counter == 3) {
+			System.out.println("test");
 			JLabel lblNewLabel_1 = new JLabel("Game starts in 3..");
 			lblNewLabel_1.setBounds(319, 203, 135, 29);
 			add(lblNewLabel_1);
@@ -91,9 +97,15 @@ public class LobbyDialog extends JDialog {
 		else if (counter == 2) {
 			lblNewLabel_1.setText("Game starts in 3.. 2..");
 		}
-		else {
+		else if(counter == 1){
 			lblNewLabel_1.setText("Game starts in 3.. 2.. 1..");
 		}
-		
+		else{
+			
+			frame.setVisible(true);
+			Main.startGame();
+		}	
 	}
+	public void readyUp(int increment){numberReady+=increment;}
+	public int getIsReady(){return numberReady;}
 }

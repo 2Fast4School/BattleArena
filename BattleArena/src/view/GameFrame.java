@@ -40,11 +40,16 @@ public class GameFrame extends JFrame {
 	}
 	
 	public void switchToGameWindow(GameWindow window) {
-		//contentPane.removeAll();
-		//contentPane.add(window);
+
 		preGameWindow.setVisible(false);
+		setVisible(false);
 		//remove(preGameWindow);
+		
+		gameWindow=window;
 		add(window);
+		
+		new LobbyDialog(this);
+		
 		//Main.runClient();
 		//Main.startGame();
 		// Lägg till lyssnare till gameWindow
