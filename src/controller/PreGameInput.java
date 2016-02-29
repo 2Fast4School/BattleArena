@@ -22,19 +22,19 @@ public class PreGameInput implements ActionListener {
 
 			break;
 		case "findGameBtn":
-
+			
 			break;
 		case "settingsBtn":
 
 			break;
 		case "quitBtn":
-
+			System.exit(0);
 			break;
 		case "dialogConnectBtn":
 
 			break;
 		default:
-			System.out.println("Annat");
+			System.out.println("Other");
 			break;
 		}
 		// Create game

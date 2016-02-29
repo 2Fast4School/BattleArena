@@ -9,15 +9,17 @@ import java.io.IOException;
 import java.awt.Font;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import controller.PreGameInput;
 
 public class PreGameWindow extends JPanel{
 	private GameFrame frame;
 	private Image preGameArt;
+	private JLabel picLabel;
 	private PreGameInput preGameInput;
-	
 	private JButton createGameBtn;
 	private JButton connectGameBtn;
 	private JButton findGameBtn;
@@ -25,6 +27,10 @@ public class PreGameWindow extends JPanel{
 	private JButton quitBtn;
 	
 	private ConnectDialog connectDialog;
+	private SettingsDialog settingsDialog;
+	private LobbyDialog lobbyDialog;
+	
+	private boolean toolTipsEnabled = false;
 	
 	public PreGameWindow(GameFrame frame) {
 		this.frame = frame;
@@ -40,12 +46,13 @@ public class PreGameWindow extends JPanel{
 			e.printStackTrace();
 			preGameArt = new BufferedImage(800,800, BufferedImage.TYPE_INT_ARGB);
 		}
+		
 		// imagePanel.clearImage(); to make it disappear.
 		
 		PreGameInput preGameInput = new PreGameInput(this);
 				//Overlapping the image with the following buttons:
 		//setBackground(Color.GRAY);
-		setLayout(null);
+		setBounds(0, 0, 800, 800);
 		
 					// Create game
 		JButton createGameBtn = new JButton("Create a game");
@@ -63,7 +70,9 @@ public class PreGameWindow extends JPanel{
 		connectGameBtn.setActionCommand("connectGameBtn");
 		connectGameBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ConnectDialog connectDialog = new ConnectDialog(frame);
+				if ((connectDialog instanceof ConnectDialog) == false || connectDialog.isShowing() == false) {
+					connectDialog = new ConnectDialog(frame);
+				}
 			}
 		});
 		add(connectGameBtn);
@@ -79,7 +88,13 @@ public class PreGameWindow extends JPanel{
 		settingsBtn.setBounds(311, 384, 192, 59);
 		settingsBtn.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		settingsBtn.setActionCommand("settingsBtn");
-		settingsBtn.addActionListener(preGameInput);
+		settingsBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if ((settingsDialog instanceof SettingsDialog) == false || settingsDialog.isShowing() == false) {
+					settingsDialog = new SettingsDialog(frame);
+				}
+			}
+		});
 		add(settingsBtn);
 					// Quit
 		JButton quitBtn = new JButton("Quit");
@@ -88,8 +103,12 @@ public class PreGameWindow extends JPanel{
 		quitBtn.setActionCommand("quitBtn");
 		quitBtn.addActionListener(preGameInput);
 		add(quitBtn);
+		quitBtn.repaint();
 		
-		
+		// picLabel is added last because it will then be painted first in the JPanel
+		JLabel picLabel = new JLabel(new ImageIcon(preGameArt));
+		add(picLabel);
+		picLabel.setBounds(0, 0, 800, 800);
 		
 	}
 	
@@ -99,7 +118,7 @@ public class PreGameWindow extends JPanel{
 		
 		// method - Connect by IP
 	
-	public void toggleToolTips(Boolean toggleToolTips) {
+	public void toggleToolTips(boolean toggleToolTips) {
 		if (toggleToolTips) {
 			createGameBtn.setToolTipText("Creates a server in a separate window and tries to connect to it");
 			connectGameBtn.setToolTipText("Tries to connect to a server using an IPv4 address");
@@ -114,9 +133,15 @@ public class PreGameWindow extends JPanel{
 			settingsBtn.setToolTipText(null);
 			quitBtn.setToolTipText(null);
 		}
+		toolTipsEnabled = toggleToolTips;
 	}
-		// method - Find game
-		
-		// 
+	
+	public boolean checkToolTipsEnabled() {
+		return toolTipsEnabled;
+	}
+	
+	public void initLobby() {
+		lobbyDialog = new LobbyDialog(frame);
+	}
 
 }

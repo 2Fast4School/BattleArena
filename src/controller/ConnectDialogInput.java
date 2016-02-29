@@ -12,9 +12,8 @@ import view.GameWindow;
 
 public class ConnectDialogInput implements ActionListener {
 	private ConnectDialog connectDialog;
-	private static final int numberOfPlayers = 2;
-	private static final int port=1337;
 	private GameFrame frame;
+	private static final int numberOfPlayers = 2;
 	public ConnectDialogInput(GameFrame frame, ConnectDialog connectDialog) {
 		this.connectDialog = connectDialog;
 		this.frame = frame;
@@ -24,23 +23,26 @@ public class ConnectDialogInput implements ActionListener {
 		// TODO Auto-generated method stub
 		switch (arg0.getActionCommand()) {
 		case "ipConnectBtn":
-			connect(connectDialog.getIp());
+			connect(connectDialog.getIp(),connectDialog.getPort());
+			connectDialog.dispose();
 			break;
-
+		case "ipCancelBtn":
+			connectDialog.dispose();
+			break;
 		default:
 
 			break;
 		}
 	}
 
-	private void connect(String ip) {
+	private void connect(String ip, int port) {
 
 		for(int n=0;n<numberOfPlayers;n++){
 			// I gamelobby när man connectat och fått information från servern om vad för bana
 			Map map = MapGenerator.generateMap("res/mapBackground.png", "grass");
 			GameState state=new GameState(numberOfPlayers, map);
 			GameInput gameInput = new GameInput();
-			GameWindow gameWindow=new GameWindow(gameInput,map.getBackground());
+			GameWindow gameWindow = new GameWindow(gameInput,map.getBackground());
 			Client client = new Client(port, ip, state);
 			Game game=new Game(state);
 			// separera port, ip från state.
@@ -53,7 +55,7 @@ public class ConnectDialogInput implements ActionListener {
 			state.setup();
 			gameInput.setup(state.returnPlayer());
 			
-			frame.switchToGameWindow();
+			frame.switchToGameWindow(gameWindow);
 			
 			state.addObserver(client);
 			state.addObserver(gameWindow);

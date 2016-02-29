@@ -2,6 +2,7 @@ package server;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Observable;
@@ -36,6 +37,7 @@ public class ServerGUI implements Observer {
 
 	public ServerGUI() {
 		mainWindow = new JFrame("Battle Arena Dedicated Server");
+		mainWindow.setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
 		mainWindow.setLayout(new BorderLayout());
 		mainWindow.setSize(500, 400);
 
