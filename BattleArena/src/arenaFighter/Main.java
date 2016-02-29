@@ -51,14 +51,15 @@ public class Main{
 		state.addObserver(client);
 		state.addObserver(window);
 		requestConnection();
-		startGame();
-		new Thread(client).start();
+		//startGame();
+		//new Thread(client).start();
 	}
 	public static void startGame(){
 		window.addKeyListener(input);
 		window.addMouseListener(input);
 		window.addMouseMotionListener(input);
 		game.start();
+		frame.setVisible(true);
 	}
 	public static void requestConnection(){
 		client.requestConnection();
@@ -67,5 +68,8 @@ public class Main{
 	}
 	public static void runClient(){
 		new Thread(client).start();
+	}
+	public static void lobbyProtocol(){
+		client.lobbyProtocol();
 	}
 }

@@ -15,6 +15,7 @@ import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
 
+import arenaFighter.Main;
 import map.Map;
 import model.Enemy;
 import model.GameState;
@@ -34,6 +35,7 @@ public class Client implements Runnable, Observer{
 	private GameState state;
 	private DatagramSocket socket;
 	private Map map;
+	private boolean ready;
 	
 	/** The Constructor opens a DatagramSocket on an empty port.
 	 * 
@@ -45,6 +47,7 @@ public class Client implements Runnable, Observer{
 		this.srvport = srvport;
 		this.state = state;
 		this.map = map;
+		ready=true;
 		
 		try {
 			this.srvip = InetAddress.getByName(srvip);
@@ -162,7 +165,49 @@ public class Client implements Runnable, Observer{
 		catch(ClassNotFoundException f){}
 	}
 	
-		
+	public void lobbyProtocol(){
+		while(true){
+			DatagramSocket sendSocket;
+			try{
+				sendSocket=new DatagramSocket();
+				
+				Message message=new Message(state.getID(), -1, -1, -1, false);
+				message.setCode(3);
+				ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+				ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+				oOut.flush();
+				message.writeExternal(oOut);
+				oOut.flush();
+				byte[] bSend=bOut.toByteArray();
+				
+				DatagramPacket sendPacket=new DatagramPacket(bSend, bSend.length, srvip, srvport);
+				sendSocket.send(sendPacket);
+			}catch(IOException e){}
+			
+			byte[] bReceive=new byte[1024];
+			DatagramPacket receivePacket=new DatagramPacket(bReceive, bReceive.length);
+			try{
+				socket.receive(receivePacket);
+			}catch(IOException e){}
+			
+			try{
+				ByteArrayInputStream bIn=new ByteArrayInputStream(bReceive);
+				ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
+				Message receiveMessage=new Message();
+				receiveMessage.readExternal(oIn);
+				boolean startGame=receiveMessage.getReady();
+				//System.out.println(""+startGame);
+				if(startGame){
+					Main.startGame();
+					Main.runClient();
+					break;
+				}
+			}catch(IOException e){}
+			catch(ClassNotFoundException e){}
+		}
+	}	
+	
+	public void setReady(boolean state){ready=state;}
 	
 	/**
 	* Client is notified when there is information that needs

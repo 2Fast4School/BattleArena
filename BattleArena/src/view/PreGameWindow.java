@@ -139,9 +139,4 @@ public class PreGameWindow extends JPanel{
 	public boolean checkToolTipsEnabled() {
 		return toolTipsEnabled;
 	}
-	
-	public void initLobby() {
-		lobbyDialog = new LobbyDialog(frame);
-	}
-
 }

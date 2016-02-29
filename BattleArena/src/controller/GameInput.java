@@ -27,7 +27,6 @@ public class GameInput implements KeyListener, MouseListener, MouseMotionListene
 	 * @param Player p The player object that the Class will manipulate.
 	 */
 	public void setup(Player p){this.p = p;}
-	
 	/**
 	 * keyPressed will set the player velocity, listening to the WASD keys.
 	 * The player's facing direction will also be set to match this.

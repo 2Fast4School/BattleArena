@@ -47,9 +47,7 @@ public class GameFrame extends JFrame {
 		
 		gameWindow=window;
 		add(window);
-		
 		new LobbyDialog(this);
-		
 		//Main.runClient();
 		//Main.startGame();
 		// Lägg till lyssnare till gameWindow

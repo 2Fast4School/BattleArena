@@ -87,7 +87,7 @@ public class LobbyDialog extends JDialog {
 		textArea.append("Player 2");
 	}
 	
-	public void countDown(int counter) {
+	public void countDown(int counter){
 		if (counter == 3) {
 			System.out.println("test");
 			JLabel lblNewLabel_1 = new JLabel("Game starts in 3..");
@@ -101,9 +101,7 @@ public class LobbyDialog extends JDialog {
 			lblNewLabel_1.setText("Game starts in 3.. 2.. 1..");
 		}
 		else{
-			
-			frame.setVisible(true);
-			Main.startGame();
+			Main.lobbyProtocol();
 		}	
 	}
 	public void readyUp(int increment){numberReady+=increment;}

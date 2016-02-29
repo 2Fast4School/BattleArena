@@ -142,7 +142,38 @@ public class Server extends Observable implements Runnable{
 					skt.send(pkt);
 				}catch(IOException e){e.printStackTrace();}
 				
-			} else {
+			}
+			else if(code==3){
+				Message sendMessage=new Message();
+				sendMessage.setCode(code);sendMessage.setReady(false);
+				int nrReady=0;
+				for(ClientInfo c : clients){
+					if(c.getID()==id){
+						c.setReady(true);
+					}
+					if(c.getReady()){
+						nrReady+=1;
+					}
+				}
+
+				if(nrReady==2){	// Inte helt testat för fler än
+					sendMessage.setReady(true);
+				}
+				try{
+					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+					oOut.flush();
+					sendMessage.writeExternal(oOut);
+					oOut.flush();
+					byte[] buf=bOut.toByteArray();
+					
+					for(ClientInfo c : clients){
+						DatagramPacket sendPacket=new DatagramPacket(buf, buf.length, c.getIP(), c.getPort());
+						skt.send(sendPacket);
+					}
+				}catch(IOException e){}
+			}
+			else {
 				int idToSkip = id;
 				
 				for(ClientInfo c : clients){
@@ -176,12 +207,13 @@ public class Server extends Observable implements Runnable{
 		private InetAddress ip;
 		private int port;
 		private int id;
-
+		private boolean ready;
 		
 		public ClientInfo(InetAddress ip, int port, int id){
 			this.ip = ip;
 			this.port = port;
 			this.id = id;
+			ready=false;
 		}
 		
 		public InetAddress getIP(){
@@ -195,6 +227,8 @@ public class Server extends Observable implements Runnable{
 		public int getID(){
 			return id;
 		}
+		public boolean getReady(){return ready;}
+		public void setReady(boolean state){ready=state;}
 	}
 }
 
