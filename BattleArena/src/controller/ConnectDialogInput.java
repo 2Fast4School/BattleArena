@@ -1,8 +1,16 @@
 package controller;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+
+import arenaFighter.Main;
 import map.Map;
 import map.MapGenerator;
 import model.GameState;
@@ -14,6 +22,12 @@ public class ConnectDialogInput implements ActionListener {
 	private ConnectDialog connectDialog;
 	private GameFrame frame;
 	private static final int numberOfPlayers = 2;
+	
+	private static Client client;
+	private static GameState state;
+	private static Game game;
+	private static GameWindow window;
+	private static GameInput input;
 	public ConnectDialogInput(GameFrame frame, ConnectDialog connectDialog) {
 		this.connectDialog = connectDialog;
 		this.frame = frame;
@@ -36,35 +50,6 @@ public class ConnectDialogInput implements ActionListener {
 	}
 
 	private void connect(String ip, int port) {
-
-		for(int n=0;n<numberOfPlayers;n++){
-			// I gamelobby när man connectat och fått information från servern om vad för bana
-			Map map = MapGenerator.generateMap("res/mapBackground.png", "grass");
-			GameState state=new GameState(numberOfPlayers, map);
-			GameInput gameInput = new GameInput();
-			GameWindow gameWindow = new GameWindow(gameInput,map.getBackground());
-			Client client = new Client(port, ip, state);
-			Game game=new Game(state);
-			// separera port, ip från state.
-			//Client startas när connectGame har gjorts och ip och port har valts.
-			//state får initieras senare, när servern har skickat det.
-			
-
-			// samma som för state ovan
-			
-			state.setup();
-			gameInput.setup(state.returnPlayer());
-			
-			frame.switchToGameWindow(gameWindow);
-			
-			state.addObserver(client);
-			state.addObserver(gameWindow);
-			// När spelet ska startas
-			game.start();
-
-			// När man klickat connect i connect by ip dialog och ip och port lagts till
-			new Thread(client).start();
-		}
-
+		Main.gameSetup(ip, port);
 	}
 }

@@ -4,6 +4,8 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import arenaFighter.Main;
 import controller.GameInput;
 import controller.PreGameInput;
 
@@ -14,28 +16,20 @@ public class GameFrame extends JFrame {
 	private PreGameInput preGameInput;
 	private GameInput gameInput;
 	
-	
 	public GameFrame(String frameName) {
 		super(frameName);
 		initGameFrame();
 	}
 	
 	private void initGameFrame() {
-		
 		setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 800);
-		contentPane = new JPanel();
-		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
 		
-		PreGameWindow preGameWindow = new PreGameWindow(this);
-		contentPane.add(preGameWindow);
+		preGameWindow = new PreGameWindow(this);
+		add(preGameWindow);
 		preGameWindow.setLayout(null);
-		
-		
 		
 				// makeVisible
 				setVisible(true); 
@@ -46,8 +40,13 @@ public class GameFrame extends JFrame {
 	}
 	
 	public void switchToGameWindow(GameWindow window) {
-		contentPane.removeAll();
-		contentPane.add(window);
+		//contentPane.removeAll();
+		//contentPane.add(window);
+		preGameWindow.setVisible(false);
+		//remove(preGameWindow);
+		add(window);
+		//Main.runClient();
+		//Main.startGame();
 		// Lägg till lyssnare till gameWindow
 		//GameInput gameInput = new GameInput();
 		// Starta spel

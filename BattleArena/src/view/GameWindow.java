@@ -22,15 +22,10 @@ public class GameWindow extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Entity> gameObjects;
 	private BufferedImage img = null;
-	private GameInput gameInput;
 	
 	//Kanske ta bort
-	public GameWindow(GameInput gameInput, BufferedImage img){
+	public GameWindow(BufferedImage img){
 		this.img = img;
-		this.gameInput = gameInput;
-		addKeyListener(gameInput);
-		addMouseListener(gameInput);
-		addMouseMotionListener(gameInput);
 	}
 
 	

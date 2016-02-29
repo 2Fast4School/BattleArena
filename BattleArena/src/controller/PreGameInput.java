@@ -3,7 +3,7 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import server.ServerMain;
+import BAServer.ServerMain;
 import view.PreGameWindow;
 
 public class PreGameInput implements ActionListener {

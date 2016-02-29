@@ -14,22 +14,19 @@ import controller.GameInput;
 import map.Map;
 import map.MapGenerator;
 import model.GameState;
-import view.GameFrame;
 import view.GameWindow;
 
-public class Main{
-	private static GameFrame frame;
+public class GameMain{
+	private static final String ip = "127.0.0.1";
+	private static final int port=5050;
 	private static Game game;
 	private static GameWindow window;
 	private static GameInput input;
+	private static JFrame frame;
 	private static Client client;
 	private static GameState state;
-	
 	public static void main(String[] args){
-		frame = new GameFrame("BattleArena");
-	}
-	
-	public static void gameSetup(String ip, int port){
+		frame = new JFrame();
 		BufferedImage logicMap;
 		try {
 		    logicMap = ImageIO.read(new File("res/mapBackground.png"));
@@ -45,27 +42,28 @@ public class Main{
 		input = new GameInput();
 		game=new Game(state);
 	
-		//frame.add(window);
-		frame.switchToGameWindow(window);
+		frame.add(window);
+		frame.setPreferredSize(new Dimension(800, 800));
 		
 		state.addObserver(client);
 		state.addObserver(window);
-		requestConnection();
-		startGame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setVisible(false);
+		//requestConnection();
+		//startGame();
 		new Thread(client).start();
 	}
 	public static void startGame(){
 		window.addKeyListener(input);
 		window.addMouseListener(input);
 		window.addMouseMotionListener(input);
+		frame.setVisible(true);
 		game.start();
 	}
 	public static void requestConnection(){
 		client.requestConnection();
 		input.setup(state.returnPlayer());
-		//frame.setTitle(""+state.getID());
-	}
-	public static void runClient(){
-		new Thread(client).start();
+		frame.setTitle(""+state.getID());
 	}
 }

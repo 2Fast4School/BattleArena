@@ -6,13 +6,16 @@ import javax.swing.JDialog;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import controller.Client;
 import controller.ConnectDialogInput;
+import model.GameState;
 
 public class ConnectDialog extends JDialog {
 	private ConnectDialogInput connectDialogInput;
 	private JTextField ipTextField;
 	private JTextField portTextField;
 	private GameFrame frame;
+	
 	public ConnectDialog(GameFrame frame) {
 		this.frame = frame;
 		initDialog();
