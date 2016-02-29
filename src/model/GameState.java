@@ -14,41 +14,20 @@ public class GameState extends Observable{
 	private Enemy gotHit;
 	private ArrayList<spawnPoint> spawnPoints;
 	
-	private int numberOfPlayers;
 	private Player player;
 	private int id;
 	private Quadtree quadtree;;
 	private Map map = null;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
-	public GameState(int numberOfPlayers, Map map){
-		this.numberOfPlayers=numberOfPlayers;
+	public GameState(){
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		gotHit = null;
 		spawnPoints = new ArrayList<spawnPoint>();
-		this.map = map;
 		
-		
-		//Add dummy-enemies to start with. These enemies will get initilized with real values one's there's proper info from the server about them.
-		for(int i = 0; i < numberOfPlayers-1; i++){
-			gameObjects.add(new Enemy(100,100,40,40));
-		}
 		//Init the quadtree with the size of the screen.
 		quadtree = new Quadtree(new Rectangle(0,0,800,800));
-		
-		//Add all entities from the map to gamestate
-		for(Entity e : map.getTiles()){
-			if(!gameObjects.contains(e)){
-				gameObjects.add(e);
-			}
-		}
-		
-		for(spawnPoint e : map.getSpawnPoints()){
-			spawnPoints.add(e);
-		}
-		//System.out.println("Number of spawn points: " + spawnPoints.size());
-
 	}
 	
 	/**
@@ -63,28 +42,36 @@ public class GameState extends Observable{
 			}
 		} return ens;
 	}
-	public void setup(){
-		Random randomGenerator = new Random();
+	
+	public void setup(int id, int maxPlayers, Map map){
+		this.id = id;
+		this.map = map;
 		
-		
-		int spawnPointIndex = randomGenerator.nextInt(spawnPoints.size());
-		spawnPoints.get(spawnPointIndex).setUsed();
-		player = new Player(spawnPoints.get(spawnPointIndex).getX(), spawnPoints.get(spawnPointIndex).getY(), 40, 40);
-		//player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 40, 40);
-		gameObjects.add(player);
-		
-		
-		
-		//Generate 50^2 16x16 entities
-		/*
-		int k = 0;
-		for(int i = 0; i < 50; i++){
-			for(int j = 0; j < 50; j++){
-				gameObjects.add(new Enemy(k, 16*i, 16*j, 16, 16 ));
-				k++;
+		//Add all entities from the map to gamestate
+		for(Tile e : map.getTiles()){
+			if(!gameObjects.contains(e)){
+				gameObjects.add(e);
 			}
 		}
-		*/
+		
+		for(spawnPoint e : map.getSpawnPoints()){
+			spawnPoints.add(e);
+		}
+		
+			
+		
+		player=new Player(spawnPoints.get(id-1).getX(), spawnPoints.get(id-1).getY(), 40, 40);
+		gameObjects.add(player);
+		
+		for(int i = 1; i < maxPlayers+1; i++){
+			if(id != i){
+				Enemy en = new Enemy(spawnPoints.get(i-1).getX(), spawnPoints.get(i-1).getY(), 40, 40);
+				en.setID(i);
+				gameObjects.add(en);
+			}
+			
+		}
+		
 		
 	}
 	public void tick(){
@@ -177,9 +164,7 @@ public class GameState extends Observable{
 	public ArrayList<Entity> getList(){return gameObjects;}
 	public ArrayList<spawnPoint> getSpawns(){return spawnPoints;}
 	public Player returnPlayer(){return player;}
-	public void setID(int id){this.id=id;}
 	public int getID(){ return id; }
-	public int getNrOfPlayers(){return numberOfPlayers;}
 	public BufferedImage getBackground(){
 		return map.getBackground();
 	}

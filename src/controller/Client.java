@@ -15,6 +15,7 @@ import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
 
+import map.Map;
 import model.Enemy;
 import model.GameState;
 import model.Message;
@@ -22,7 +23,7 @@ import model.Player;
 /**
 * <h1>Client</h1>
 * Client is the class which is responsible for sending packets including player information to the server and listen for incoming packets from the Server.
-* @author  William Bjï¿½rklund / Victor Dahlberg
+* @author  William Bjorklund / Victor Dahlberg
 * @version 2.0
 * @since   2016-02-26
 */
@@ -30,9 +31,8 @@ public class Client implements Runnable, Observer{
 	private int srvport;
 	private InetAddress srvip;
 	private GameState state;
-	private int id;
 	private DatagramSocket socket;
-	private int streamPort;
+	private Map map;
 	
 	/** The Constructor opens a DatagramSocket on an empty port.
 	 * 
@@ -40,11 +40,10 @@ public class Client implements Runnable, Observer{
 	 * @param srvip The server's ip in form of a String.
 	 * @param state The GameState which should be updated when a packet is received.
 	 */
-	public Client(int srvport, String srvip, GameState state, int streamPort){
+	public Client(int srvport, String srvip, GameState state, Map map){
 		this.srvport = srvport;
 		this.state = state;
-		this.streamPort=streamPort;
-		id = -1;
+		this.map = map;
 		
 		try {
 			this.srvip = InetAddress.getByName(srvip);
@@ -68,7 +67,6 @@ public class Client implements Runnable, Observer{
 	* sent depending on which OP-CODE it is.*/
 	@Override
 	public void run() {
-		String sdata;
 		int id = 0, newx = 0, newy = 0, rot = 0;
 		boolean attacking;
 		byte[] data = new byte[1024];
@@ -84,35 +82,43 @@ public class Client implements Runnable, Observer{
 				System.out.println("error");
 				e.printStackTrace();
 			}
-			
-			int byteCount = pkt.getLength();
-		    ByteArrayInputStream receiveStream = new ByteArrayInputStream(data);
-		    try{
-		    	ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(receiveStream));
-			    Object o = is.readObject();
-			    is.close();
-			    Message aMessage=(Message)o;
-			    
-			    int code=aMessage.getCode();
-			    newx=aMessage.getXPos();id=aMessage.getID();newy=aMessage.getYPos();
-			    rot=aMessage.getRotVar();attacking=aMessage.getAttacking();
-			    for(Enemy n : state.getTheEnemies()){
-					if(id == n.getID() || n.getID() == -1){
-						
-						if(n.getID() == -1){
-							n.setID(id);
-						}
-						
+				
+			try{
+				ByteArrayInputStream bIn=new ByteArrayInputStream(data);
+				ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
+				Message receiveMessage=new Message();
+				receiveMessage.readExternal(oIn);
+				
+				int code=receiveMessage.getCode();int enemyID=receiveMessage.getEnemeyID();
+				id=receiveMessage.getID();newx=receiveMessage.getXPos();newy=receiveMessage.getYPos();
+				rot=receiveMessage.getRotVar();attacking=receiveMessage.getAttacking();
+				int playerHP=receiveMessage.getPlayerHP();
+				
+				for(Enemy n : state.getTheEnemies()){
+					if(id == n.getID()){
 						n.setX(newx); n.setY(newy); n.setRotVar(rot);
 						
+						if(playerHP!=-1){
+							n.setHP(playerHP);
+						}
 						//Funger inte just nu..
-						if(attacking){
+						if(attacking && !n.getHasAttacked()){
+							n.setHasAttacked(true);
 							n.doAttack();
 						}
+						else if(!attacking){
+							n.setHasAttacked(false);
+						}
+					}
+					else if(enemyID==n.getID()){
+						n.setHP(receiveMessage.getEnemyHP());
 					}
 				}
-		    }catch(ClassNotFoundException e){e.printStackTrace();}
-		    catch(IOException f){f.getStackTrace();}
+				if(enemyID==state.getID()){
+					state.returnPlayer().setHP(receiveMessage.getEnemyHP());
+				}
+			}catch(IOException e){}
+			catch(ClassNotFoundException f){}
 		}
 	}
 	
@@ -125,40 +131,34 @@ public class Client implements Runnable, Observer{
 	 */
 	public void requestConnection(){
 		//OPCODE 0 is initpacket. server responds with your id.
-		Message message=new Message(0);
+		Message message=new Message();
+		message.setCode(0);
 		
-		ByteArrayOutputStream byteStream = new ByteArrayOutputStream(streamPort/2);	// Kanske måste vara unik?
 		try{
-			ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
-			os.flush();
-			os.writeObject(message);
-			os.flush();
-		}catch(IOException e){}
-		byte[] data = byteStream.toByteArray();
-		
-		DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
-		
-		try {
-			socket.send(pkt);
+			ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+			ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+			oOut.flush();
+			message.writeExternal(oOut);
+			oOut.flush();
+			byte[] data=bOut.toByteArray();
+
+			DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
 			
+			socket.send(pkt);
 			byte []buf = new byte[1024];
 			pkt = new DatagramPacket(buf, buf.length);
+			
 			socket.setSoTimeout(10000);
 			socket.receive(pkt);
 			
-			int byteCount = pkt.getLength();
-		    ByteArrayInputStream receiveStream = new ByteArrayInputStream(buf);
-		    ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(receiveStream));
-		    try{
-			    Object o = is.readObject();
-			    is.close();
-			    Message aMessage=(Message)o;
-				state.setID(aMessage.getID());
-		    }catch(ClassNotFoundException e){e.printStackTrace();}
-		} catch (IOException e) {
-			System.out.println("couldnt connect");
-		}
-		
+			ByteArrayInputStream bIn=new ByteArrayInputStream(buf);
+			ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
+			Message receiveMessage=new Message();
+			receiveMessage.readExternal(oIn);
+			
+			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);
+		}catch(IOException e){System.out.println("couldnt connect");}	
+		catch(ClassNotFoundException f){}
 	}
 	
 		
@@ -177,35 +177,34 @@ public class Client implements Runnable, Observer{
 		if(arg1 instanceof Player){
 			Player player=(Player)arg1;
 			Enemy enemy = state.gotHit();
-			Message message=new Message(state.getID(),player.getX(),player.getY()
-					,player.getRotVar(), player.getWeapon().isAttacking());
+			//Default-strÃ¤ng som alltid ska med.
 			byte[] data;
-		
+			Message message=new Message(state.getID(),player.getX(),player.getY(),player.getRotVar(),
+					player.getWeapon().isAttacking());
+
+			message.setPlayerHP(player.getHP());
+
 			//hp-change OPCODE:2
 			if(enemy != null) {
 				message.setCode(2);
-				message.setEnemeyID(enemy.getID());
+				message.setEnemyID(enemy.getID());
+				message.setEnemyHP(enemy.getHP());
 			} else {
 				//Regular / move OPCODE:1
 				message.setCode(1);
 			}
-
-			ByteArrayOutputStream byteStream = new ByteArrayOutputStream(streamPort);	// Kanske måste vara unik?
-			try{
-				ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
-				os.flush();
-				os.writeObject(message);
-				os.flush();
-				os.close();
-			}catch(IOException e){}
-			data=byteStream.toByteArray();
-		
 			
-			DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
-			try {
-				//System.out.println("sending");
+			try{
+				ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+				ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+				oOut.flush();
+				message.writeExternal(oOut);
+				oOut.flush();
+				data=bOut.toByteArray();
+				
+				DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
 				socket.send(pkt);
-			} catch (IOException e) {}
+			}catch(IOException e){}
 		}
 	}
 }				

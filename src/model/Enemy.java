@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 public class Enemy extends Unit {
 	private int ID;
+	private boolean hasAttacked;
 	/**
 	 * Constructor for Enemy. 
 	 * @param x The x-position of the Enemy.
@@ -18,7 +19,7 @@ public class Enemy extends Unit {
 	public Enemy(int x, int y, int w, int h){
 		super(x, y, w ,h, true);
 		setWeapon(new SweepSword(this, 8, 50));
-		
+		hasAttacked=false;
 		//Init the enemies Id with -1 which means this enemy object dont have a "human counter-part".
 		setID(-1);
 		loadImages();
@@ -51,4 +52,6 @@ public class Enemy extends Unit {
 			sprite = ImageIO.read(new File("res/testa.png"));
 		}catch(IOException e){}	
 	}
+	public void setHasAttacked(boolean state){hasAttacked=state;}
+	public boolean getHasAttacked(){return hasAttacked;}
 }

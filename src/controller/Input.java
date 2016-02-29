@@ -34,27 +34,26 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 	 * @param e : KeyEvent
 	 */
 	public void keyPressed(KeyEvent e) {
-		if(p.isAlive()){
-			if(e.getKeyCode() == KeyEvent.VK_W){
-				p.setdy(-VELOCITY);
-			}
-			
-			if(e.getKeyCode() == KeyEvent.VK_A){
-				p.setdx(-VELOCITY);
-			}
-			
-			if(e.getKeyCode() == KeyEvent.VK_S){
-				p.setdy(VELOCITY);
-			}
-			
-			if(e.getKeyCode() == KeyEvent.VK_D){
-				p.setdx(VELOCITY);
-			}
-			
-			//Force shut down the game.
-			if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-				System.exit(1);
-			}
+
+		if(e.getKeyCode() == KeyEvent.VK_W){
+			p.setdy(-VELOCITY);
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_A){
+			p.setdx(-VELOCITY);
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_S){
+			p.setdy(VELOCITY);
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_D){
+			p.setdx(VELOCITY);
+		}
+		
+		//Force shut down the game.
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+			System.exit(1);
 		}
 	}
 
@@ -62,23 +61,23 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 	 * keyReleased will set the player's x or y velocity to 0, depending on which of the WASD keys is released.
 	 */
 	public void keyReleased(KeyEvent e) {
-		if(p.isAlive()){
-			if(e.getKeyCode() == KeyEvent.VK_W){
-				p.setdy(0);
-			}
-			
-			if(e.getKeyCode() == KeyEvent.VK_A){
-				p.setdx(0);
-			}
-			
-			if(e.getKeyCode() == KeyEvent.VK_S){
-				p.setdy(0);
-			}
-			
-			if(e.getKeyCode() == KeyEvent.VK_D){
-				p.setdx(0);
-			}
+
+		if(e.getKeyCode() == KeyEvent.VK_W){
+			p.setdy(0);
 		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_A){
+			p.setdx(0);
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_S){
+			p.setdy(0);
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_D){
+			p.setdx(0);
+		}
+
 	}
 	
 	//Unused
@@ -86,11 +85,11 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 
 	//Unused
 	public void mouseDragged(MouseEvent e) {
-		if(p.isAlive()){
-			if(e.getButton()==MouseEvent.BUTTON1){
-				p.doAttack();
-			}
+
+		if(e.getButton()==MouseEvent.BUTTON1){
+			p.doAttack();
 		}
+
 	}
 	
 	public void mouseMoved(MouseEvent e) {
@@ -115,11 +114,11 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener{
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		if(p.isAlive()){
-			if(arg0.getButton()==MouseEvent.BUTTON1){
-				p.doAttack();
-			}
+
+		if(arg0.getButton()==MouseEvent.BUTTON1){
+			p.doAttack();
 		}
+
 	}
 
 	@Override
