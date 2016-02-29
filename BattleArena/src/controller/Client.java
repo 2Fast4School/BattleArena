@@ -22,6 +22,7 @@ import model.Message;
 import model.Player;
 /**
 * <h1>Client</h1>
+
 * Client is the class which is responsible for sending packets including player information to the server and listen for incoming packets from the Server.
 * @author  William Bjorklund / Victor Dahlberg
 * @version 2.0

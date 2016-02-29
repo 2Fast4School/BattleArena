@@ -1,10 +1,6 @@
 package model;
 
 import java.awt.Rectangle;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 /**
  * <h1>Weapon</h1>
