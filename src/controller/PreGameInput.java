@@ -4,12 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import BAServer.ServerMain;
-import view.PreGameWindow;
+import view.ConnectPanel;
+import view.GameFrame;
+import view.SettingsPanel;
 
 public class PreGameInput implements ActionListener {
-	private PreGameWindow preGameWindow;
-	public PreGameInput(PreGameWindow preGameWindow) {
-		this.preGameWindow = preGameWindow;
+	private GameFrame theFrame;
+	
+	public PreGameInput(GameFrame theFrame) {
+		this.theFrame = theFrame;
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -18,21 +21,24 @@ public class PreGameInput implements ActionListener {
 		case "createGameBtn":
 			ServerMain.main(null);
 			break;
-		case "connectGameBtn":
-
-			break;
-		case "findGameBtn":
 			
-			break;
-		case "settingsBtn":
+		case "connectGameBtn":
+			theFrame.setView("CONNECT");
 
 			break;
+			
+		case "findGameBtn":
+
+			break;
+			
+		case "settingsBtn":
+			theFrame.setView("SETTINGS");
+			break;
+			
 		case "quitBtn":
 			System.exit(0);
 			break;
-		case "dialogConnectBtn":
-
-			break;
+			
 		default:
 			System.out.println("Other");
 			break;

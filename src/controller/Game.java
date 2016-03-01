@@ -22,6 +22,8 @@ public class Game implements Runnable {
 	public Game(GameState GAMESTATE){
 		this.GAMESTATE = GAMESTATE;
 		running = false;
+		
+		
 	}
 
 	/**

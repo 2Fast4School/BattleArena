@@ -1,21 +1,21 @@
 package arenaFighter;
 
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 
 import controller.Client;
 import controller.Game;
 import controller.GameInput;
+import controller.PreGameInput;
 import map.Map;
 import map.MapGenerator;
 import model.GameState;
 import view.GameFrame;
 import view.GameWindow;
+import view.PreGameWindow;
 
 public class Main{
 	private static GameFrame frame;
@@ -27,6 +27,7 @@ public class Main{
 	
 	public static void main(String[] args){
 		frame = new GameFrame("BattleArena");
+		frame.setView("MENY");
 	}
 	
 	public static void gameSetup(String ip, int port){
@@ -47,7 +48,7 @@ public class Main{
 	
 		frame.setClient(client);
 		//frame.add(window);
-		frame.switchToGameWindow(window);
+		frame.setView("GAME");
 		
 		state.addObserver(client);
 		state.addObserver(window);
