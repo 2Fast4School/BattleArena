@@ -51,7 +51,7 @@ public class Main{
 		window=new GameWindow(null);
 		client = new Client(port, ip, state, map);
 		input = new GameInput();
-		game=new Game(state);
+		game=new Game(state, frame);
 	
 		frame.setClient(client);
 		//frame.add(window);
@@ -75,7 +75,7 @@ public class Main{
 		input.setup(state.returnPlayer());
 	}
 	public static void runClient(){
-		new Thread(client).start();
+		client.start();
 	}
 	public static void lobbyProtocol(){
 		client.startLobbyProtocol();	

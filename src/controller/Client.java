@@ -37,6 +37,9 @@ public class Client implements Runnable, Observer{
 	private Map map;
 	private boolean ready;
 	
+	private boolean running;
+	private Thread thread;
+	
 	/** The Constructor opens a DatagramSocket on an empty port.
 	 * 
 	 * @param srvport The port which the server listens on.
@@ -98,6 +101,11 @@ public class Client implements Runnable, Observer{
 				rot=receiveMessage.getRotVar();attacking=receiveMessage.getAttacking();
 				int playerHP=receiveMessage.getPlayerHP();
 				
+				if(code==4){
+					state.setGameOver();
+					stop();
+				}
+				
 				for(Enemy n : state.getTheEnemies()){
 					if(id == n.getID()){
 						n.setX(newx); n.setY(newy); n.setRotVar(rot);
@@ -105,7 +113,7 @@ public class Client implements Runnable, Observer{
 						if(playerHP!=-1){
 							n.setHP(playerHP);
 						}
-						//Funger inte just nu..
+						
 						if(attacking && !n.getHasAttacked()){
 							n.setHasAttacked(true);
 							n.doAttack();
@@ -216,6 +224,7 @@ public class Client implements Runnable, Observer{
 			}			
 		}
 	}	
+
 	
 	public void setReady(boolean state){ready=state;}
 	
@@ -239,6 +248,7 @@ public class Client implements Runnable, Observer{
 					player.getWeapon().isAttacking());
 
 			message.setPlayerHP(player.getHP());
+			message.setAlive(player.isAlive());
 
 			//hp-change OPCODE:2
 			if(enemy != null) {
@@ -261,6 +271,26 @@ public class Client implements Runnable, Observer{
 				DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
 				socket.send(pkt);
 			}catch(IOException e){}
+		}
+	}
+	public synchronized void start(){
+		if(running){return;}
+		running = true;
+		thread = new Thread(this);
+		thread.start();
+	}
+	
+	/**
+	 * Stop the main game thread.
+	 */
+	public synchronized void stop(){
+		if(running)
+			running = false;
+		
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 }				
