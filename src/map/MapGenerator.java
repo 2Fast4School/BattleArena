@@ -21,12 +21,12 @@ public class MapGenerator { //Perhaps implement serialization
 	/**
 	 * Enormous method which generates entities as boundaries in the Map object it returns
 	 * and paints the background depending on the parameter type.
-	 * @param The logicMap which will be used to create walls and such
+	 * @param The logicMap which will be used to create walls and such, cannot be null
 	 * @param type The desired theme of the map generated
 	 * @param sizeOfPixel The size each pixel in the logicMap should represent in the game view (16 or 8)
 	 * @return The map it created
 	 */
-	public static Map generateMap(BufferedImage logicMap, String type, int sizeOfPixel){
+	public static Map generateMap(BufferedImage logicMap, String type, int sizeOfPixel){		
 		//The different images used
 		BufferedImage standardTileBackground = null;
 		BufferedImage wallTileBackground = null;
@@ -87,13 +87,18 @@ public class MapGenerator { //Perhaps implement serialization
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
 				int rgb = logicMap.getRGB(x, y);
-				//System.out.println(Integer.toHexString(rgb));
+				//System.out.println(rgb);
 				String tileType = "";
+				if(rgb == 0){ //No color at all, should be white/standard
+					tileType = "standard";
+					rgb = -1; //Set the color to white
+				}
 				if(Integer.toHexString(rgb).compareTo("ffffffff") == 0) { //white
 					tileType = "standard"; 
 				}
 				if(Integer.toHexString(rgb).compareTo("fffff200") == 0) { //Yellow
 					tileType = "standard"; //Should not be visible to the player
+					rgb = -1; //Set the color to white
 				}
 				if(Integer.toHexString(rgb).compareTo("ff000000") == 0) { //Black
 					tileType = "wall"; //Wall
@@ -101,6 +106,7 @@ public class MapGenerator { //Perhaps implement serialization
 				if(Integer.toHexString(rgb).compareTo("ffed1c24") == 0) { //Wall
 					tileType = "damage";
 				}
+				
 				for(int i=0; i < sizeOfPixel; i++){
 					for(int j = 0; j < sizeOfPixel; j++){
 						switch(tileType){
@@ -116,16 +122,16 @@ public class MapGenerator { //Perhaps implement serialization
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), wallTileBackground.getRGB(i, j));
 								break;
 							}else{
-								tileType="onotmatchondis";
+								tileType="donotmatchondis";
 							}
 						case "damage":
 							if(damageTileBackground != null){
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), damageTileBackground.getRGB(i, j));
 								break;
 							}else{
-								tileType="onotmatchondis";
+								tileType="donotmatchondis";
 							}
-						default:
+						default: //The case where the color didn't match anything
 							background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), rgb);
 							break;
 						}

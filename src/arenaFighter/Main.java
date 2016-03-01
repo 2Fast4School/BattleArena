@@ -27,17 +27,18 @@ public class Main{
 		for(int n=0;n<numberOfPlayers;n++){
 			JFrame frame = new JFrame();
 			
-		
+			int sizeOfPixel = 16;
 			BufferedImage logicMap;
+			
 			try {
 			    logicMap = ImageIO.read(new File("res/logicMap.png"));
 			} catch (IOException e) {
 			    e.printStackTrace();
-			    logicMap = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
+			    logicMap = new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB);
+			    sizeOfPixel = 16;
 			}
-			
-			
-			Map map = MapGenerator.generateMap(logicMap, "desert", 16);
+			Map map = MapGenerator.generateMap(logicMap, "lava", sizeOfPixel);
+
 			GameState state=new GameState(numberOfPlayers, map);
 			GameWindow window=new GameWindow();
 			Client client = new Client(port, ip, state);
@@ -48,7 +49,7 @@ public class Main{
 			input.setup(state.returnPlayer());
 			
 			frame.add(window);
-			frame.setPreferredSize(new Dimension(logicMap.getWidth()*16+22, logicMap.getHeight()*16+56));//Have to use constants (22 and 56) for some odd reason
+			frame.setPreferredSize(new Dimension(logicMap.getWidth()*sizeOfPixel+22, logicMap.getHeight()*sizeOfPixel+56));//Have to use constants (22 and 56) for some odd reason
 			
 			window.addKeyListener(input);
 			window.addMouseListener(input);

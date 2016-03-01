@@ -64,13 +64,19 @@ public class GameState extends Observable{
 		} return ens;
 	}
 	public void setup(){
+		
+		
 		Random randomGenerator = new Random();
 		
-		
-		int spawnPointIndex = randomGenerator.nextInt(spawnPoints.size());
-		spawnPoints.get(spawnPointIndex).setUsed();
-		player = new Player(spawnPoints.get(spawnPointIndex).getX(), spawnPoints.get(spawnPointIndex).getY(), 40, 40);
-		//player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 40, 40);
+		if(spawnPoints.size() > numberOfPlayers){
+			int spawnPointIndex = randomGenerator.nextInt(spawnPoints.size());
+			spawnPoints.get(spawnPointIndex).setUsed();
+			player = new Player(spawnPoints.get(spawnPointIndex).getX(), spawnPoints.get(spawnPointIndex).getY(), 40, 40);
+			
+		}else{
+			player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 40, 40);
+			
+		}
 		gameObjects.add(player);
 		
 		
