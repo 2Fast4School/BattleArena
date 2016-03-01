@@ -104,7 +104,6 @@ public class LobbyDialog extends JDialog {
 			lblNewLabel_1.setText("Game starts in 3.. 2.. 1..");
 		}
 		else{
-			Main.lobbyProtocol();
 		}	
 	}
 	public void readyUp(int increment){numberReady+=increment;}

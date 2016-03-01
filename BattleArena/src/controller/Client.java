@@ -165,45 +165,55 @@ public class Client implements Runnable, Observer{
 		catch(ClassNotFoundException f){}
 	}
 	
-	public void lobbyProtocol(){
-		while(true){
-			DatagramSocket sendSocket;
-			try{
-				sendSocket=new DatagramSocket();
-				
-				Message message=new Message(state.getID(), -1, -1, -1, false);
-				message.setCode(3);
-				ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-				ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-				oOut.flush();
-				message.writeExternal(oOut);
-				oOut.flush();
-				byte[] bSend=bOut.toByteArray();
-				
-				DatagramPacket sendPacket=new DatagramPacket(bSend, bSend.length, srvip, srvport);
-				sendSocket.send(sendPacket);
-			}catch(IOException e){}
+	public void startLobbyProtocol(){
+		new Thread(new LobbyProtocol()).start();
+	}
+	
+	private class LobbyProtocol implements Runnable{
+		public LobbyProtocol(){
 			
-			byte[] bReceive=new byte[1024];
-			DatagramPacket receivePacket=new DatagramPacket(bReceive, bReceive.length);
-			try{
-				socket.receive(receivePacket);
-			}catch(IOException e){}
-			
-			try{
-				ByteArrayInputStream bIn=new ByteArrayInputStream(bReceive);
-				ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
-				Message receiveMessage=new Message();
-				receiveMessage.readExternal(oIn);
-				boolean startGame=receiveMessage.getReady();
-				//System.out.println(""+startGame);
-				if(startGame){
-					Main.startGame();
-					Main.runClient();
-					break;
-				}
-			}catch(IOException e){}
-			catch(ClassNotFoundException e){}
+		}
+		@Override
+		public void run() {
+			while(true){
+				DatagramSocket sendSocket;
+				try{
+					sendSocket=new DatagramSocket();
+					
+					Message message=new Message(state.getID(), -1, -1, -1, false);
+					message.setCode(3);message.setReady(ready);
+					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+					oOut.flush();
+					message.writeExternal(oOut);
+					oOut.flush();
+					byte[] bSend=bOut.toByteArray();
+					
+					DatagramPacket sendPacket=new DatagramPacket(bSend, bSend.length, srvip, srvport);
+					sendSocket.send(sendPacket);
+				}catch(IOException e){}
+				
+				byte[] bReceive=new byte[1024];
+				DatagramPacket receivePacket=new DatagramPacket(bReceive, bReceive.length);
+				try{
+					socket.receive(receivePacket);
+				}catch(IOException e){}
+				
+				try{
+					ByteArrayInputStream bIn=new ByteArrayInputStream(bReceive);
+					ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
+					Message receiveMessage=new Message();
+					receiveMessage.readExternal(oIn);
+					boolean startGame=receiveMessage.getReady();
+					//System.out.println(""+startGame);
+					if(startGame){
+						Main.startGame();
+						Main.runClient();
+						break;
+					}
+				}catch(IOException e){}
+				catch(ClassNotFoundException e){}
+			}			
 		}
 	}	
 	

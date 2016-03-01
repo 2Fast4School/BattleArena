@@ -94,6 +94,7 @@ public class Server extends Observable implements Runnable{
 		DatagramSocket skt = null;
 		String d[];
 		int code, id;
+		Message receiveMessage;
 		
 		/**
 		 * 
@@ -106,7 +107,7 @@ public class Server extends Observable implements Runnable{
 			try {
 				ByteArrayInputStream bIn=new ByteArrayInputStream(bReceive);
 				ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
-				Message receiveMessage=new Message();
+				receiveMessage=new Message();
 				receiveMessage.readExternal(oIn);
 				
 				code = receiveMessage.getCode();
@@ -148,7 +149,7 @@ public class Server extends Observable implements Runnable{
 				sendMessage.setCode(code);sendMessage.setReady(false);
 				int nrReady=0;
 				for(ClientInfo c : clients){
-					if(c.getID()==id){
+					if(c.getID()==id && receiveMessage.getReady()){
 						c.setReady(true);
 					}
 					if(c.getReady()){

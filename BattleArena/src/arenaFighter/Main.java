@@ -70,6 +70,6 @@ public class Main{
 		new Thread(client).start();
 	}
 	public static void lobbyProtocol(){
-		client.lobbyProtocol();
+		client.startLobbyProtocol();;
 	}
 }
