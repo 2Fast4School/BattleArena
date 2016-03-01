@@ -1,4 +1,7 @@
 package model;
+
+import java.io.Serializable;
+
 /**
  * A simple class which basically does nothing.
  * 
@@ -6,7 +9,12 @@ package model;
  * @version 1.0  28-02-16
  * 
  */
-public abstract class Tile extends Entity{
+public abstract class Tile extends Entity implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5909650419706010850L;
+
 	/**
 	 * 
 	 * @param x The x-position of the Tile.

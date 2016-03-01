@@ -1,10 +1,13 @@
 package model;
+
+import java.io.Serializable;
+
 /**
  * A simple class which represents a wall in game
  * @author Alexander Erenstedt - Modified 28-02-16
  * @version 1.0  28-02-16
  */
-public class WallTile extends Tile {
+public class WallTile extends Tile implements Serializable {
 	/**
 	 * The constructor, creates a Solid WallTile at x,y with the size of w and h
 	 * @param x The x-position of the WallTile.

@@ -106,7 +106,7 @@ public class Game implements Runnable {
 							((Unit)e).revive();
 						}
 					}
-					for(spawnPoint sp : GAMESTATE.getSpawns()){
+					for(SpawnPoint sp : GAMESTATE.getSpawns()){
 						sp.setUnused();
 					}
 				}

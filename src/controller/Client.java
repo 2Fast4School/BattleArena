@@ -9,7 +9,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import model.Enemy;
-import model.Entity;
 import model.GameState;
 import model.Player;
 import model.Unit;

@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 
 import model.DamageTile;
 import model.WallTile;
-import model.spawnPoint;
+import model.SpawnPoint;
 
 /**
  * <h1>MapGenerator</h1>
@@ -60,7 +60,7 @@ public class MapGenerator { //Perhaps implement serialization
 		//Create mapObjects based on pixels, the format ARGB is used with hexcode
 		//example "ff000000" gives A = ff, R = 00, G = 00, B = 00 which gives black
 		for(int y = 0; y < height; y++){ //Need to loop in "wrong" order for the checkAdjacentToRIght to work
-			for(int x = 0; x < width; x++){ 
+			for(int x = 0; x < width; x++){
 				int temp = 0;
 				int rgb = logicMap.getRGB(x, y);
 				switch(Integer.toHexString(rgb)){
@@ -70,7 +70,7 @@ public class MapGenerator { //Perhaps implement serialization
 					x += temp; //Used so skip the pixels the optimization method created
 					break;
 				case "fffff200": //yellow, represents spawnpoints
-					map.addSpawnPoint(new spawnPoint(x*sizeOfPixel, y*sizeOfPixel));
+					map.addSpawnPoint(new SpawnPoint(x*sizeOfPixel, y*sizeOfPixel));
 					break;
 				case "ffed1c24": //red, represent a damageTile
 					temp = checkAdjacentToRight(x, y, logicMap); 
@@ -155,7 +155,7 @@ public class MapGenerator { //Perhaps implement serialization
 	 * @return Returns the number of adjacent pixels to the right with the same color
 	 */
 	private static int checkAdjacentToRight(int x, int y, BufferedImage img){
-		int width = img.getWidth();
+		int width = img.getWidth();					
 		int rgb = img.getRGB(x, y);
 
 		if(x+1 < width && rgb == img.getRGB(x+1, y)){

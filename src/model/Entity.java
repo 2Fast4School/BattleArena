@@ -1,8 +1,7 @@
 package model;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.TreeMap;
+import java.io.Serializable;
 
 /**
  * <h1>Entity</h1>
@@ -12,7 +11,11 @@ import java.util.TreeMap;
  * @author Victor Dahlberg
  * @version 1.0
  */
-public abstract class Entity{
+public abstract class Entity implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8210056978015432264L;
 	private boolean solid;
 	protected int x, y, w, h, rotation, hp;
 	protected BufferedImage sprite;

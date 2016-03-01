@@ -1,37 +1,39 @@
 package map;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-import model.Entity;
 import model.Tile;
-import model.spawnPoint;
+import model.SpawnPoint;
 /**
  * <h1>Map</h1>
  * Object to hold the map-specific objects such as spawnPoints and boundaries
  * @author Alexander Erenstedt - Modified: 28-02-16 
  * @version 1.0 
  */
-public class Map {
+public class Map implements Serializable {
+	private static final long serialVersionUID = -771730320380106281L;
 	private ArrayList<Tile> tiles; 
-	private BufferedImage background;	
-	private ArrayList<spawnPoint> spawnPoints;
+	//private ArrayList<BufferedImage> background;
+	private MyBufferedImage background;	
+	private ArrayList<SpawnPoint> spawnPoints;
 	
 	/**
 	 * Constructor for Map,
 	 * Initializes the background image as null temporarily
 	 */
 	public Map(){
-		background = null;
+		background = new MyBufferedImage();
 		tiles = new ArrayList<Tile>();
-		spawnPoints = new ArrayList<spawnPoint>();
+		spawnPoints = new ArrayList<SpawnPoint>();
 	}
 	
 	/**
 	 * @param img The background image for the board
 	 */
 	public void setBackground(BufferedImage img){
-		background = img;
+		background.setImage(img);
 	}
 	
 	/**
@@ -44,7 +46,7 @@ public class Map {
 	/**
 	 * @param e Adds spawnpoints
 	 */
-	public void addSpawnPoint(spawnPoint sp){
+	public void addSpawnPoint(SpawnPoint sp){
 		spawnPoints.add(sp);
 	}
 	
@@ -52,7 +54,7 @@ public class Map {
 	 * @return Returns the background as a BufferedImage, could be null
 	 */
 	public BufferedImage getBackground(){
-		return background;
+		return background.getImage();
 	}
 	
 	/**
@@ -65,7 +67,9 @@ public class Map {
 	/**
 	 * @return Returns the spawnpoints of the map
 	 */
-	public ArrayList<spawnPoint> getSpawnPoints(){
+	public ArrayList<SpawnPoint> getSpawnPoints(){
 		return spawnPoints;
 	}
+	
+
 }

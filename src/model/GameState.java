@@ -12,7 +12,7 @@ public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private ArrayList<Entity> objInNode;
 	private Enemy gotHit;
-	private ArrayList<spawnPoint> spawnPoints;
+	private ArrayList<SpawnPoint> spawnPoints;
 	
 	private int numberOfPlayers;
 	private Player player;
@@ -26,7 +26,7 @@ public class GameState extends Observable{
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		gotHit = null;
-		spawnPoints = new ArrayList<spawnPoint>();
+		spawnPoints = new ArrayList<SpawnPoint>();
 		this.map = map;
 		
 		
@@ -44,7 +44,7 @@ public class GameState extends Observable{
 			}
 		}
 		
-		for(spawnPoint e : map.getSpawnPoints()){
+		for(SpawnPoint e : map.getSpawnPoints()){
 			spawnPoints.add(e);
 		}
 		//System.out.println("Number of spawn points: " + spawnPoints.size());
@@ -181,7 +181,7 @@ public class GameState extends Observable{
 	
 	public Enemy gotHit(){return gotHit;}
 	public ArrayList<Entity> getList(){return gameObjects;}
-	public ArrayList<spawnPoint> getSpawns(){return spawnPoints;}
+	public ArrayList<SpawnPoint> getSpawns(){return spawnPoints;}
 	public Player returnPlayer(){return player;}
 	public void setID(int id){this.id=id;}
 	public int getID(){ return id; }

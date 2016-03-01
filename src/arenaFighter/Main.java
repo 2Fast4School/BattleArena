@@ -4,7 +4,11 @@ import java.awt.Dimension;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -15,7 +19,6 @@ import controller.Input;
 import map.Map;
 import map.MapGenerator;
 import model.GameState;
-import server.Server;
 import view.GameWindow;
 
 public class Main{
@@ -24,7 +27,7 @@ public class Main{
 	private static final int port=7020;
 	public static void main(String[] args){
 		
-		for(int n=0;n<numberOfPlayers;n++){
+		//for(int n=0;n<numberOfPlayers;n++){
 			JFrame frame = new JFrame();
 			
 			int sizeOfPixel = 16;
@@ -38,12 +41,63 @@ public class Main{
 			    sizeOfPixel = 16;
 			}
 			Map map = MapGenerator.generateMap(logicMap, "lava", sizeOfPixel);
-
+			
+			
+			
+			//Serialize map
+			try
+		      {
+		         FileOutputStream fileOut =
+		         new FileOutputStream("serializedMap.ser");
+		         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+		         out.writeObject(map);
+		         out.close();
+		         fileOut.close();
+		         System.out.printf("Serialized data is saved in serializedMap.ser \n");
+		      }catch(IOException i)
+		      {
+		          i.printStackTrace();
+		      }
+			
+			map = null;
+			//Unserialize map
+		      try
+		      {
+		         FileInputStream fileIn = new FileInputStream("serializedMap.ser");
+		         ObjectInputStream in = new ObjectInputStream(fileIn);
+		         map = (Map) in.readObject();
+		         in.close();
+		         fileIn.close();
+		      }catch(IOException i)
+		      {
+		         i.printStackTrace();
+		         return;
+		      }catch(ClassNotFoundException c)
+		      {
+		         System.out.println("Map class not found");
+		         c.printStackTrace();
+		         return;
+		      }
+		      System.out.println("Deserialized serializedMap...");
+			
+			
+			
 			GameState state=new GameState(numberOfPlayers, map);
 			GameWindow window=new GameWindow();
 			Client client = new Client(port, ip, state);
 			Input input = new Input();
 			Game game=new Game(state);
+			
+			
+			
+			
+
+
+			
+			
+			
+			
+			
 			
 			state.setup();
 			input.setup(state.returnPlayer());
@@ -62,6 +116,6 @@ public class Main{
 			
 			game.start();
 			new Thread(client).start();
-		}
+		//}
 	}
 }
