@@ -13,6 +13,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import arenaFighter.Main;
 import controller.PreGameInput;
 
 public class PreGameWindow extends JPanel{
@@ -40,7 +42,7 @@ public class PreGameWindow extends JPanel{
 	private void initPreGameWindow() {
 		//Image of gameArt~
 		try {
-			preGameArt = ImageIO.read(new File("res/pregameart.png"));
+			preGameArt = ImageIO.read(Main.class.getResource("/pregameart.png"));
 		}
 		catch(IOException e) {
 			e.printStackTrace();

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+
+import arenaFighter.Main;
 /**
  * <h1>Player</h1>
  * Player class extends the Entity Class. Used to store the data of YOUR player. Only one player per Game.
@@ -51,7 +53,7 @@ public class Player extends Unit{
 	 */
 	public void loadImages(){
 		try{
-			sprite = ImageIO.read(new File("res/testa.png"));
+			sprite = ImageIO.read(Main.class.getResource("/testa.png"));
 		}catch(IOException e){}
 	}
 	

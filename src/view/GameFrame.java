@@ -1,7 +1,10 @@
 package view;
 
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -24,7 +27,10 @@ public class GameFrame extends JFrame {
 	}
 	
 	private void initGameFrame() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
+		try {
+			setIconImage(ImageIO.read(Main.class.getResource("/testa.png")));
+		}
+		catch(IOException e) {}
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 800);

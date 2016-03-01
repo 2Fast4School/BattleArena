@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import arenaFighter.Main;
+
 public abstract class Weapon extends Entity{
 	
 	protected boolean attacking, dmgDone;
@@ -30,7 +32,7 @@ public abstract class Weapon extends Entity{
 	 */
 	public void loadImages(){
 		try{
-			sprite = ImageIO.read(new File("res/sw.png"));
+			sprite = ImageIO.read(Main.class.getResource("/sw.png"));
 		}catch(IOException e){}
 	}
 

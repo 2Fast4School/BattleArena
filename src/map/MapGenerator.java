@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import arenaFighter.Main;
 import model.DamageTile;
 import model.WallTile;
 import model.SpawnPoint;
@@ -35,9 +36,9 @@ public class MapGenerator { //Perhaps implement serialization
 		
 		//If the read failed they will be null and be painted as the colorcode on the background
 		try {
-			standardTileBackground = ImageIO.read(new File("res/" + type + "/standardBackground.png"));
-			wallTileBackground = ImageIO.read(new File("res/" + type + "/wall.png"));
-			damageTileBackground = ImageIO.read(new File("res/" + type + "/damageTileBackground.png"));
+			standardTileBackground = ImageIO.read(Main.class.getResource("/"+type + "/standardBackground.png"));
+			wallTileBackground = ImageIO.read(Main.class.getResource("/"+type + "/wall.png"));
+			damageTileBackground = ImageIO.read(Main.class.getResource("/"+type + "/damageTileBackground.png"));
 			
 		} catch (IOException e) {	
 		    e.printStackTrace();

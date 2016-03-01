@@ -40,7 +40,7 @@ public class Main{
 		BufferedImage logicMap;
 		int sizeOfPixel = 16;
 		try {
-		    logicMap = ImageIO.read(new File("res/logicMap.png"));
+		    logicMap = ImageIO.read(Main.class.getResource("/logicMap.png"));
 		} catch (IOException e) {
 		    e.printStackTrace();
 		    logicMap = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);

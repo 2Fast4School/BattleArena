@@ -47,7 +47,9 @@ public class LobbyDialog extends JDialog {
 		pack();
 		setVisible(true);
 
-		setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
+		try{
+			setIconImage(ImageIO.read(Main.class.getResource("/testa.png")));
+		}catch(IOException e){}
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 470, 240);
 		contentPane = new JPanel();
@@ -73,7 +75,7 @@ public class LobbyDialog extends JDialog {
 		
 		
 		try {
-			mapImage = ImageIO.read(new File("res/pregameart.png"));
+			mapImage = ImageIO.read(Main.class.getResource("/pregameart.png"));
 		}
 		catch(IOException e) {
 			e.printStackTrace();
