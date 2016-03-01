@@ -27,7 +27,7 @@ public class Main{
 	private static final int port=7020;
 	public static void main(String[] args){
 		
-		//for(int n=0;n<numberOfPlayers;n++){
+		for(int n=0;n<numberOfPlayers;n++){
 			JFrame frame = new JFrame();
 			
 			int sizeOfPixel = 16;
@@ -116,6 +116,6 @@ public class Main{
 			
 			game.start();
 			new Thread(client).start();
-		//}
+		}
 	}
 }
