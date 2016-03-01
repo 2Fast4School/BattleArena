@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-
+/**
+ * Each instance represents a player placed on a different client.
+ * @author Victor Dahlberg - Modified 28-02-16
+ * @version 1.0
+ */
 public class Enemy extends Unit {
 	private int ID;
 	private boolean hasAttacked;
@@ -26,8 +30,8 @@ public class Enemy extends Unit {
 	}
 
 	public void tick() {}
+	
 	/**
-	 * 
 	 * @return The ID of this enemy.
 	 */
 	public int getID(){
@@ -35,7 +39,6 @@ public class Enemy extends Unit {
 	}
 	
 	/**
-	 * 
 	 * @param ID The id to give this enemy.
 	 */
 	public void setID(int ID){

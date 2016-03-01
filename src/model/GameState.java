@@ -12,7 +12,7 @@ public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private ArrayList<Entity> objInNode;
 	private Enemy gotHit;
-	private ArrayList<spawnPoint> spawnPoints;
+	private ArrayList<SpawnPoint> spawnPoints;
 	
 	private Player player;
 	private int id;
@@ -24,10 +24,10 @@ public class GameState extends Observable{
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		gotHit = null;
-		spawnPoints = new ArrayList<spawnPoint>();
-		
-		//Init the quadtree with the size of the screen.
-		quadtree = new Quadtree(new Rectangle(0,0,800,800));
+
+		spawnPoints = new ArrayList<SpawnPoint>();
+
+
 	}
 	
 	/**
@@ -42,22 +42,40 @@ public class GameState extends Observable{
 			}
 		} return ens;
 	}
+
 	
 	public void setup(int id, int maxPlayers, Map map){
 		this.id = id;
 		this.map = map;
-		
+
+		//Init the quadtree with the size of the screen.
+		quadtree = new Quadtree(new Rectangle(0,0,map.getBackground().getWidth(),map.getBackground().getHeight()));
+				
 		//Add all entities from the map to gamestate
-		for(Tile e : map.getTiles()){
+		for(Entity e : map.getTiles()){
 			if(!gameObjects.contains(e)){
 				gameObjects.add(e);
 			}
 		}
-		
-		for(spawnPoint e : map.getSpawnPoints()){
+				
+		for(SpawnPoint e : map.getSpawnPoints()){
 			spawnPoints.add(e);
 		}
+
+/*		Random randomGenerator = new Random();
 		
+		if(spawnPoints.size() > numberOfPlayers){
+			int spawnPointIndex = randomGenerator.nextInt(spawnPoints.size());
+			spawnPoints.get(spawnPointIndex).setUsed();
+			player = new Player(spawnPoints.get(spawnPointIndex).getX(), spawnPoints.get(spawnPointIndex).getY(), 40, 40);
+			
+		}else{
+			player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 40, 40);
+			
+		}
+		gameObjects.add(player);
+
+*/		
 			
 		
 		player=new Player(spawnPoints.get(id-1).getX(), spawnPoints.get(id-1).getY(), 40, 40);
@@ -162,7 +180,7 @@ public class GameState extends Observable{
 	
 	public Enemy gotHit(){return gotHit;}
 	public ArrayList<Entity> getList(){return gameObjects;}
-	public ArrayList<spawnPoint> getSpawns(){return spawnPoints;}
+	public ArrayList<SpawnPoint> getSpawns(){return spawnPoints;}
 	public Player returnPlayer(){return player;}
 	public int getID(){ return id; }
 	public BufferedImage getBackground(){

@@ -1,6 +1,7 @@
 package model;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 /**
  * <h1>Entity</h1>
@@ -10,7 +11,11 @@ import java.awt.image.BufferedImage;
  * @author Victor Dahlberg
  * @version 1.0
  */
-public abstract class Entity{
+public abstract class Entity implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8210056978015432264L;
 	private boolean solid;
 	protected int x, y, w, h, rotation, hp;
 	protected BufferedImage sprite;
@@ -25,7 +30,6 @@ public abstract class Entity{
 	 * @param h	The height of the Entity
 	 * @param solid Boolean that determines if the Entity will be solid, or able to move through.
 	 */
-
 	public Entity(int x, int y, int w, int h, boolean solid){
 		this.x = x; this.y = y; this.w = w; this.h = h;
 		this.solid = solid;

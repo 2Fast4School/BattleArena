@@ -93,7 +93,7 @@ public class GameWindow extends Canvas implements Observer{
 				g2d.drawImage(e.getSprite(), e.getX(), e.getY(), null);
 				
 			}
-			/*if(e instanceof mapObject){
+			/*if(e instanceof Tile){
 				g2d.setColor(Color.GREEN);
 				g2d.fillRect(e.getX(), e.getY(), e.getWidth(), e.getHeight());
 				

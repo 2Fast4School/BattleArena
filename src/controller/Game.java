@@ -93,6 +93,7 @@ public class Game implements Runnable {
 				
 				//Decrement the tick with 1. We don't set it to 0 because if we would loose a couple of ticks, we want the next second to tick a few more times than 60.
 				delta--;
+
 			}
 			//Used to print number of "ticks" the last second.
 			if(System.currentTimeMillis() - timer > 1000){

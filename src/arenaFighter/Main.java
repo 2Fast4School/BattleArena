@@ -1,9 +1,14 @@
 package arenaFighter;
 
 import java.awt.Dimension;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -14,7 +19,9 @@ import controller.GameInput;
 import map.Map;
 import map.MapGenerator;
 import model.GameState;
+
 import view.GameFrame;
+
 import view.GameWindow;
 
 public class Main{
@@ -31,6 +38,7 @@ public class Main{
 	
 	public static void gameSetup(String ip, int port){
 		BufferedImage logicMap;
+		int sizeOfPixel = 16;
 		try {
 		    logicMap = ImageIO.read(new File("res/mapBackground.png"));
 		} catch (IOException e) {
@@ -38,7 +46,7 @@ public class Main{
 		    logicMap = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
 		}
 		
-		Map map = MapGenerator.generateMap(logicMap, "lava");
+		Map map = MapGenerator.generateMap(logicMap, "lava", sizeOfPixel);
 		state=new GameState();
 		window=new GameWindow(null);
 		client = new Client(port, ip, state, map);
@@ -70,6 +78,45 @@ public class Main{
 		new Thread(client).start();
 	}
 	public static void lobbyProtocol(){
-		client.startLobbyProtocol();;
+		client.startLobbyProtocol();	
 	}
 }
+
+
+/*
+//Serialize map
+try
+  {
+     FileOutputStream fileOut =
+     new FileOutputStream("serializedMap.ser");
+     ObjectOutputStream out = new ObjectOutputStream(fileOut);
+     out.writeObject(map);
+     out.close();
+     fileOut.close();
+     System.out.printf("Serialized data is saved in serializedMap.ser \n");
+  }catch(IOException i)
+  {
+      i.printStackTrace();
+  }
+
+map = null;
+//Unserialize map
+  try
+  {
+     FileInputStream fileIn = new FileInputStream("serializedMap.ser");
+     ObjectInputStream in = new ObjectInputStream(fileIn);
+     map = (Map) in.readObject();
+     in.close();
+     fileIn.close();
+  }catch(IOException i)
+  {
+     i.printStackTrace();
+     return;
+  }catch(ClassNotFoundException c)
+  {
+     System.out.println("Map class not found");
+     c.printStackTrace();
+     return;
+  }
+  System.out.println("Deserialized serializedMap...");
+*/
