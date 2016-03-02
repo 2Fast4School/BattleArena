@@ -98,7 +98,6 @@ public class Client implements Runnable, Observer{
 				if(code == 99){ //LOBBY-CODE
 					if(receiveMessage.toStart()){
 						state.startGame();
-						System.out.println("ddwad");
 					}
 			
 				} else {
@@ -175,7 +174,7 @@ public class Client implements Runnable, Observer{
 			ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
 			Message receiveMessage=new Message();
 			receiveMessage.readExternal(oIn);
-			
+			System.out.println(receiveMessage.getID());
 			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);
 		}catch(IOException e){System.out.println("couldnt connect");}	
 		catch(ClassNotFoundException f){}
@@ -202,6 +201,7 @@ public class Client implements Runnable, Observer{
 				Message message = new Message(); //LOBBYCODE
 				message.setCode(99); 
 				message.setReady(state.isReady());
+				message.setID(state.getID());
 				
 				try{
 					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);

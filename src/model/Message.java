@@ -21,6 +21,9 @@ public class Message implements Externalizable{
 	public int getCode(){return code;}
 	public void setCode(int code){this.code=code;}
 	public int getID(){return id;}
+	public void setID(int id){
+		this.id = id;
+	}
 	public int getXPos(){return xPos;}
 	public int getYPos(){return yPos;}
 	public int getRotVar(){return rotVar;}

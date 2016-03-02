@@ -36,7 +36,7 @@ public class GameState extends Observable{
 	 * 
 	 * @return A list with all the enemies in the game.
 	 */
-	public ArrayList<Enemy> getTheEnemies(){
+	public synchronized ArrayList<Enemy> getTheEnemies(){
 		ArrayList<Enemy> ens = new ArrayList<Enemy>();
 		for(Entity e : gameObjects){
 			if(e instanceof Enemy){
@@ -79,8 +79,10 @@ public class GameState extends Observable{
 	
 	public void tick(){
 		if(isAlive()){
+
 			actualtick();
 		} else {
+
 			setChanged();
 			notifyObservers();
 		}
@@ -184,8 +186,8 @@ public class GameState extends Observable{
 	public void startGame(){
 		alive = true;
 		ready = false;
-		setChanged();
-		notifyObservers();
+		//setChanged();
+		//notifyObservers();
 	}
 	
 	public boolean isAlive(){

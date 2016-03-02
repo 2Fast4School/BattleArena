@@ -37,7 +37,7 @@ public class Server extends Observable implements Runnable{
 	private DatagramPacket packet;
 	private byte[] receive;
 	private int idToGiveClient=0;
-	private int maxPlayers = 1;
+	private int maxPlayers = 4;
 	private List<ClientInfo> clients;
 	
 	/**
@@ -167,7 +167,14 @@ public class Server extends Observable implements Runnable{
 					}
 				}
 				
-				sendMessage.setToStart(tostart);
+				if(clients.size() == maxPlayers){
+					sendMessage.setToStart(tostart);
+				} else {
+					sendMessage.setToStart(false);
+				}
+
+				
+		
 
 				try{
 					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
