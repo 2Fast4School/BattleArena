@@ -63,6 +63,11 @@ public class GameFrame extends JFrame {
 		// Starta spel
 	}
 	
+	public void switchToPreGameWindow(){
+		remove(gameWindow);
+		preGameWindow.setVisible(true);
+	}
+	
 	public boolean getToolTipsBool() {
 		return preGameWindow.checkToolTipsEnabled();
 	}

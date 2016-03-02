@@ -3,6 +3,7 @@ package controller;
 import javax.swing.JOptionPane;
 
 import model.*;
+import view.GameFrame;
 
 /**
  * The Game class is in charge of the main game thread.
@@ -14,13 +15,15 @@ public class Game implements Runnable {
 	private GameState GAMESTATE;
 	private boolean running;
 	private Thread thread;
+	private GameFrame frame;
 	
 	/**
 	 * Constructor.
 	 * @param GAMESTATE The gamestate which the game class will be responsible of "running".
 	 */
-	public Game(GameState GAMESTATE){
+	public Game(GameState GAMESTATE, GameFrame frame){
 		this.GAMESTATE = GAMESTATE;
+		this.frame=frame;
 		running = false;
 	}
 
@@ -86,20 +89,27 @@ public class Game implements Runnable {
 			lastTime = now;
 								
 			//Wait until 1/60 of a second has passed by and then update gamestate.
-			while(delta >= 1){ 
-				//Update the gamestate.
-				GAMESTATE.tick();
-				updates++;
-				
-				//Decrement the tick with 1. We don't set it to 0 because if we would loose a couple of ticks, we want the next second to tick a few more times than 60.
-				delta--;
-
+			if(GAMESTATE.getGameOver()){
+				JOptionPane.showMessageDialog(frame, "Game over, returning to main menu..", "Game Over", JOptionPane.OK_OPTION);
+				frame.switchToPreGameWindow();
+				stop();
 			}
-			//Used to print number of "ticks" the last second.
-			if(System.currentTimeMillis() - timer > 1000){
-				timer += 1000;
-				//System.out.println("TICKS: "+updates);
-				updates = 0;
+			else{
+				while(delta >= 1){ 
+					//Update the gamestate.
+					GAMESTATE.tick();
+					updates++;
+					
+					//Decrement the tick with 1. We don't set it to 0 because if we would loose a couple of ticks, we want the next second to tick a few more times than 60.
+					delta--;
+	
+				}
+				//Used to print number of "ticks" the last second.
+				if(System.currentTimeMillis() - timer > 1000){
+					timer += 1000;
+					//System.out.println("TICKS: "+updates);
+					updates = 0;
+				}
 			}
 		}
 		

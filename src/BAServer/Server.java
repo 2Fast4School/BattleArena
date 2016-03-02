@@ -107,9 +107,9 @@ public class Server extends Observable implements Runnable{
 		byte[] bReceive = null;
 		DatagramSocket skt = null;
 		String d[];
-		int code, id;
+		int code, id, nrDead;
 		Message receiveMessage;
-		
+		boolean alive;
 		/**
 		 * 
 		 * @param pkt The DatagramPacket to be handled.
@@ -126,6 +126,7 @@ public class Server extends Observable implements Runnable{
 				
 				code = receiveMessage.getCode();
 				id=receiveMessage.getID();
+				alive=receiveMessage.getAlive();
 				//Create a new datagramsocket on an open port.
 				skt = new DatagramSocket();
 			}catch(IOException e){e.printStackTrace();}
@@ -136,66 +137,20 @@ public class Server extends Observable implements Runnable{
 		 * Depending on the OP-CODE. Responds or forwards the packet.
 		 */
 		public void run(){
-			
-			if(code == 0){
-				idToGiveClient += 1;
-				Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
-				sendMessage.setMaxNrPlayers(maxPlayers);
-				
-				
-		/*
-				  //Serialize map
-					try
-					  {
-					     FileOutputStream fileOut =
-					     new FileOutputStream("serializedMap.ser");
-					     ObjectOutputStream out = new ObjectOutputStream(fileOut);
-					     out.writeObject(map);
-					     out.close();
-					     fileOut.close();
-					     System.out.printf("Serialized data is saved in serializedMap.ser \n");
-					  }catch(IOException i)
-					  {
-					      i.printStackTrace();
-					  }
+		
+			nrDead=0;
+			for(ClientInfo c : clients){
+				if(c.getID()==id){
+					c.setAlive(alive);
+				}
+				if(!c.getAlive()){
+					nrDead++;
 
-			*/	
-				
-				
-				
-				
-				try{
-					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-					oOut.flush();
-					sendMessage.writeExternal(oOut);
-					oOut.flush();
-					byte[] buf=bOut.toByteArray();
-					
-					clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
-					
-					pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
-					
-					skt.send(pkt);
-				}catch(IOException e){e.printStackTrace();}
-				
+				}
 			}
-			else if(code==3){
+			if(maxPlayers-nrDead==1){
 				Message sendMessage=new Message();
-				sendMessage.setCode(code);sendMessage.setReady(false);
-				int nrReady=0;
-				for(ClientInfo c : clients){
-					if(c.getID()==id && receiveMessage.getReady()){
-						c.setReady(true);
-					}
-					if(c.getReady()){
-						nrReady+=1;
-					}
-				}
-
-				if(nrReady==2){	// Inte helt testat f�r fler �n
-					sendMessage.setReady(true);
-				}
+				sendMessage.setCode(4);
 				try{
 					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
 					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
@@ -209,25 +164,98 @@ public class Server extends Observable implements Runnable{
 						skt.send(sendPacket);
 					}
 				}catch(IOException e){}
-			}
-			else {
-				int idToSkip = id;
 				
-				for(ClientInfo c : clients){
+			}
+			else{
+				if(code == 0){
+					idToGiveClient += 1;
+					Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
+					sendMessage.setMaxNrPlayers(maxPlayers);;
 					
-					if(c.getID() != idToSkip){
-						try {
-							pkt = new DatagramPacket(pkt.getData(), pkt.getLength(), c.getIP(), c.getPort());
-							skt.send(pkt);
-						} catch (IOException e) {
-							e.printStackTrace();
+					try{
+						ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+						ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+						oOut.flush();
+						sendMessage.writeExternal(oOut);
+						oOut.flush();
+						byte[] buf=bOut.toByteArray();
+						
+						clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
+						
+						pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
+						
+						skt.send(pkt);
+						
+						
+						/*
+						  //Serialize map
+							try
+							  {
+							     FileOutputStream fileOut =
+							     new FileOutputStream("serializedMap.ser");
+							     ObjectOutputStream out = new ObjectOutputStream(fileOut);
+							     out.writeObject(map);
+							     out.close();
+							     fileOut.close();
+							     System.out.printf("Serialized data is saved in serializedMap.ser \n");
+							  }catch(IOException i)
+							  {
+							      i.printStackTrace();
+							  }
+
+					*/	
+						
+					}catch(IOException e){e.printStackTrace();}
+					
+				}
+				else if(code==3){
+					Message sendMessage=new Message();
+					sendMessage.setCode(code);sendMessage.setReady(false);
+					int nrReady=0;
+					for(ClientInfo c : clients){
+						if(c.getID()==id && receiveMessage.getReady()){
+							c.setReady(true);
+						}
+						if(c.getReady()){
+							nrReady+=1;
+						}
+					}
+					if(nrReady==maxPlayers){
+						sendMessage.setReady(true);
+					}
+					try{
+						ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+						ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+						oOut.flush();
+						sendMessage.writeExternal(oOut);
+						oOut.flush();
+						byte[] buf=bOut.toByteArray();
+						
+						for(ClientInfo c : clients){
+							DatagramPacket sendPacket=new DatagramPacket(buf, buf.length, c.getIP(), c.getPort());
+							skt.send(sendPacket);
+						}
+					}catch(IOException e){}
+				}
+				else {
+					int idToSkip = id;
+					
+					for(ClientInfo c : clients){
+						
+						if(c.getID() != idToSkip){
+							try {
+								pkt = new DatagramPacket(pkt.getData(), pkt.getLength(), c.getIP(), c.getPort());
+								skt.send(pkt);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
-			}
-			
-			if(skt != null){
-				skt.close();
+				
+				if(skt != null){
+					skt.close();
+				}
 			}
 		}
 	}
@@ -245,12 +273,14 @@ public class Server extends Observable implements Runnable{
 		private int port;
 		private int id;
 		private boolean ready;
+		private boolean alive;
 		
 		public ClientInfo(InetAddress ip, int port, int id){
 			this.ip = ip;
 			this.port = port;
 			this.id = id;
 			ready=false;
+			alive=true;
 		}
 		
 		public InetAddress getIP(){
@@ -266,6 +296,8 @@ public class Server extends Observable implements Runnable{
 		}
 		public boolean getReady(){return ready;}
 		public void setReady(boolean state){ready=state;}
+		public boolean getAlive(){return alive;}
+		public void setAlive(boolean state){alive=state;}
 	}
 }
 

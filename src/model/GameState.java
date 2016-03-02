@@ -18,13 +18,15 @@ public class GameState extends Observable{
 	private int id;
 	private Quadtree quadtree;;
 	private Map map = null;
+	private boolean gameOver;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
 	public GameState(){
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		gotHit = null;
-
+		gameOver=false;
+		
 		spawnPoints = new ArrayList<SpawnPoint>();
 
 
@@ -76,8 +78,7 @@ public class GameState extends Observable{
 		gameObjects.add(player);
 
 */		
-			
-		
+
 		player=new Player(spawnPoints.get(id-1).getX(), spawnPoints.get(id-1).getY(), 40, 40);
 		gameObjects.add(player);
 		
@@ -186,4 +187,6 @@ public class GameState extends Observable{
 	public BufferedImage getBackground(){
 		return map.getBackground();
 	}
+	public void setGameOver(){gameOver=true;}
+	public boolean getGameOver(){return gameOver;}
 }

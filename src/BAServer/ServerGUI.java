@@ -10,6 +10,7 @@ import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,6 +29,7 @@ public class ServerGUI implements Observer {
 	private static JFrame mainWindow;
 	private static JComboBox<String> serverIp;
 	private static JTextField serverPort;
+	private static JFormattedTextField nrOfPlayers;
 	private static JTextArea infoArea;
 	private static JScrollPane infoScrollPane;
 	private static JPanel buttonArea, serverInfoArea;
@@ -44,6 +46,7 @@ public class ServerGUI implements Observer {
 		serverInfoArea = new JPanel();
 		serverIp = new JComboBox<String>();
 		serverPort = new JTextField(String.valueOf(port));
+		nrOfPlayers = new JFormattedTextField("4");
 		infoArea = new JTextArea("");
 		infoScrollPane = new JScrollPane(infoArea);
 		startGameBtn = new JButton("Start Game");
@@ -58,11 +61,15 @@ public class ServerGUI implements Observer {
 		buttonArea.add(endGameBtn);
 		buttonArea.add(chooseMapBtn);
 		serverInfoArea.add(serverIp, BorderLayout.WEST);
-		serverInfoArea.add(serverPort, BorderLayout.EAST);
+		serverInfoArea.add(serverPort, BorderLayout.CENTER);
+		serverInfoArea.add(nrOfPlayers, BorderLayout.EAST);
 
 		// Modifications to components
 		serverIp.setBackground(Color.DARK_GRAY);
 		serverIp.setForeground(Color.GREEN);
+		nrOfPlayers.setBackground(Color.DARK_GRAY);
+		nrOfPlayers.setForeground(Color.GREEN);
+		
 		serverPort.setBackground(Color.DARK_GRAY);
 		serverPort.setForeground(Color.GREEN);
 		infoArea.setBackground(Color.BLACK);
