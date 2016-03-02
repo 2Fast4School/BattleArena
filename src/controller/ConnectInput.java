@@ -5,29 +5,35 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JTextField;
 
-import arenaFighter.Main;
-import view.ConnectPanel;
-import view.GameFrame;
+import view.Meny;
 
 public class ConnectInput implements ActionListener {
-	private ConnectPanel connectDialog;
-	private GameFrame frame;
-	
-
+	private Meny frame;
 	private String ip, port;
 	
-	public ConnectInput(GameFrame frame) {
-
+	public ConnectInput(Meny frame) {
 		this.frame = frame;
 	}
+	
+	public String getIP(){
+		return ip;
+	}
+	
+	public int getPort(){
+		System.out.println(port);
+		return Integer.parseInt(port);
+	}
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		switch (arg0.getActionCommand()) {
 		
 		case "ipConnectBtn":
-			connect(ip, Integer.parseInt(port));
-			frame.setView("LOBBY");
+			if(port != null || ip != null){
+				frame.setView("LOBBY");
+			}
 			break;
 			
 		case "ipCancelBtn":
@@ -40,15 +46,12 @@ public class ConnectInput implements ActionListener {
 			
 		case "portTextField":
 			port = ((JTextField)arg0.getSource()).getText();
+			System.out.println(port);
 			break;
 			
 		default:
 			
 			break;
 		}
-	}
-
-	private void connect(String ip, int port) {
-		Main.gameSetup(ip, port);
 	}
 }

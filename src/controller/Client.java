@@ -93,33 +93,48 @@ public class Client implements Runnable, Observer{
 				Message receiveMessage=new Message();
 				receiveMessage.readExternal(oIn);
 				
-				int code=receiveMessage.getCode();int enemyID=receiveMessage.getEnemeyID();
-				id=receiveMessage.getID();newx=receiveMessage.getXPos();newy=receiveMessage.getYPos();
-				rot=receiveMessage.getRotVar();attacking=receiveMessage.getAttacking();
-				int playerHP=receiveMessage.getPlayerHP();
+				int code=receiveMessage.getCode();
 				
-				for(Enemy n : state.getTheEnemies()){
-					if(id == n.getID()){
-						n.setX(newx); n.setY(newy); n.setRotVar(rot);
-						
-						if(playerHP!=-1){
-							n.setHP(playerHP);
+				if(code == 99){ //LOBBY-CODE
+					if(receiveMessage.toStart()){
+						state.startGame();
+					}
+			
+				} else {
+					
+					int enemyID=receiveMessage.getEnemeyID();
+					id=receiveMessage.getID();
+					newx=receiveMessage.getXPos();
+					newy=receiveMessage.getYPos();
+					rot=receiveMessage.getRotVar();
+					attacking=receiveMessage.getAttacking();
+					
+					int playerHP=receiveMessage.getPlayerHP();
+					
+					for(Enemy n : state.getTheEnemies()){
+						if(id == n.getID()){
+							n.setX(newx); n.setY(newy); n.setRotVar(rot);
+							
+							if(playerHP!=-1){
+								n.setHP(playerHP);
+							}
+							//Funger inte just nu..
+							if(attacking && !n.getHasAttacked()){
+								n.setHasAttacked(true);
+								n.doAttack();
+							}
+							else if(!attacking){
+								n.setHasAttacked(false);
+							}
 						}
-						//Funger inte just nu..
-						if(attacking && !n.getHasAttacked()){
-							n.setHasAttacked(true);
-							n.doAttack();
-						}
-						else if(!attacking){
-							n.setHasAttacked(false);
+						else if(enemyID==n.getID()){
+							n.setHP(receiveMessage.getEnemyHP());
 						}
 					}
-					else if(enemyID==n.getID()){
-						n.setHP(receiveMessage.getEnemyHP());
+					if(enemyID==state.getID()){
+						state.returnPlayer().setHP(receiveMessage.getEnemyHP());
 					}
-				}
-				if(enemyID==state.getID()){
-					state.returnPlayer().setHP(receiveMessage.getEnemyHP());
+				
 				}
 			}catch(IOException e){}
 			catch(ClassNotFoundException f){}
@@ -165,57 +180,6 @@ public class Client implements Runnable, Observer{
 		catch(ClassNotFoundException f){}
 	}
 	
-	public void startLobbyProtocol(){
-		new Thread(new LobbyProtocol()).start();
-	}
-	
-	private class LobbyProtocol implements Runnable{
-		public LobbyProtocol(){
-			
-		}
-		@Override
-		public void run() {
-			while(true){
-				DatagramSocket sendSocket;
-				try{
-					sendSocket=new DatagramSocket();
-					
-					Message message=new Message(state.getID(), -1, -1, -1, false);
-					message.setCode(3);message.setReady(ready);
-					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-					oOut.flush();
-					message.writeExternal(oOut);
-					oOut.flush();
-					byte[] bSend=bOut.toByteArray();
-					
-					DatagramPacket sendPacket=new DatagramPacket(bSend, bSend.length, srvip, srvport);
-					sendSocket.send(sendPacket);
-				}catch(IOException e){}
-				
-				byte[] bReceive=new byte[1024];
-				DatagramPacket receivePacket=new DatagramPacket(bReceive, bReceive.length);
-				try{
-					socket.receive(receivePacket);
-				}catch(IOException e){}
-				
-				try{
-					ByteArrayInputStream bIn=new ByteArrayInputStream(bReceive);
-					ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
-					Message receiveMessage=new Message();
-					receiveMessage.readExternal(oIn);
-					boolean startGame=receiveMessage.getReady();
-					//System.out.println(""+startGame);
-					if(startGame){
-						Main.startGame();
-						Main.runClient();
-						break;
-					}
-				}catch(IOException e){}
-				catch(ClassNotFoundException e){}
-			}			
-		}
-	}	
 	
 	public void setReady(boolean state){ready=state;}
 	
@@ -239,9 +203,14 @@ public class Client implements Runnable, Observer{
 					player.getWeapon().isAttacking());
 
 			message.setPlayerHP(player.getHP());
-
+			
+			if(!state.isAlive()){
+				message = new Message(); //LOBBYCODE
+				message.setCode(99); 
+				message.setReady(state.isReady());
+			}
 			//hp-change OPCODE:2
-			if(enemy != null) {
+			else if(enemy != null) {
 				message.setCode(2);
 				message.setEnemyID(enemy.getID());
 				message.setEnemyHP(enemy.getHP());

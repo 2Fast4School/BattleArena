@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -11,7 +12,7 @@ public class ConnectPanel extends JPanel {
 	private ConnectInput connectinput;
 	private JTextField ipTextField;
 	private JTextField portTextField;
-	private GameFrame frame;
+	private JLabel info;
 	
 	public ConnectPanel(ConnectInput connectinput) {
 		this.connectinput = connectinput;
@@ -30,7 +31,7 @@ public class ConnectPanel extends JPanel {
 
 		ipTextField = new JTextField();
 		ipTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		ipTextField.setText("127.0.0.1");
+		ipTextField.setText("x.x.x.x");
 		ipTextField.setBounds(20, 45, 111, 21);
 		ipTextField.setColumns(10);
 		ipTextField.setActionCommand("ipTextField");
@@ -38,7 +39,7 @@ public class ConnectPanel extends JPanel {
 		
 		portTextField = new JTextField();
 		portTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		portTextField.setText("1337");
+		portTextField.setText("> 1024");
 		portTextField.setBounds(135, 45, 40, 21);
 		portTextField.setColumns(10);
 		portTextField.setActionCommand("portTextField");
@@ -50,11 +51,14 @@ public class ConnectPanel extends JPanel {
 		ipCancelBtn.setActionCommand("ipCancelBtn");
 		ipCancelBtn.addActionListener(connectinput);
 		ipCancelBtn.setVisible(true);
+		
+		info = new JLabel("Avsluta med ENTER i textfältet för att ip respektive port ska registreras.");
 
 		add(ipConnectBtn);
 		add(ipTextField);
 		add(portTextField);
 		add(ipCancelBtn);
+		add(info);
 	}
 	
 	public String getIp() {

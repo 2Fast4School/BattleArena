@@ -3,15 +3,13 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import view.Meny;
 import BAServer.ServerMain;
-import view.ConnectPanel;
-import view.GameFrame;
-import view.SettingsPanel;
 
 public class PreGameInput implements ActionListener {
-	private GameFrame theFrame;
+	private Meny theFrame;
 	
-	public PreGameInput(GameFrame theFrame) {
+	public PreGameInput(Meny theFrame) {
 		this.theFrame = theFrame;
 	}
 	@Override

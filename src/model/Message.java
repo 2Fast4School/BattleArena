@@ -9,7 +9,7 @@ public class Message implements Externalizable{
 	boolean attacking;
 	int enemyID=-1;int enemyHP=-1;
 	int maxNrPlayers=-1;
-	boolean ready;
+	boolean ready, tostart;
 	public Message(){
 		
 	}
@@ -36,6 +36,14 @@ public class Message implements Externalizable{
 	public boolean getReady(){return ready;}
 	public void setReady(boolean state){ready=state;}
 	
+	public void setToStart(boolean b){
+		tostart = b;
+	}
+	
+	public boolean toStart(){
+		return tostart;
+	}
+	
 	@Override
 	public void readExternal(ObjectInput arg0) throws IOException, ClassNotFoundException {
 		code=arg0.readInt();
@@ -49,6 +57,7 @@ public class Message implements Externalizable{
 		enemyHP=arg0.readInt();
 		playerHP=arg0.readInt();
 		ready=arg0.readBoolean();
+		tostart = arg0.readBoolean();
 	}
 	@Override
 	public void writeExternal(ObjectOutput arg0) throws IOException {
@@ -63,5 +72,6 @@ public class Message implements Externalizable{
 		arg0.writeInt(enemyHP);
 		arg0.writeInt(playerHP);
 		arg0.writeBoolean(ready);
+		arg0.writeBoolean(tostart);
 	}
 }

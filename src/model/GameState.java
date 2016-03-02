@@ -13,7 +13,8 @@ public class GameState extends Observable{
 	private ArrayList<Entity> objInNode;
 	private Enemy gotHit;
 	private ArrayList<spawnPoint> spawnPoints;
-	
+	private boolean alive;
+	private boolean ready;
 	private Player player;
 	private int id;
 	private Quadtree quadtree;;
@@ -25,7 +26,8 @@ public class GameState extends Observable{
 		objInNode = new ArrayList<Entity>();
 		gotHit = null;
 		spawnPoints = new ArrayList<spawnPoint>();
-		
+		alive = false;
+		ready = false;
 		//Init the quadtree with the size of the screen.
 		quadtree = new Quadtree(new Rectangle(0,0,800,800));
 	}
@@ -74,7 +76,14 @@ public class GameState extends Observable{
 		
 		
 	}
+	
 	public void tick(){
+		if(isAlive()){
+			actualtick();
+		}
+	}
+	
+	public void actualtick(){
 		//Clear the QuadTree every tick.
 		quadtree.clear();
 		gotHit=null;
@@ -167,5 +176,24 @@ public class GameState extends Observable{
 	public int getID(){ return id; }
 	public BufferedImage getBackground(){
 		return map.getBackground();
+	}
+	
+	public void startGame(){
+		alive = true;
+		ready = false;
+		setChanged();
+		notifyObservers();
+	}
+	
+	public boolean isAlive(){
+		return alive;
+	}
+	
+	public boolean isReady(){
+		return ready;
+	}
+	
+	public void setToReady(){
+		ready = true;
 	}
 }

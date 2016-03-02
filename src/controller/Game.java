@@ -1,8 +1,15 @@
 package controller;
 
-import javax.swing.JOptionPane;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-import model.*;
+import javax.imageio.ImageIO;
+
+import map.Map;
+import map.MapGenerator;
+import model.GameState;
+import view.GameWindow;
 
 /**
  * The Game class is in charge of the main game thread.
@@ -22,8 +29,7 @@ public class Game implements Runnable {
 	public Game(GameState GAMESTATE){
 		this.GAMESTATE = GAMESTATE;
 		running = false;
-		
-		
+
 	}
 
 	/**
@@ -33,6 +39,7 @@ public class Game implements Runnable {
 		if(running){return;}
 			
 		running = true;
+
 		thread = new Thread(this);
 		thread.start();
 	}

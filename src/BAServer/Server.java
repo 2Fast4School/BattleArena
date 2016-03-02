@@ -144,22 +144,29 @@ public class Server extends Observable implements Runnable{
 				}catch(IOException e){e.printStackTrace();}
 				
 			}
-			else if(code==3){
+			else if(code==99){
 				Message sendMessage=new Message();
-				sendMessage.setCode(code);sendMessage.setReady(false);
-				int nrReady=0;
+				sendMessage.setCode(code);
+				boolean tostart = true;
 				for(ClientInfo c : clients){
-					if(c.getID()==id && receiveMessage.getReady()){
-						c.setReady(true);
+					
+					if(c.getID()==id){
+						
+						if(receiveMessage.getReady()){
+							c.setReady(true);
+						} else {
+							c.setReady(false);
+						}
+						
 					}
-					if(c.getReady()){
-						nrReady+=1;
+					
+					if(!c.getReady()){
+						tostart = false;
 					}
 				}
+				
+				sendMessage.setToStart(tostart);
 
-				if(nrReady==2){	// Inte helt testat för fler än
-					sendMessage.setReady(true);
-				}
 				try{
 					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
 					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
@@ -168,10 +175,10 @@ public class Server extends Observable implements Runnable{
 					oOut.flush();
 					byte[] buf=bOut.toByteArray();
 					
-					for(ClientInfo c : clients){
-						DatagramPacket sendPacket=new DatagramPacket(buf, buf.length, c.getIP(), c.getPort());
-						skt.send(sendPacket);
-					}
+					System.out.println("Svara med lobbypacket");
+					pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
+					skt.send(pkt);
+					
 				}catch(IOException e){}
 			}
 			else {

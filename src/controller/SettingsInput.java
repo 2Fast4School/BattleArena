@@ -1,18 +1,14 @@
 package controller;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JPanel;
-
-import view.GameFrame;
-import view.SettingsPanel;
+import view.Meny;
 
 public class SettingsInput implements ActionListener {
-		private GameFrame theFrame;
+		private Meny theFrame;
 		
-		public SettingsInput(GameFrame theFrame) {
+		public SettingsInput(Meny theFrame) {
 			this.theFrame = theFrame;
 		}
 		
