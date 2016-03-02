@@ -132,7 +132,7 @@ public class Server extends Observable implements Runnable{
 					nrDead++;
 				}
 			}
-			if(nrDead==1){
+			if(maxPlayers-nrDead==1){
 				Message sendMessage=new Message();
 				sendMessage.setCode(4);
 				try{
@@ -184,7 +184,7 @@ public class Server extends Observable implements Runnable{
 							nrReady+=1;
 						}
 					}
-					if(nrReady==2){	// Inte helt testat för fler än
+					if(nrReady==maxPlayers){
 						sendMessage.setReady(true);
 					}
 					try{

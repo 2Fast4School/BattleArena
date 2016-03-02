@@ -78,8 +78,8 @@ public class GameState extends Observable{
 		gameObjects.add(player);
 
 */		
-			///////////SPAWNPOINTS BUGGADE
-		player=new Player(/*spawnPoints.get(id-1).getX()*/id*100, /*spawnPoints.get(id-1).getY()*/id*100, 40, 40);
+
+		player=new Player(spawnPoints.get(id-1).getX(), spawnPoints.get(id-1).getY(), 40, 40);
 		gameObjects.add(player);
 		
 		for(int i = 1; i < maxPlayers+1; i++){
