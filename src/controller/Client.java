@@ -98,6 +98,7 @@ public class Client implements Runnable, Observer{
 				if(code == 99){ //LOBBY-CODE
 					if(receiveMessage.toStart()){
 						state.startGame();
+						System.out.println("ddwad");
 					}
 			
 				} else {
@@ -193,6 +194,30 @@ public class Client implements Runnable, Observer{
 	*/
 	@Override
 	public void update(Observable arg0, Object arg1){
+		
+		if(arg0 instanceof GameState){
+			
+			if(!state.isAlive()){
+				byte[] data;
+				Message message = new Message(); //LOBBYCODE
+				message.setCode(99); 
+				message.setReady(state.isReady());
+				
+				try{
+					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+					oOut.flush();
+					message.writeExternal(oOut);
+					oOut.flush();
+					data=bOut.toByteArray();
+					
+					DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
+					socket.send(pkt);
+					
+				}catch(IOException e){}
+			}
+			
+		}
 
 		if(arg1 instanceof Player){
 			Player player=(Player)arg1;
@@ -204,13 +229,9 @@ public class Client implements Runnable, Observer{
 
 			message.setPlayerHP(player.getHP());
 			
-			if(!state.isAlive()){
-				message = new Message(); //LOBBYCODE
-				message.setCode(99); 
-				message.setReady(state.isReady());
-			}
+			
 			//hp-change OPCODE:2
-			else if(enemy != null) {
+			if(enemy != null) {
 				message.setCode(2);
 				message.setEnemyID(enemy.getID());
 				message.setEnemyHP(enemy.getHP());
@@ -229,6 +250,7 @@ public class Client implements Runnable, Observer{
 				
 				DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
 				socket.send(pkt);
+				
 			}catch(IOException e){}
 		}
 	}

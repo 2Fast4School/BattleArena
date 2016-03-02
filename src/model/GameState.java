@@ -80,6 +80,9 @@ public class GameState extends Observable{
 	public void tick(){
 		if(isAlive()){
 			actualtick();
+		} else {
+			setChanged();
+			notifyObservers();
 		}
 	}
 	
@@ -195,5 +198,6 @@ public class GameState extends Observable{
 	
 	public void setToReady(){
 		ready = true;
+		System.out.println(ready);
 	}
 }

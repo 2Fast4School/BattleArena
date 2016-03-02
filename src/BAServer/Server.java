@@ -37,7 +37,7 @@ public class Server extends Observable implements Runnable{
 	private DatagramPacket packet;
 	private byte[] receive;
 	private int idToGiveClient=0;
-	private int maxPlayers = 4;
+	private int maxPlayers = 1;
 	private List<ClientInfo> clients;
 	
 	/**
@@ -141,6 +141,7 @@ public class Server extends Observable implements Runnable{
 					pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
 					
 					skt.send(pkt);
+					
 				}catch(IOException e){e.printStackTrace();}
 				
 			}
@@ -154,6 +155,7 @@ public class Server extends Observable implements Runnable{
 						
 						if(receiveMessage.getReady()){
 							c.setReady(true);
+							System.out.println("READY: "+id);
 						} else {
 							c.setReady(false);
 						}
@@ -175,7 +177,6 @@ public class Server extends Observable implements Runnable{
 					oOut.flush();
 					byte[] buf=bOut.toByteArray();
 					
-					System.out.println("Svara med lobbypacket");
 					pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
 					skt.send(pkt);
 					
