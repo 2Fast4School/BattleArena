@@ -144,7 +144,7 @@ public class Meny extends JFrame {
 				break;
 				
 			case "GAME":
-				this.setBounds(0,0,GAMESTATE.getBackground().getWidth(),GAMESTATE.getBackground().getHeight());
+				this.setSize(GAMESTATE.getBackground().getWidth(),GAMESTATE.getBackground().getHeight());
 				GAMEWINDOW.addKeyListener(GAMEINPUT);
 				GAMEWINDOW.addMouseListener(GAMEINPUT);
 				GAMEWINDOW.addMouseMotionListener(GAMEINPUT);
@@ -154,7 +154,7 @@ public class Meny extends JFrame {
 				
 			case "BACK":
 			case "MENY":
-				this.setBounds(0,0,800,800);
+				this.setSize(800,800);
 				cardlayout.show(contentpane, "MENY");
 				break;
 				
