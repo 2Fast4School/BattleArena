@@ -139,7 +139,6 @@ public class Server extends Observable implements Runnable{
 				
 				code = receiveMessage.getCode();
 				id=receiveMessage.getID();
-				alive=receiveMessage.getAlive();
 				//Create a new datagramsocket on an open port.
 				skt = new DatagramSocket();
 			}catch(IOException e){e.printStackTrace();}
@@ -149,21 +148,13 @@ public class Server extends Observable implements Runnable{
 		/**
 		 * Depending on the OP-CODE. Responds or forwards the packet.
 		 */
-		public void run(){
-		
-			nrDead=0;
-			for(ClientInfo c : clients){
-				if(c.getID()==id){
-					c.setAlive(alive);
-				}
-				if(!c.getAlive()){
-					nrDead++;
-
-				}
-			}
-			if(maxPlayers-nrDead==1){
-				Message sendMessage=new Message();
-				sendMessage.setCode(4);
+		public void run(){	
+			if(code == 0){
+				idToGiveClient += 1;
+				Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
+				sendMessage.setMaxNrPlayers(maxPlayers);;
+				sendMessage.setMapName(mapName);
+				sendMessage.setMapType(type);
 				try{
 					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
 					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
@@ -172,10 +163,54 @@ public class Server extends Observable implements Runnable{
 					oOut.flush();
 					byte[] buf=bOut.toByteArray();
 					
-					for(ClientInfo c : clients){
-						DatagramPacket sendPacket=new DatagramPacket(buf, buf.length, c.getIP(), c.getPort());
-						skt.send(sendPacket);
+					clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
+					
+					pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
+					
+					skt.send(pkt);
+					
+				}catch(IOException e){e.printStackTrace();}
+				
+			}
+			else if(code==99){
+				Message sendMessage=new Message();
+				sendMessage.setCode(code);
+				boolean tostart = true;
+				for(ClientInfo c : clients){
+					
+					if(c.getID()==id){
+						
+						if(receiveMessage.getReady()){
+							c.setReady(true);
+							System.out.println("READY: "+id);
+						} else {
+							c.setReady(false);
+						}
+						
 					}
+					
+					if(!c.getReady()){
+						tostart = false;
+					}
+				}
+				
+				if(clients.size() == maxPlayers){
+					sendMessage.setToStart(tostart);
+				} else {
+					sendMessage.setToStart(false);
+				}
+
+				try{
+					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+					oOut.flush();
+					sendMessage.writeExternal(oOut);
+					oOut.flush();
+					byte[] buf=bOut.toByteArray();
+					
+					pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
+					skt.send(pkt);
+					
 				}catch(IOException e){}
 				
 			}

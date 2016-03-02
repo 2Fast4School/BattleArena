@@ -2,8 +2,7 @@ package controller;
 
 import javax.swing.JOptionPane;
 
-import model.*;
-import view.GameFrame;
+import model.GameState;
 
 /**
  * The Game class is in charge of the main game thread.
@@ -15,16 +14,16 @@ public class Game implements Runnable {
 	private GameState GAMESTATE;
 	private boolean running;
 	private Thread thread;
-	private GameFrame frame;
 	
 	/**
 	 * Constructor.
 	 * @param GAMESTATE The gamestate which the game class will be responsible of "running".
 	 */
-	public Game(GameState GAMESTATE, GameFrame frame){
+	public Game(GameState GAMESTATE){
 		this.GAMESTATE = GAMESTATE;
-		this.frame=frame;
+
 		running = false;
+
 	}
 
 	/**
@@ -34,6 +33,7 @@ public class Game implements Runnable {
 		if(running){return;}
 			
 		running = true;
+
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -89,12 +89,6 @@ public class Game implements Runnable {
 			lastTime = now;
 								
 			//Wait until 1/60 of a second has passed by and then update gamestate.
-			if(GAMESTATE.getGameOver()){
-				JOptionPane.showMessageDialog(frame, "Game over, returning to main menu..", "Game Over", JOptionPane.OK_OPTION);
-				frame.switchToPreGameWindow();
-				stop();
-			}
-			else{
 				while(delta >= 1){ 
 					//Update the gamestate.
 					GAMESTATE.tick();
@@ -110,7 +104,6 @@ public class Game implements Runnable {
 					//System.out.println("TICKS: "+updates);
 					updates = 0;
 				}
-			}
 		}
 		
 		stop();	

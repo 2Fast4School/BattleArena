@@ -7,16 +7,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 
 import arenaFighter.Main;
-import view.GameFrame;
 import view.LobbyDialog;
 
 public class LobbyDialogInput extends JDialog implements ActionListener {
 	private LobbyDialog lobbyDialog;
-	private GameFrame frame;
+
 	private Client client;
-	public LobbyDialogInput(Client client, GameFrame frame, LobbyDialog lobbyDialog) {
+	public LobbyDialogInput(Client client, LobbyDialog lobbyDialog) {
 		this.lobbyDialog = lobbyDialog;
-		this.frame = frame;
 		this.client=client;
 	}
 	@Override
@@ -27,7 +25,6 @@ public class LobbyDialogInput extends JDialog implements ActionListener {
 			JCheckBox box = (JCheckBox)arg0.getSource();
 			box.setEnabled(false);
 			client.setReady(true);
-			Main.lobbyProtocol();
 			break;
 		default:
 

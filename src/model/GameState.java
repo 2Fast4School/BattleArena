@@ -13,7 +13,8 @@ public class GameState extends Observable{
 	private ArrayList<Entity> objInNode;
 	private Enemy gotHit;
 	private ArrayList<SpawnPoint> spawnPoints;
-	
+	private boolean alive;
+	private boolean ready;
 	private Player player;
 	private int id;
 	private Quadtree quadtree;;
@@ -25,18 +26,18 @@ public class GameState extends Observable{
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		gotHit = null;
-		gameOver=false;
-		
 		spawnPoints = new ArrayList<SpawnPoint>();
-
-
+		alive = false;
+		ready = false;
+		//Init the quadtree with the size of the screen.
+		quadtree = new Quadtree(new Rectangle(0,0,800,800));
 	}
 	
 	/**
 	 * 
 	 * @return A list with all the enemies in the game.
 	 */
-	public ArrayList<Enemy> getTheEnemies(){
+	public synchronized ArrayList<Enemy> getTheEnemies(){
 		ArrayList<Enemy> ens = new ArrayList<Enemy>();
 		for(Entity e : gameObjects){
 			if(e instanceof Enemy){
@@ -93,7 +94,19 @@ public class GameState extends Observable{
 		
 		
 	}
+	
 	public void tick(){
+		if(isAlive()){
+
+			actualtick();
+		} else {
+
+			setChanged();
+			notifyObservers();
+		}
+	}
+	
+	public void actualtick(){
 		//Clear the QuadTree every tick.
 		quadtree.clear();
 		gotHit=null;
@@ -187,6 +200,24 @@ public class GameState extends Observable{
 	public BufferedImage getBackground(){
 		return map.getBackground();
 	}
-	public void setGameOver(){gameOver=true;}
-	public boolean getGameOver(){return gameOver;}
+	
+	public void startGame(){
+		alive = true;
+		ready = false;
+		//setChanged();
+		//notifyObservers();
+	}
+	
+	public boolean isAlive(){
+		return alive;
+	}
+	
+	public boolean isReady(){
+		return ready;
+	}
+	
+	public void setToReady(){
+		ready = true;
+		System.out.println(ready);
+	}
 }

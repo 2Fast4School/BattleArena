@@ -11,10 +11,9 @@ public class Message implements Externalizable{
 	boolean attacking;
 	int enemyID=-1;int enemyHP=-1;
 	int maxNrPlayers=-1;
-	boolean ready;
-	boolean alive;
 	String mapName;
 	String type;
+	boolean ready, tostart;
 	public Message(){
 		
 	}
@@ -22,11 +21,13 @@ public class Message implements Externalizable{
 		this.id=id;this.attacking=attacking;this.xPos=xPos;
 		this.yPos=yPos;this.rotVar=rotVar;
 		ready=false;
-		alive=true;
 	}
 	public int getCode(){return code;}
 	public void setCode(int code){this.code=code;}
 	public int getID(){return id;}
+	public void setID(int id){
+		this.id = id;
+	}
 	public int getXPos(){return xPos;}
 	public int getYPos(){return yPos;}
 	public int getRotVar(){return rotVar;}
@@ -41,12 +42,18 @@ public class Message implements Externalizable{
 	public void setPlayerHP(int playerHP){this.playerHP=playerHP;}
 	public boolean getReady(){return ready;}
 	public void setReady(boolean state){ready=state;}
-	public boolean getAlive(){return alive;}
-	public void setAlive(boolean state){alive=state;}	
 	public String getMapName(){return mapName;}
 	public void setMapName(String mapName){this.mapName=mapName;}
 	public String getMapType(){return type;}
 	public void setMapType(String type){this.type=type;}
+	
+	public void setToStart(boolean b){
+		tostart = b;
+	}
+	
+	public boolean toStart(){
+		return tostart;
+	}
 	
 	@Override
 	public void readExternal(ObjectInput arg0) throws IOException, ClassNotFoundException {
@@ -61,9 +68,9 @@ public class Message implements Externalizable{
 		enemyHP=arg0.readInt();
 		playerHP=arg0.readInt();
 		ready=arg0.readBoolean();
-		alive=arg0.readBoolean();
 		mapName=(String)arg0.readObject();
 		type=(String)arg0.readObject();
+		tostart = arg0.readBoolean();
 	}
 	@Override
 	public void writeExternal(ObjectOutput arg0) throws IOException {
@@ -78,8 +85,8 @@ public class Message implements Externalizable{
 		arg0.writeInt(enemyHP);
 		arg0.writeInt(playerHP);
 		arg0.writeBoolean(ready);
-		arg0.writeBoolean(alive);
 		arg0.writeObject(mapName);
 		arg0.writeObject(type);
+		arg0.writeBoolean(tostart);
 	}
 }

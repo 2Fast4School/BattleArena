@@ -18,9 +18,9 @@ import arenaFighter.Main;
 import controller.PreGameInput;
 
 public class PreGameWindow extends JPanel{
-	private GameFrame frame;
+
+	
 	private Image preGameArt;
-	private JLabel picLabel;
 	private PreGameInput preGameInput;
 	private JButton createGameBtn;
 	private JButton connectGameBtn;
@@ -28,14 +28,12 @@ public class PreGameWindow extends JPanel{
 	private JButton settingsBtn;
 	private JButton quitBtn;
 	
-	private ConnectDialog connectDialog;
-	private SettingsDialog settingsDialog;
-	private LobbyDialog lobbyDialog;
-	
+
 	private boolean toolTipsEnabled = false;
 	
-	public PreGameWindow(GameFrame frame) {
-		this.frame = frame;
+	public PreGameWindow(PreGameInput preGameInput) {
+		setLayout(null);
+		this.preGameInput = preGameInput;
 		initPreGameWindow();
 	}
 	
@@ -50,8 +48,6 @@ public class PreGameWindow extends JPanel{
 		}
 		
 		// imagePanel.clearImage(); to make it disappear.
-		
-		PreGameInput preGameInput = new PreGameInput(this);
 				//Overlapping the image with the following buttons:
 		//setBackground(Color.GRAY);
 		setBounds(0, 0, 800, 800);
@@ -70,13 +66,7 @@ public class PreGameWindow extends JPanel{
 		connectGameBtn.setBounds(311, 244, 192, 59);
 		connectGameBtn.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		connectGameBtn.setActionCommand("connectGameBtn");
-		connectGameBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if ((connectDialog instanceof ConnectDialog) == false || connectDialog.isShowing() == false) {
-					connectDialog = new ConnectDialog(frame);
-				}
-			}
-		});
+		connectGameBtn.addActionListener(preGameInput);
 		add(connectGameBtn);
 					// Find game (checks RSS feed)
 		JButton findGameBtn = new JButton("Find a game");
@@ -90,13 +80,7 @@ public class PreGameWindow extends JPanel{
 		settingsBtn.setBounds(311, 384, 192, 59);
 		settingsBtn.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		settingsBtn.setActionCommand("settingsBtn");
-		settingsBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if ((settingsDialog instanceof SettingsDialog) == false || settingsDialog.isShowing() == false) {
-					settingsDialog = new SettingsDialog(frame);
-				}
-			}
-		});
+		settingsBtn.addActionListener(preGameInput);
 		add(settingsBtn);
 					// Quit
 		JButton quitBtn = new JButton("Quit");

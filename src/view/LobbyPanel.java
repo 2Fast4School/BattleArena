@@ -10,70 +10,47 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-import arenaFighter.Main;
 import controller.Client;
-import controller.LobbyDialogInput;
+import controller.LobbyInput;
 
-public class LobbyDialog extends JDialog {
-	private LobbyDialogInput lobbyDialogInput;
-	private JTextArea playersTextArea;
-	private JPanel contentPane;
+public class LobbyPanel extends JPanel {
 	private JLabel lblNewLabel_1;
+	private LobbyInput lobbyinput;
 	private BufferedImage mapImage;
-	private int numberReady;
-	private Client client;
 	
-	public LobbyDialog(Client client) {
-		this.client=client;
-		numberReady=0;
+	public LobbyPanel(LobbyInput lobbyinput) {
+		this.lobbyinput = lobbyinput;
 		initDialog();
 	}
 	public void initDialog() {
-		LobbyDialogInput lobbyDialogInput = new LobbyDialogInput(client, this);
-		setTitle("Lobby");
-		setLayout(null);
-		setLocation(160, 160);
-		setPreferredSize(new Dimension(470, 240));		
-		setResizable(false);
-		pack();
-		setVisible(true);
 
-		try{
-			setIconImage(ImageIO.read(Main.class.getResource("/testa.png")));
-		}catch(IOException e){}
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 470, 240);
-		contentPane = new JPanel();
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
 		
 		JLabel lblMap = new JLabel("Map: " + "VAD MAPPEN HETER");
 		lblMap.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMap.setBounds(26, 11, 277, 25);
-		contentPane.add(lblMap);
+		add(lblMap);
 		
 		JTextArea textArea = new JTextArea();
 		textArea.setRows(8);
 		textArea.setBounds(332, 11, 100, 166);
-		contentPane.add(textArea);
+		add(textArea);
 		
 		JCheckBox chckbxReady = new JCheckBox("READY");
 		chckbxReady.setActionCommand("chckbxReady");
-		chckbxReady.addActionListener(lobbyDialogInput);
+		chckbxReady.addActionListener(lobbyinput);
 		chckbxReady.setBounds(352, 184, 70, 23);
-		contentPane.add(chckbxReady);
+		add(chckbxReady);
 		
 		
 		
-		try {	/*******MapNamn********/
-			mapImage = ImageIO.read(Main.class.getResource("/pregameart.png"));
+		try {
+			mapImage = ImageIO.read(new File("res/pregameart.png"));
 		}
 		catch(IOException e) {
 			e.printStackTrace();
@@ -84,7 +61,7 @@ public class LobbyDialog extends JDialog {
 		lblNewLabel.setBounds(65, 32, 200, 200);
 		
 		
-		contentPane.add(lblNewLabel);
+		add(lblNewLabel);
 		
 		textArea.append("Player 1");
 		textArea.append("Player 2");
@@ -106,6 +83,5 @@ public class LobbyDialog extends JDialog {
 		else{
 		}	
 	}
-	public void readyUp(int increment){numberReady+=increment;}
-	public int getIsReady(){return numberReady;}
+
 }

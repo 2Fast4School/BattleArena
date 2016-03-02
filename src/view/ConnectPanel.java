@@ -1,69 +1,64 @@
 package view;
 
-import java.awt.Dimension;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import controller.Client;
-import controller.ConnectDialogInput;
-import model.GameState;
+import controller.ConnectInput;
 
-public class ConnectDialog extends JDialog {
-	private ConnectDialogInput connectDialogInput;
+public class ConnectPanel extends JPanel {
+	private ConnectInput connectinput;
 	private JTextField ipTextField;
 	private JTextField portTextField;
-	private GameFrame frame;
+	private JLabel info;
 	
-	public ConnectDialog(GameFrame frame) {
-		this.frame = frame;
+	public ConnectPanel(ConnectInput connectinput) {
+		this.connectinput = connectinput;
 		initDialog();
 	}
 	public void initDialog() {
-		ConnectDialogInput connectDialogInput = new ConnectDialogInput(frame, this);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setTitle("Connect by IP");
-		setLayout(null);
-		setAlwaysOnTop(true);
-		setLocation(300, 300);
-		setPreferredSize(new Dimension(200, 200));		
-		setResizable(false);
-		pack();
-		setVisible(true);
 		
 		// Connect button over the IP textfield
 		JButton ipConnectBtn = new JButton("Connect");
 		ipConnectBtn.setBounds(20, 20, 111, 21);
 		ipConnectBtn.setActionCommand("ipConnectBtn");
-		ipConnectBtn.addActionListener(connectDialogInput);
+		ipConnectBtn.addActionListener(connectinput);
 		ipConnectBtn.setVisible(true);
 		
 		
 
 		ipTextField = new JTextField();
 		ipTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		ipTextField.setText("127.0.0.1");
+		ipTextField.setText("x.x.x.x");
 		ipTextField.setBounds(20, 45, 111, 21);
 		ipTextField.setColumns(10);
+		ipTextField.setActionCommand("ipTextField");
+		ipTextField.addActionListener(connectinput);
 		
 		portTextField = new JTextField();
 		portTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		portTextField.setText("5050");
+		portTextField.setText("> 1024");
 		portTextField.setBounds(135, 45, 40, 21);
 		portTextField.setColumns(10);
+		portTextField.setActionCommand("portTextField");
+		portTextField.addActionListener(connectinput);
 		
 		// Cancel button under the IP textfield
 		JButton ipCancelBtn = new JButton("Cancel");
 		ipCancelBtn.setBounds(20, 70, 111, 21);
 		ipCancelBtn.setActionCommand("ipCancelBtn");
-		ipCancelBtn.addActionListener(connectDialogInput);
+		ipCancelBtn.addActionListener(connectinput);
 		ipCancelBtn.setVisible(true);
+		
+		info = new JLabel("Avsluta med ENTER i textfältet för att ip respektive port ska registreras.");
 
 		add(ipConnectBtn);
 		add(ipTextField);
 		add(portTextField);
 		add(ipCancelBtn);
+		add(info);
 	}
 	
 	public String getIp() {
