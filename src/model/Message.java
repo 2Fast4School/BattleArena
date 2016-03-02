@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import map.Map;
+
 public class Message implements Externalizable{
 	int code=-1;int id;int xPos;int yPos;int rotVar;int playerHP=-1;
 	boolean attacking;
@@ -11,6 +13,8 @@ public class Message implements Externalizable{
 	int maxNrPlayers=-1;
 	boolean ready;
 	boolean alive;
+	String mapName;
+	String type;
 	public Message(){
 		
 	}
@@ -39,6 +43,11 @@ public class Message implements Externalizable{
 	public void setReady(boolean state){ready=state;}
 	public boolean getAlive(){return alive;}
 	public void setAlive(boolean state){alive=state;}	
+	public String getMapName(){return mapName;}
+	public void setMapName(String mapName){this.mapName=mapName;}
+	public String getMapType(){return type;}
+	public void setMapType(String type){this.type=type;}
+	
 	@Override
 	public void readExternal(ObjectInput arg0) throws IOException, ClassNotFoundException {
 		code=arg0.readInt();
@@ -53,6 +62,8 @@ public class Message implements Externalizable{
 		playerHP=arg0.readInt();
 		ready=arg0.readBoolean();
 		alive=arg0.readBoolean();
+		mapName=(String)arg0.readObject();
+		type=(String)arg0.readObject();
 	}
 	@Override
 	public void writeExternal(ObjectOutput arg0) throws IOException {
@@ -68,5 +79,7 @@ public class Message implements Externalizable{
 		arg0.writeInt(playerHP);
 		arg0.writeBoolean(ready);
 		arg0.writeBoolean(alive);
+		arg0.writeObject(mapName);
+		arg0.writeObject(type);
 	}
 }

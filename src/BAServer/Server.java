@@ -44,6 +44,8 @@ public class Server extends Observable implements Runnable{
 	private int maxPlayers = 4;
 	private List<ClientInfo> clients;
 	private Map map = null;
+	private String mapName;
+	private String type;
 	
 	/**
 	 * Creates a DatagramSocket bount to a specific port. The Server listens for packets on this port.
@@ -55,10 +57,16 @@ public class Server extends Observable implements Runnable{
 		clients=Collections.synchronizedList(new ArrayList<ClientInfo>());
 	}
 	
-	public void setMap(BufferedImage logicMap, String type)
+	public void setMap(Map map)
 	{
-		map = MapGenerator.generateMap(logicMap, type, 16);
+		this.map=map;
 	}
+	
+	public void setMapName(String mapName, String type){
+		this.mapName=mapName;
+		this.type=type;
+	}
+	public String getMapName(){return mapName;}
 	
 	public Map getMap()
 	{
@@ -175,8 +183,9 @@ public class Server extends Observable implements Runnable{
 				if(code == 0){
 					idToGiveClient += 1;
 					Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
-					sendMessage.setMaxNrPlayers(maxPlayers);;
-					
+					sendMessage.setMaxNrPlayers(maxPlayers);
+					sendMessage.setMapName(mapName);
+					sendMessage.setMapType(type);
 					try{
 						ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
 						ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
@@ -190,26 +199,7 @@ public class Server extends Observable implements Runnable{
 						pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
 						
 						skt.send(pkt);
-						
-						
-						/*
-						  //Serialize map
-							try
-							  {
-							     FileOutputStream fileOut =
-							     new FileOutputStream("serializedMap.ser");
-							     ObjectOutputStream out = new ObjectOutputStream(fileOut);
-							     out.writeObject(map);
-							     out.close();
-							     fileOut.close();
-							     System.out.printf("Serialized data is saved in serializedMap.ser \n");
-							  }catch(IOException i)
-							  {
-							      i.printStackTrace();
-							  }
 
-					*/	
-						
 					}catch(IOException e){e.printStackTrace();}
 					
 				}

@@ -81,7 +81,7 @@ public class ServerController implements ActionListener {
 	public void chooseMap()
 	{
 		JFileChooser chooser = new JFileChooser(new File(System.getProperty("user.dir")+"/res"));
-		BufferedImage o = null;
+		BufferedImage logicMap = null;
 		
 	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
 	        ".PNG logic maps", "png");
@@ -92,16 +92,14 @@ public class ServerController implements ActionListener {
 	       System.out.println("You chose to open this file: " +
 	            chooser.getSelectedFile().getName());
 	       try {
-			o = ImageIO.read(chooser.getSelectedFile());
+			logicMap = ImageIO.read(chooser.getSelectedFile());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	      
 	    }
-	    //model.setMap();
-	    System.out.println(""+o.getHeight());
-	    
-	    
+	    model.setMapName(chooser.getSelectedFile().getName(), view.getMapType());
+	    //model.setMap(MapGenerator.generateMap(logicMap, view.getMapType(), 16));
 	}
 }

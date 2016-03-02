@@ -49,7 +49,7 @@ public class ConnectDialog extends JDialog {
 		
 		portTextField = new JTextField();
 		portTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		portTextField.setText("1337");
+		portTextField.setText("5050");
 		portTextField.setBounds(135, 45, 40, 21);
 		portTextField.setColumns(10);
 		

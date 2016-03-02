@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -15,8 +16,11 @@ import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.imageio.ImageIO;
+
 import arenaFighter.Main;
 import map.Map;
+import map.MapGenerator;
 import model.Enemy;
 import model.GameState;
 import model.Message;
@@ -153,10 +157,11 @@ public class Client implements Runnable, Observer{
 			message.writeExternal(oOut);
 			oOut.flush();
 			byte[] data=bOut.toByteArray();
-
+			
 			DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
 			
 			socket.send(pkt);
+			
 			byte []buf = new byte[1024];
 			pkt = new DatagramPacket(buf, buf.length);
 			
@@ -167,10 +172,14 @@ public class Client implements Runnable, Observer{
 			ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
 			Message receiveMessage=new Message();
 			receiveMessage.readExternal(oIn);
-			
+			System.out.println(receiveMessage.getMapName());
+			BufferedImage logicMap=ImageIO.read(Main.class.getResource("/"+receiveMessage.getMapName()));
+			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
+
 			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);
-		}catch(IOException e){System.out.println("couldnt connect");}	
-		catch(ClassNotFoundException f){}
+		}catch(ClassNotFoundException f){System.out.println("Class Not Found");}
+		catch(IOException e){System.out.println("couldnt connect");e.printStackTrace();}	
+		
 	}
 	
 	public void startLobbyProtocol(){

@@ -34,10 +34,10 @@ public class MyBufferedImage implements Serializable{
 	 * @param out
 	 * @throws IOException
 	 */
-	private void writeObject(ObjectOutputStream out) throws IOException {
+	/*private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         ImageIO.write(image, "png", out); // png is lossless
-    }
+    }*/
 	
 	/**
 	 * http://stackoverflow.com/questions/15058663/how-to-serialize-an-object-that-includes-bufferedimages
@@ -45,8 +45,8 @@ public class MyBufferedImage implements Serializable{
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
+   /* private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    	in.defaultReadObject();
         image = ImageIO.read(in);
-    }
+    }*/
 }

@@ -2,6 +2,7 @@ package BAServer;
 
 
 import java.awt.BorderLayout;
+import java.awt.Choice;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
@@ -33,6 +34,7 @@ public class ServerGUI implements Observer {
 	private static JScrollPane infoScrollPane;
 	private static JPanel buttonArea, serverInfoArea;
 	private static JButton startGameBtn, endGameBtn, chooseMapBtn;
+	private Choice typeChoice;
 	
 	private static int port = 5050;
 
@@ -54,7 +56,11 @@ public class ServerGUI implements Observer {
 		JLabel IPLabel = new JLabel("IP adresses:");
 		JLabel portLabel = new JLabel("Port:");
 		JLabel nrOfPlayersLabel = new JLabel("Number of players:");
-
+		typeChoice=new Choice();
+		typeChoice.add("grass");
+		typeChoice.add("lava");
+		typeChoice.add("desert");
+		
 		// Add components to mainFrame
 		mainWindow.add(serverInfoArea, BorderLayout.NORTH);
 		mainWindow.add(infoScrollPane);
@@ -62,6 +68,7 @@ public class ServerGUI implements Observer {
 		buttonArea.add(startGameBtn);
 		buttonArea.add(endGameBtn);
 		buttonArea.add(chooseMapBtn);
+		buttonArea.add(typeChoice);
 		serverInfoArea.add(IPLabel);
 		serverInfoArea.add(serverIp);
 		serverInfoArea.add(portLabel);
@@ -139,7 +146,7 @@ public class ServerGUI implements Observer {
 	
 	public int getNrOfPlayers()
 	{
-		return Integer.parseInt(nrOfPlayers.getText());
+		return Integer.parseInt(nrOfPlayers.getText().trim());
 	}
 	
 	public void addController(ActionListener controller){
@@ -165,5 +172,8 @@ public class ServerGUI implements Observer {
 			startGameBtn.setEnabled(true);	
 			endGameBtn.setEnabled(false);
 		}
+	}
+	public String getMapType(){
+		return typeChoice.getSelectedItem();
 	}
 }

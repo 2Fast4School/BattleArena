@@ -74,7 +74,7 @@ public class LobbyDialog extends JDialog {
 		
 		
 		
-		try {
+		try {	/*******MapNamn********/
 			mapImage = ImageIO.read(Main.class.getResource("/pregameart.png"));
 		}
 		catch(IOException e) {
