@@ -7,7 +7,11 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import javax.imageio.ImageIO;
-
+/**
+ * DEPRECATED DONT FUCKING USE IT yet...
+ * @author Alexander
+ *
+ */
 public class MyBufferedImage implements Serializable{
 	private static final long serialVersionUID = -8565146954702818348L;
 	private transient BufferedImage image;
