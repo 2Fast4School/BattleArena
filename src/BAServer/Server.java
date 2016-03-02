@@ -1,9 +1,11 @@
 package BAServer;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
+import map.Map;
+import map.MapGenerator;
 import model.Message;
 
 /**
@@ -39,6 +43,7 @@ public class Server extends Observable implements Runnable{
 	private int idToGiveClient=0;
 	private int maxPlayers = 4;
 	private List<ClientInfo> clients;
+	private Map map = null;
 	
 	/**
 	 * Creates a DatagramSocket bount to a specific port. The Server listens for packets on this port.
@@ -50,6 +55,15 @@ public class Server extends Observable implements Runnable{
 		clients=Collections.synchronizedList(new ArrayList<ClientInfo>());
 	}
 	
+	public void setMap(BufferedImage logicMap, String type)
+	{
+		map = MapGenerator.generateMap(logicMap, type, 16);
+	}
+	
+	public Map getMap()
+	{
+		return map;
+	}
 
 	/**
 	 * Listens for packets and every time a packet is received it starts a new Thread of a new object of Packethandler.
@@ -126,7 +140,29 @@ public class Server extends Observable implements Runnable{
 			if(code == 0){
 				idToGiveClient += 1;
 				Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
-				sendMessage.setMaxNrPlayers(maxPlayers);;
+				sendMessage.setMaxNrPlayers(maxPlayers);
+				
+				
+		/*
+				  //Serialize map
+					try
+					  {
+					     FileOutputStream fileOut =
+					     new FileOutputStream("serializedMap.ser");
+					     ObjectOutputStream out = new ObjectOutputStream(fileOut);
+					     out.writeObject(map);
+					     out.close();
+					     fileOut.close();
+					     System.out.printf("Serialized data is saved in serializedMap.ser \n");
+					  }catch(IOException i)
+					  {
+					      i.printStackTrace();
+					  }
+
+			*/	
+				
+				
+				
 				
 				try{
 					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
@@ -157,7 +193,7 @@ public class Server extends Observable implements Runnable{
 					}
 				}
 
-				if(nrReady==2){	// Inte helt testat för fler än
+				if(nrReady==2){	// Inte helt testat fï¿½r fler ï¿½n
 					sendMessage.setReady(true);
 				}
 				try{
