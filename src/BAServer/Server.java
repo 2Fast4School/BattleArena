@@ -64,6 +64,11 @@ public class Server extends Observable implements Runnable{
 	{
 		return map;
 	}
+	
+	public void setMaxPlayers(int nrOfPlayers)
+	{
+		this.maxPlayers = nrOfPlayers;
+	}
 
 	/**
 	 * Listens for packets and every time a packet is received it starts a new Thread of a new object of Packethandler.

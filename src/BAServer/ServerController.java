@@ -60,9 +60,10 @@ public class ServerController implements ActionListener {
 	public void startServer()
 	{
 		try {
-			Server s = new Server(5050);
+			Server s = new Server(view.getPort());
 			s.addObserver(view);
 			addModel(s);
+			s.setMaxPlayers(view.getNrOfPlayers());
 			new Thread(s).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -72,6 +73,11 @@ public class ServerController implements ActionListener {
 		view.toTerminal("Starting server on " + view.getIpAddress() + ":" + view.getPort() + "\n");
 	}//startServer()
 	
+	
+	/**
+	 * <h1>chooseMap</h1>
+	 * Creates a file explorer to find maps which is of filetype .png
+	 */
 	public void chooseMap()
 	{
 		JFileChooser chooser = new JFileChooser(new File(System.getProperty("user.dir")+"/res"));

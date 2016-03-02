@@ -10,8 +10,8 @@ import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -28,8 +28,7 @@ public class ServerGUI implements Observer {
 
 	private static JFrame mainWindow;
 	private static JComboBox<String> serverIp;
-	private static JTextField serverPort;
-	private static JFormattedTextField nrOfPlayers;
+	private static JTextField serverPort, nrOfPlayers;
 	private static JTextArea infoArea;
 	private static JScrollPane infoScrollPane;
 	private static JPanel buttonArea, serverInfoArea;
@@ -40,18 +39,21 @@ public class ServerGUI implements Observer {
 	public ServerGUI() {
 		mainWindow = new JFrame("Battle Arena Dedicated Server");
 		mainWindow.setLayout(new BorderLayout());
-		mainWindow.setSize(500, 400);
+		mainWindow.setSize(700, 400);
 
 		buttonArea = new JPanel();
 		serverInfoArea = new JPanel();
 		serverIp = new JComboBox<String>();
 		serverPort = new JTextField(String.valueOf(port));
-		nrOfPlayers = new JFormattedTextField("4");
+		nrOfPlayers = new JTextField(" 2 ");
 		infoArea = new JTextArea("");
 		infoScrollPane = new JScrollPane(infoArea);
 		startGameBtn = new JButton("Start Game");
 		endGameBtn = new JButton("End Game");
 		chooseMapBtn = new JButton("Choose Map");
+		JLabel IPLabel = new JLabel("IP adresses:");
+		JLabel portLabel = new JLabel("Port:");
+		JLabel nrOfPlayersLabel = new JLabel("Number of players:");
 
 		// Add components to mainFrame
 		mainWindow.add(serverInfoArea, BorderLayout.NORTH);
@@ -60,23 +62,26 @@ public class ServerGUI implements Observer {
 		buttonArea.add(startGameBtn);
 		buttonArea.add(endGameBtn);
 		buttonArea.add(chooseMapBtn);
-		serverInfoArea.add(serverIp, BorderLayout.WEST);
-		serverInfoArea.add(serverPort, BorderLayout.CENTER);
-		serverInfoArea.add(nrOfPlayers, BorderLayout.EAST);
+		serverInfoArea.add(IPLabel);
+		serverInfoArea.add(serverIp);
+		serverInfoArea.add(portLabel);
+		serverInfoArea.add(serverPort);
+		serverInfoArea.add(nrOfPlayersLabel);
+		serverInfoArea.add(nrOfPlayers);
+		
 
 		// Modifications to components
 		serverIp.setBackground(Color.DARK_GRAY);
 		serverIp.setForeground(Color.GREEN);
 		nrOfPlayers.setBackground(Color.DARK_GRAY);
 		nrOfPlayers.setForeground(Color.GREEN);
-		
 		serverPort.setBackground(Color.DARK_GRAY);
 		serverPort.setForeground(Color.GREEN);
 		infoArea.setBackground(Color.BLACK);
 		infoArea.setForeground(Color.GREEN);
 		endGameBtn.setEnabled(false);
 
-		// add data to serverIp dropbux
+		// add data to serverIp ComboBox
 		updateIpComboBox();
 
 		// Make this bad boy main window show
@@ -117,6 +122,9 @@ public class ServerGUI implements Observer {
 		Iterator<String> i = n.getInterfaces().iterator();
 		while(i.hasNext())
 			serverIp.addItem(i.next().toString());
+		
+		//Set Loopback as default adress
+		serverIp.setSelectedIndex(serverIp.getItemCount()-1);
 	}
 	
 	public String getIpAddress()
@@ -127,6 +135,11 @@ public class ServerGUI implements Observer {
 	public int getPort()
 	{
 		return Integer.parseInt(serverPort.getText());
+	}
+	
+	public int getNrOfPlayers()
+	{
+		return Integer.parseInt(nrOfPlayers.getText());
 	}
 	
 	public void addController(ActionListener controller){
