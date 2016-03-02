@@ -17,7 +17,6 @@ public class PreGameInput implements ActionListener {
 		switch (e.getActionCommand()) {
 		case "createGameBtn":
 			ServerMain m = ServerMain.getInstance();
-			m.startServerUI();
 			break;
 		case "connectGameBtn":
 

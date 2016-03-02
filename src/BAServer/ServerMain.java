@@ -12,7 +12,7 @@ public class ServerMain {
 	private ServerGUI sg;
 	private static ServerMain instance = null;
 	
-	private ServerMain(){	}
+	private ServerMain(){ startServerUI();	}
 	
 	public static ServerMain getInstance()
 	{
@@ -22,7 +22,7 @@ public class ServerMain {
 		return instance;
 	}
 	
-	public void startServerUI()
+	private void startServerUI()
 	{
 		
 		sg = new ServerGUI();
