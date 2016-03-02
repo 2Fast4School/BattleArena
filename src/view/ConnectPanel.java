@@ -31,7 +31,7 @@ public class ConnectPanel extends JPanel {
 
 		ipTextField = new JTextField();
 		ipTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		ipTextField.setText("x.x.x.x");
+		ipTextField.setText("127.0.0.1");
 		ipTextField.setBounds(20, 45, 111, 21);
 		ipTextField.setColumns(10);
 		ipTextField.setActionCommand("ipTextField");
@@ -39,7 +39,7 @@ public class ConnectPanel extends JPanel {
 		
 		portTextField = new JTextField();
 		portTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		portTextField.setText("> 1024");
+		portTextField.setText("5050");
 		portTextField.setBounds(135, 45, 40, 21);
 		portTextField.setColumns(10);
 		portTextField.setActionCommand("portTextField");
