@@ -69,7 +69,7 @@ public class Meny extends JFrame {
 
 		GAMESTATE = new GameState();
 		GAMEINPUT = new GameInput();
-		
+		/*
 		BufferedImage logicMap;
 		try {
 			logicMap=ImageIO.read(Main.class.getResource("/logicMap.png"));
@@ -79,7 +79,7 @@ public class Meny extends JFrame {
 		}
 		
 		MAP = MapGenerator.generateMap(logicMap, "lava", 16);
-		
+		*/
 		
 	}
 	
