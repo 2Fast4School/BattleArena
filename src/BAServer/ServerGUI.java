@@ -51,7 +51,7 @@ public class ServerGUI implements Observer {
 		infoArea = new JTextArea("");
 		infoScrollPane = new JScrollPane(infoArea);
 		startGameBtn = new JButton("Start Game");
-		endGameBtn = new JButton("End Game");
+		endGameBtn = new JButton("Reset Server");
 		chooseMapBtn = new JButton("Choose Map");
 		JLabel IPLabel = new JLabel("IP adresses:");
 		JLabel portLabel = new JLabel("Port:");
@@ -102,16 +102,22 @@ public class ServerGUI implements Observer {
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
+		if(arg instanceof Boolean){
+			infoArea.append("The game is over.\n");
+			toTerminal("Server shut down\n");
+			switchButtonState();
+		}
+		else{
+			String[] message = new String((byte[])arg).trim().split(",");
+			int OPcode = Integer.parseInt(message[0]);
+			String id = message[1];
 		
-		String[] message = new String((byte[])arg).trim().split(",");
-		int OPcode = Integer.parseInt(message[0]);
-		String id = message[1];
-	
-		//Check if attack OP = 2
-		if(OPcode == 2)
-		{
-			infoArea.append(id + " is attacking!\n");
-			infoArea.setCaretPosition(infoArea.getDocument().getLength());
+			//Check if attack OP = 2
+			if(OPcode == 2)
+			{
+				infoArea.append(id + " is attacking!\n");
+				infoArea.setCaretPosition(infoArea.getDocument().getLength());
+			}
 		}
 	}
 	

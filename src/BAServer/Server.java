@@ -1,24 +1,22 @@
 package BAServer;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
 import map.Map;
-import map.MapGenerator;
 import model.Message;
 
 /**
@@ -44,8 +42,12 @@ public class Server extends Observable implements Runnable{
 	private int maxPlayers = 4;
 	private List<ClientInfo> clients;
 	private Map map = null;
-	private String mapName;
-	private String type;
+	private String mapName="logicMap.png";;
+	private String type="grass";
+	private boolean safelyClosed=false;
+	
+	private boolean running;
+	private Thread thread;
 	
 	/**
 	 * Creates a DatagramSocket bount to a specific port. The Server listens for packets on this port.
@@ -83,16 +85,16 @@ public class Server extends Observable implements Runnable{
 	 * The only thing run does is listens for incoming packets and the distribute the work to Packethandler which actually does something with the received packet.
 	 */
 	public void run(){
-
-		while(true){
+		while(running){
 			receive=new byte[1024];
 			packet=new DatagramPacket(receive, receive.length);
 			try {
 				revSkt.receive(packet);
 				new Thread(new PacketHandler(packet, receive)).start();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(!safelyClosed){
+					e.printStackTrace();	
+				}
 			}
 		}
 	}
@@ -150,12 +152,15 @@ public class Server extends Observable implements Runnable{
 		 * Depending on the OP-CODE. Responds or forwards the packet.
 		 */
 		public void run(){	
+			System.out.println(mapName);
 			if(code == 0){
 				idToGiveClient += 1;
 				Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
 				sendMessage.setMaxNrPlayers(maxPlayers);;
 				sendMessage.setMapName(mapName);
 				sendMessage.setMapType(type);
+				System.out.println(type);
+				System.out.println(mapName);
 				try{
 					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
 					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
@@ -237,9 +242,13 @@ public class Server extends Observable implements Runnable{
 						byte[] buf=bOut.toByteArray();
 						
 						clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
-						
-						pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
-						skt.send(pkt);
+						for(ClientInfo c : clients){
+							pkt = new DatagramPacket(buf, buf.length, c.getIP(), c.getPort());
+							skt.send(pkt);
+						}
+						setChanged();
+						notifyObservers(true);
+						stop();
 
 					}catch(IOException e){e.printStackTrace();}
 				}
@@ -316,6 +325,28 @@ public class Server extends Observable implements Runnable{
 				}
 			}
 		}
+	}
+	
+	public void resetServer(){
+		clients.clear();
+		idToGiveClient=0;
+	}
+	
+	public synchronized void start(){
+		if(running){return;}
+		running = true;
+		thread = new Thread(this);
+		thread.start();
+	}
+	
+	/**
+	 * Stop the main game thread.
+	 */
+	public synchronized void stop(){
+		if(running)
+			running = false;
+			safelyClosed=true;
+			revSkt.close();
 	}
 	
 	/**

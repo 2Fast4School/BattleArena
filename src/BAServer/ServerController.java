@@ -33,10 +33,13 @@ public class ServerController implements ActionListener {
 		//System.out.println("Controller: acting on Model");
 		switch (e.getActionCommand()){
 		case "Start Game": startServer();
-			view.switchButtonState(); //Inactivate Start Game and activate End Game
+			view.switchButtonState(); //Inactivate Start Game and activate 
 			break;
-		case "End Game": view.toTerminal("Dummy shutting down game\n");
+		case "Reset Server": 
+			view.toTerminal("Server shut down\n");
 			view.switchButtonState(); //Inactivate End Game and activate Start Game
+			model.stop();
+			model.resetServer();
 			break;
 		case "Choose Map": chooseMap();
 			break;
@@ -64,7 +67,7 @@ public class ServerController implements ActionListener {
 			s.addObserver(view);
 			addModel(s);
 			s.setMaxPlayers(view.getNrOfPlayers());
-			new Thread(s).start();
+			s.start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -96,10 +99,12 @@ public class ServerController implements ActionListener {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-	      
+			} 
+	    }
+	    String mapName=chooser.getSelectedFile().getName();
+	    if(mapName==null){
+	    	mapName="logicMap.png";
 	    }
 	    model.setMapName(chooser.getSelectedFile().getName(), view.getMapType());
-	    //model.setMap(MapGenerator.generateMap(logicMap, view.getMapType(), 16));
 	}
 }

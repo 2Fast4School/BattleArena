@@ -97,7 +97,6 @@ public class GameState extends Observable{
 	
 	public void tick(){
 		if(isAlive()){
-
 			actualtick();
 		} else {
 

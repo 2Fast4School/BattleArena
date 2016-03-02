@@ -84,7 +84,7 @@ public class Client implements Runnable, Observer{
 		DatagramPacket pkt;
 		
 		
-		while(true){
+		while(running){
 			pkt = new DatagramPacket(data, data.length);
 			
 			try {
@@ -166,15 +166,8 @@ public class Client implements Runnable, Observer{
 		message.setCode(0);
 		
 		try{
-			ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-			ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-			oOut.flush();
-			message.writeExternal(oOut);
-			oOut.flush();
-			byte[] data=bOut.toByteArray();
-			
+			byte[] data=externByteRepresentation(message);
 			DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
-			
 			socket.send(pkt);
 			
 			byte []buf = new byte[1024];
@@ -183,18 +176,14 @@ public class Client implements Runnable, Observer{
 			socket.setSoTimeout(10000);
 			socket.receive(pkt);
 			
-			ByteArrayInputStream bIn=new ByteArrayInputStream(buf);
-			ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
 			Message receiveMessage=new Message();
-			receiveMessage.readExternal(oIn);
+			bytesToExternObject(buf, receiveMessage);
 
-			System.out.println(receiveMessage.getMapName());
 			BufferedImage logicMap=ImageIO.read(Main.class.getResource("/"+receiveMessage.getMapName()));
 			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
 
 			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);
-		}catch(ClassNotFoundException f){System.out.println("Class Not Found");}
-		catch(IOException e){System.out.println("couldnt connect");e.printStackTrace();}	
+		}catch(IOException e){System.out.println("couldnt connect");e.printStackTrace();}	
 		
 	}
 	
@@ -220,17 +209,10 @@ public class Client implements Runnable, Observer{
 				message.setReady(state.isReady());
 				message.setID(state.getID());
 				
-				try{
-					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-					oOut.flush();
-					message.writeExternal(oOut);
-					oOut.flush();
-					data=bOut.toByteArray();
-					
+				try{	
+					data=externByteRepresentation(message);
 					DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
-					socket.send(pkt);
-					
+					socket.send(pkt);	
 				}catch(IOException e){}
 			}
 			
@@ -246,6 +228,7 @@ public class Client implements Runnable, Observer{
 
 			message.setPlayerHP(player.getHP());
 			message.setAlive(player.isAlive());
+			
 			//hp-change OPCODE:2
 			if(enemy != null) {
 				message.setCode(2);
@@ -257,16 +240,9 @@ public class Client implements Runnable, Observer{
 			}
 			
 			try{
-				ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-				ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-				oOut.flush();
-				message.writeExternal(oOut);
-				oOut.flush();
-				data=bOut.toByteArray();
-				
+				data=externByteRepresentation(message);
 				DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
-				socket.send(pkt);
-				
+				socket.send(pkt);	
 			}catch(IOException e){}
 		}
 	}
@@ -288,5 +264,30 @@ public class Client implements Runnable, Observer{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	public byte[] externByteRepresentation(Object externializable){
+		try{
+			ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+			ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+			oOut.flush();
+			if(externializable instanceof Message){
+				Message message=(Message)externializable;
+				message.writeExternal(oOut);
+			}
+			oOut.flush();
+			oOut.close();
+			bOut.close();
+			return bOut.toByteArray();
+		}catch(IOException e){e.printStackTrace();return null;}
+	}
+	public void bytesToExternObject(byte[] byteRepresentation, Message message){
+		try{
+			ByteArrayInputStream bIn=new ByteArrayInputStream(byteRepresentation);
+			ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
+			message.readExternal(oIn);
+			oIn.close();
+			bIn.close();
+		}catch(IOException e){e.printStackTrace();}
+		catch(ClassNotFoundException f){}
 	}
 }				
