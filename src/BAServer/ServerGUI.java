@@ -139,7 +139,7 @@ public class ServerGUI implements Observer {
 	
 	public int getNrOfPlayers()
 	{
-		return Integer.parseInt(nrOfPlayers.getText());
+		return Integer.parseInt(nrOfPlayers.getText().trim());
 	}
 	
 	public void addController(ActionListener controller){

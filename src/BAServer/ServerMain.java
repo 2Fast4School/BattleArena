@@ -8,11 +8,22 @@ package BAServer;
  *
  */
 public class ServerMain {
-	private static ServerController sc;
-	private static ServerGUI sg;
-
+	private ServerController sc;
+	private ServerGUI sg;
+	private static ServerMain instance = null;
 	
-	public static void main(String[] args) {
+	private ServerMain(){	}
+	
+	public static ServerMain getInstance()
+	{
+		if(instance == null)
+			instance = new ServerMain();
+		
+		return instance;
+	}
+	
+	public void startServerUI()
+	{
 		
 		sg = new ServerGUI();
 		sc = new ServerController();
@@ -21,8 +32,5 @@ public class ServerMain {
 		sg.addController(sc);
 	
 	}
-	
-	
-	
 
 }
