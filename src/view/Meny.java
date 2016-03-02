@@ -2,18 +2,15 @@ package view;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import arenaFighter.Main;
-import map.Map;
-import map.MapGenerator;
 import model.GameState;
 import controller.Client;
 import controller.ConnectInput;
@@ -35,15 +32,16 @@ public class Meny extends JFrame {
 	private LobbyInput lobbyinput;
 	private JPanel contentpane;
 	private CardLayout cardlayout;
+	private Image preGameArt;
 	
 
 	private Client CLIENT;
 	private GameState GAMESTATE;
 	private GameWindow GAMEWINDOW;
-	private GameInput GAMEINPUT;
+	private GameInput GAMEINPUT;	
 	private Game GAME;
 
-	
+		
 	
 	public Meny(String frameName) {
 		super(frameName);
@@ -51,9 +49,26 @@ public class Meny extends JFrame {
 		setPreferredSize(new Dimension(800,800));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 800);
+		setBounds(0, 0, 800, 800);
+		this.setLocationRelativeTo(null);
 		setLayout(null);
-		
+
+		try {
+			preGameArt = ImageIO.read(Main.class.getResource("/pregameart.png"));
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		if (preGameArt == null) {
+			try {
+				preGameArt = ImageIO.read(new File("res/pregameart.png"));
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+				preGameArt = new BufferedImage(800,800, BufferedImage.TYPE_INT_ARGB);
+			}
+		}
+
 		makeOtherObjects();
 		makeOtherPanels();
 		setVisible(true);
@@ -75,16 +90,16 @@ public class Meny extends JFrame {
 		
 		//lobbypanel = new LobbyPanel();
 		pregameinput = new PreGameInput(this);
-		pregamewindow = new PreGameWindow(pregameinput);
+		pregamewindow = new PreGameWindow(pregameinput, preGameArt);
 		
 		connectinput = new ConnectInput(this);
-		connectpanel = new ConnectPanel(connectinput);
+		connectpanel = new ConnectPanel(connectinput, preGameArt);
 		
 		settingsinput = new SettingsInput(this);
-		settingspanel = new SettingsPanel(settingsinput);
+		settingspanel = new SettingsPanel(settingsinput, preGameArt);
 		
 		lobbyinput = new LobbyInput(this, GAMESTATE);
-		lobbypanel = new LobbyPanel(lobbyinput);
+		lobbypanel = new LobbyPanel(lobbyinput, preGameArt);
 		
 		//contentpane.add(pregamewindow, "LOBBY");
 		contentpane.add(connectpanel, "CONNECT");

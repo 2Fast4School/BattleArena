@@ -1,12 +1,7 @@
 package map;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-import javax.imageio.ImageIO;
 /**
  * DEPRECATED DONT FUCKING USE IT yet...
  * @author Alexander

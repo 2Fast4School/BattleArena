@@ -1,8 +1,6 @@
 package view;
 
-import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -10,22 +8,22 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-import controller.Client;
 import controller.LobbyInput;
 
 public class LobbyPanel extends JPanel {
 	private JLabel lblNewLabel_1;
 	private LobbyInput lobbyinput;
 	private BufferedImage mapImage;
+	private Image preGameArt;
 	
-	public LobbyPanel(LobbyInput lobbyinput) {
+	public LobbyPanel(LobbyInput lobbyinput, Image preGameArt) {
 		this.lobbyinput = lobbyinput;
+		this.preGameArt = preGameArt;
 		initDialog();
 	}
 	public void initDialog() {
@@ -63,8 +61,12 @@ public class LobbyPanel extends JPanel {
 		
 		add(lblNewLabel);
 		
-		textArea.append("Player 1");
-		textArea.append("Player 2");
+		if (preGameArt != null) {
+			JLabel picLabel = new JLabel(new ImageIcon(preGameArt));
+			add(picLabel);
+			picLabel.setBounds(0, 0, 800, 800);
+		}
+		
 	}
 	
 	public void countDown(int counter){

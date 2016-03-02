@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import map.Map;
-
 public class Message implements Externalizable{
 	int code=-1;int id;int xPos;int yPos;int rotVar;int playerHP=-1;
 	boolean attacking;

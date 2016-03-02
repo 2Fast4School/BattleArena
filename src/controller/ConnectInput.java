@@ -3,8 +3,9 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JTextField;
+import javax.swing.JButton;
 
+import view.ConnectPanel;
 import view.Meny;
 
 public class ConnectInput implements ActionListener {
@@ -20,7 +21,6 @@ public class ConnectInput implements ActionListener {
 	}
 	
 	public int getPort(){
-		System.out.println(port);
 		return Integer.parseInt(port);
 	}
 	
@@ -31,26 +31,16 @@ public class ConnectInput implements ActionListener {
 		switch (arg0.getActionCommand()) {
 		
 		case "ipConnectBtn":
-			if(port != null || ip != null){
-				frame.setView("LOBBY");
-			}
-			break;
-			
+			JButton ipConnectBtn = (JButton)(arg0.getSource());
+			ConnectPanel connectPanel = (ConnectPanel)(ipConnectBtn.getParent());
+			ip = connectPanel.getIp();
+			port = connectPanel.getPort();
+			frame.setView("LOBBY");
+			break;	
 		case "ipCancelBtn":
 			frame.setView("MENY");
 			break;
-			
-		case "ipTextField":
-			ip = ((JTextField)arg0.getSource()).getText();
-			break;
-			
-		case "portTextField":
-			port = ((JTextField)arg0.getSource()).getText();
-			System.out.println(port);
-			break;
-			
 		default:
-			
 			break;
 		}
 	}

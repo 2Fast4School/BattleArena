@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import controller.GameInput;
 import model.Entity;
 import model.GameState;
 import model.Tile;

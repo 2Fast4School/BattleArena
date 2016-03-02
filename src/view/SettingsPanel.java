@@ -1,7 +1,11 @@
 package view;
 
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -14,12 +18,14 @@ public class SettingsPanel extends JPanel {
 	private JTextField nameTextField;
 	public static String name = "Player";
 	public static boolean toolTipsEnabled = false;
+	private Image preGameArt;
 	
 	JButton settingsCloseBtn;
 	JButton settingsSaveBtn;
 	JCheckBox settingsToolTipsChk;
-	public SettingsPanel(SettingsInput settingsinput) {
+	public SettingsPanel(SettingsInput settingsinput, Image preGameArt) {
 		this.settingsinput = settingsinput;
+		this.preGameArt = preGameArt;
 		initDialog();
 	}
 	public void initDialog() {
@@ -54,6 +60,13 @@ public class SettingsPanel extends JPanel {
 		add(settingsCloseBtn);
 		add(settingsSaveBtn);
 		add(settingsToolTipsChk);
+		
+		if (preGameArt != null) {
+			JLabel picLabel = new JLabel(new ImageIcon(preGameArt));
+			add(picLabel);
+			picLabel.setBounds(0, 0, 800, 800);
+		}
+		
 	}
 	
 	public void setName(String newName) {
@@ -62,14 +75,6 @@ public class SettingsPanel extends JPanel {
 	
 	public String getName() {
 		return nameTextField.getText();
-	}
-	
-	public void setToolTipsEnabled(boolean enable) {
-		toolTipsEnabled = enable;
-	}
-	
-	public boolean getToolTipsEnabled() {
-		return toolTipsEnabled;
 	}
 	
 }

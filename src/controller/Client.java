@@ -25,7 +25,6 @@ import model.Enemy;
 import model.GameState;
 import model.Message;
 import model.Player;
-import view.Meny;
 /**
 * <h1>Client</h1>
 

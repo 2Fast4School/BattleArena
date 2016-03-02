@@ -1,5 +1,8 @@
 package view;
 
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,15 +16,18 @@ public class ConnectPanel extends JPanel {
 	private JTextField ipTextField;
 	private JTextField portTextField;
 	private JLabel info;
+	private Image preGameArt;
 	
-	public ConnectPanel(ConnectInput connectinput) {
+	public ConnectPanel(ConnectInput connectinput, Image preGameArt) {
 		this.connectinput = connectinput;
+		this.preGameArt = preGameArt;
 		initDialog();
 	}
 	public void initDialog() {
 		
 		// Connect button over the IP textfield
 		JButton ipConnectBtn = new JButton("Connect");
+		setLayout(null);
 		ipConnectBtn.setBounds(20, 20, 111, 21);
 		ipConnectBtn.setActionCommand("ipConnectBtn");
 		ipConnectBtn.addActionListener(connectinput);
@@ -59,13 +65,20 @@ public class ConnectPanel extends JPanel {
 		add(portTextField);
 		add(ipCancelBtn);
 		add(info);
+		
+		if (preGameArt != null) {
+			JLabel picLabel = new JLabel(new ImageIcon(preGameArt));
+			add(picLabel);
+			picLabel.setBounds(0, 0, 800, 800);
+		}
+		
 	}
 	
 	public String getIp() {
 		return ipTextField.getText();
 	}
 	
-	public int getPort() {
-		return Integer.parseInt(portTextField.getText());
+	public String getPort() {
+		return portTextField.getText();
 	}
 }

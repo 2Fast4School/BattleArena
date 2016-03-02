@@ -4,8 +4,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Observable;
-import java.util.Random;
-
 import map.Map;
 
 public class GameState extends Observable{
