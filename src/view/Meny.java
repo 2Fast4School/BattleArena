@@ -42,7 +42,6 @@ public class Meny extends JFrame {
 	private GameWindow GAMEWINDOW;
 	private GameInput GAMEINPUT;
 	private Game GAME;
-	private Map MAP;
 
 	
 	
@@ -54,33 +53,19 @@ public class Meny extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 800);
 		setLayout(null);
-		cardlayout = new CardLayout();
-		contentpane = new JPanel(cardlayout);
-		setContentPane(contentpane);
 		
 		makeOtherObjects();
-		
 		makeOtherPanels();
-
 		setVisible(true);
 	}
 	
 	private void makeOtherObjects(){
-
+		cardlayout = new CardLayout();
+		contentpane = new JPanel(cardlayout);
+		setContentPane(contentpane);
+		
 		GAMESTATE = new GameState();
 		GAMEINPUT = new GameInput();
-		/*
-		BufferedImage logicMap;
-		try {
-			logicMap=ImageIO.read(Main.class.getResource("/logicMap.png"));
-		} catch (IOException e) {
-		    e.printStackTrace();
-		    logicMap = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
-		}
-		
-		MAP = MapGenerator.generateMap(logicMap, "lava", 16);
-		*/
-		
 	}
 	
 	private void makeOtherPanels(){
@@ -111,15 +96,13 @@ public class Meny extends JFrame {
 	}
 	
 	public void setView(String v){
-
 		switch(v){
-		
 			case "LOBBY":
 				//
 				int port = connectinput.getPort();
 				String ip = connectinput.getIP();
-				GAME = new Game(GAMESTATE);
-				CLIENT = new Client(port, ip, GAMESTATE, MAP);
+				GAME = new Game(GAMESTATE, this);
+				CLIENT = new Client(port, ip, GAMESTATE);
 				CLIENT.requestConnection();
 
 				GAMEINPUT.setup(GAMESTATE.returnPlayer());
@@ -128,10 +111,9 @@ public class Meny extends JFrame {
 				GAMESTATE.addObserver(lobbyinput);
 				
 				GAME.start();
-				new Thread(CLIENT).start();
+				CLIENT.start();
 				
 				cardlayout.show(contentpane, "LOBBY");
-				//
 				break;
 	
 			case "CONNECT":
@@ -153,6 +135,10 @@ public class Meny extends JFrame {
 				break;
 				
 			case "BACK":
+				makeOtherObjects();
+				makeOtherPanels();
+				setView("MENY");
+				setVisible(true);
 			case "MENY":
 				this.setSize(800,800);
 				cardlayout.show(contentpane, "MENY");

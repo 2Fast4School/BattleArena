@@ -220,4 +220,6 @@ public class GameState extends Observable{
 		ready = true;
 		System.out.println(ready);
 	}
+	public void setGameOver(boolean state){gameOver=state;}
+	public boolean getGameOver(){return gameOver;}
 }

@@ -28,7 +28,6 @@ public class GameWindow extends Canvas implements Observer{
 		this.img = img;
 	}
 
-	
 	/**
 	 * The actual drawing of the current GameState
 	 * using triple-buffering.

@@ -14,6 +14,7 @@ public class Message implements Externalizable{
 	String mapName;
 	String type;
 	boolean ready, tostart;
+	boolean alive, gameOver;
 	public Message(){
 		
 	}
@@ -21,6 +22,7 @@ public class Message implements Externalizable{
 		this.id=id;this.attacking=attacking;this.xPos=xPos;
 		this.yPos=yPos;this.rotVar=rotVar;
 		ready=false;
+		gameOver=false;;
 	}
 	public int getCode(){return code;}
 	public void setCode(int code){this.code=code;}
@@ -46,6 +48,10 @@ public class Message implements Externalizable{
 	public void setMapName(String mapName){this.mapName=mapName;}
 	public String getMapType(){return type;}
 	public void setMapType(String type){this.type=type;}
+	public boolean getAlive(){return alive;}
+	public void setAlive(boolean state){alive=state;}
+	public boolean getGameOver(){return gameOver;}
+	public void setGameOver(boolean state){gameOver=state;}
 	
 	public void setToStart(boolean b){
 		tostart = b;
@@ -71,6 +77,8 @@ public class Message implements Externalizable{
 		mapName=(String)arg0.readObject();
 		type=(String)arg0.readObject();
 		tostart = arg0.readBoolean();
+		alive=arg0.readBoolean();
+		gameOver=arg0.readBoolean();
 	}
 	@Override
 	public void writeExternal(ObjectOutput arg0) throws IOException {
@@ -88,5 +96,7 @@ public class Message implements Externalizable{
 		arg0.writeObject(mapName);
 		arg0.writeObject(type);
 		arg0.writeBoolean(tostart);
+		arg0.writeBoolean(alive);
+		arg0.writeBoolean(gameOver);
 	}
 }

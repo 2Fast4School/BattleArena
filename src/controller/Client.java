@@ -25,6 +25,7 @@ import model.Enemy;
 import model.GameState;
 import model.Message;
 import model.Player;
+import view.Meny;
 /**
 * <h1>Client</h1>
 
@@ -50,10 +51,9 @@ public class Client implements Runnable, Observer{
 	 * @param srvip The server's ip in form of a String.
 	 * @param state The GameState which should be updated when a packet is received.
 	 */
-	public Client(int srvport, String srvip, GameState state, Map map){
+	public Client(int srvport, String srvip, GameState state){
 		this.srvport = srvport;
 		this.state = state;
-		this.map = map;
 		ready=false;
 		
 		try {
@@ -117,6 +117,11 @@ public class Client implements Runnable, Observer{
 					attacking=receiveMessage.getAttacking();
 					
 					int playerHP=receiveMessage.getPlayerHP();
+					
+					if(code==4){
+						state.setGameOver(true);
+						stop();
+					}
 					
 					for(Enemy n : state.getTheEnemies()){
 						if(id == n.getID()){
@@ -234,13 +239,13 @@ public class Client implements Runnable, Observer{
 		if(arg1 instanceof Player){
 			Player player=(Player)arg1;
 			Enemy enemy = state.gotHit();
-			//Default-sträng som alltid ska med.
+
 			byte[] data;
 			Message message=new Message(state.getID(),player.getX(),player.getY(),player.getRotVar(),
 					player.getWeapon().isAttacking());
 
 			message.setPlayerHP(player.getHP());
-			
+			message.setAlive(player.isAlive());
 			//hp-change OPCODE:2
 			if(enemy != null) {
 				message.setCode(2);
@@ -278,7 +283,6 @@ public class Client implements Runnable, Observer{
 	public synchronized void stop(){
 		if(running)
 			running = false;
-		
 		try {
 			thread.join();
 		} catch (InterruptedException e) {

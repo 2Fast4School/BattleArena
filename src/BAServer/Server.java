@@ -139,6 +139,7 @@ public class Server extends Observable implements Runnable{
 				
 				code = receiveMessage.getCode();
 				id=receiveMessage.getID();
+				alive=receiveMessage.getAlive();
 				//Create a new datagramsocket on an open port.
 				skt = new DatagramSocket();
 			}catch(IOException e){e.printStackTrace();}
@@ -215,7 +216,34 @@ public class Server extends Observable implements Runnable{
 				
 			}
 			else{
-				if(code == 0){
+				int nrDead=0;
+				for(ClientInfo c : clients){
+					if(c.getID()==id){
+						c.setAlive(alive);
+					}
+					if(!c.getAlive()){
+						nrDead++;
+					}
+				}
+				if(maxPlayers-nrDead==1){
+					Message gameOverMessage=new Message();
+					gameOverMessage.setCode(4);
+					try{
+						ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+						ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+						oOut.flush();
+						gameOverMessage.writeExternal(oOut);
+						oOut.flush();
+						byte[] buf=bOut.toByteArray();
+						
+						clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
+						
+						pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
+						skt.send(pkt);
+
+					}catch(IOException e){e.printStackTrace();}
+				}
+				else if(code == 0){
 					idToGiveClient += 1;
 					Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
 					sendMessage.setMaxNrPlayers(maxPlayers);
