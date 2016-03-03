@@ -17,9 +17,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * ServerController is the action handler for GUI interactions and 
  * starts a server instance for network communication 
  * @author Oscar Hall 
- *
+ * @version 2016-03-03
  */
-
 public class ServerController implements ItemListener, ActionListener{
 	Server model;
 	ServerGUI view;
@@ -44,6 +43,9 @@ public class ServerController implements ItemListener, ActionListener{
 		
 	} //actionPerformed()
 
+	/**
+	 * set map tile type
+	 */
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 		if(arg0.getItemSelectable() instanceof Choice){
@@ -51,13 +53,19 @@ public class ServerController implements ItemListener, ActionListener{
 		}
 	}
 
+	/**
+	 * Add data connection
+	 * @param m Server instance
+	 */
 	public void addModel(Server m){
-		System.out.println("Controller: adding model");
 		this.model = m;
 	} //addModel()
 
+	/**
+	 * Add a GUI to control
+	 * @param v ServerGUI 
+	 */
 	public void addView(ServerGUI v){
-		System.out.println("Controller: adding view");
 		this.view = v;
 	} //addView()
 
@@ -73,7 +81,6 @@ public class ServerController implements ItemListener, ActionListener{
 			s.setMaxPlayers(view.getNrOfPlayers());
 			s.start();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -82,7 +89,6 @@ public class ServerController implements ItemListener, ActionListener{
 	
 	
 	/**
-	 * <h1>chooseMap</h1>
 	 * Creates a file explorer to find maps which is of filetype .png
 	 */
 	public void chooseMap()
@@ -101,7 +107,6 @@ public class ServerController implements ItemListener, ActionListener{
 		       try {
 				logicMap = ImageIO.read(chooser.getSelectedFile());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
 		    String mapName=chooser.getSelectedFile().getName();

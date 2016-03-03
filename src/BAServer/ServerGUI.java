@@ -26,10 +26,10 @@ import arenaFighter.Main;
 
 /**
  * <h1>ServerGUI</h1>
- * ServerGUI creates a graphic interface for a dedicated game server with a terminal output,
+ * ServerGUI creates a graphic interface for a game server with a terminal output,
  * a comboBox for option of network interfaces and buttons to start and end game.
  * @author Oscar Hall
- *
+ * @version 2016-03-03
  */
 public class ServerGUI implements Observer {
 
@@ -44,8 +44,11 @@ public class ServerGUI implements Observer {
 	private boolean shutDown=false;
 	private static int port = 5050;
 
+	/**
+	 * Constructor
+	 */
 	public ServerGUI() {
-		mainWindow = new JFrame("Battle Arena Dedicated Server");
+		mainWindow = new JFrame("Battle Arena Server");
 		try {
 			mainWindow.setIconImage(ImageIO.read(Main.class.getResource("/testa.png")));
 		}
@@ -181,6 +184,10 @@ public class ServerGUI implements Observer {
 		return Integer.parseInt(serverPort.getText());
 	}
 	
+	/**
+	 * 
+	 * @return hej
+	 */
 	public int getNrOfPlayers()
 	{
 		return Integer.parseInt(nrOfPlayers.getText().trim());
