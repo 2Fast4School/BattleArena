@@ -182,7 +182,7 @@ public class Client implements Runnable, Observer{
 			Message receiveMessage;
 			receiveMessage=byteRepresenter.bytesToExternObject(buf);
 
-			BufferedImage logicMap=ImageIO.read(Main.class.getResource("/"+receiveMessage.getMapName()));
+			BufferedImage logicMap=ImageIO.read(Main.class.getResource("/maps/"+receiveMessage.getMapName()));
 			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
 
 			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);
