@@ -50,7 +50,7 @@ public class Player extends Unit{
 	 * The associated value is an ArrayList containing all sprites comprising the attack animation,
 	 * where [0] is used as regular standing animation. 
 	 */
-	public void loadImages(){
+	private void loadImages(){
 		try{
 			sprite = ImageIO.read(Main.class.getResource("/testa.png"));
 		}catch(IOException e){}

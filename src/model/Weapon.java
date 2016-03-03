@@ -29,7 +29,7 @@ public abstract class Weapon extends Entity{
 	/**
 	 * Loads the weapon with a Sprite.
 	 */
-	public void loadImages(){
+	private void loadImages(){
 		try{
 			sprite = ImageIO.read(Main.class.getResource("/sw.png"));
 		}catch(IOException e){}

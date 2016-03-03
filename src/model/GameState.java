@@ -18,6 +18,7 @@ public class GameState extends Observable{
 	private Quadtree quadtree;;
 	private Map map = null;
 	private boolean gameOver;
+	private String name;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
 	public GameState(){
@@ -201,8 +202,6 @@ public class GameState extends Observable{
 	public void startGame(){
 		alive = true;
 		ready = false;
-		//setChanged();
-		//notifyObservers();
 	}
 	
 	public boolean isAlive(){
@@ -215,8 +214,9 @@ public class GameState extends Observable{
 	
 	public void setToReady(){
 		ready = true;
-		System.out.println(ready);
 	}
 	public void setGameOver(boolean state){gameOver=state;}
 	public boolean getGameOver(){return gameOver;}
+	public void setName(String name){this.name=name;}
+	public String getName(){return name;}
 }
