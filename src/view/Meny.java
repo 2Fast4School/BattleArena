@@ -136,6 +136,7 @@ public class Meny extends JFrame {
 				CLIENT.requestConnection();
 
 				GAMEINPUT.setup(GAMESTATE.returnPlayer());
+				GAMESTATE.addObserver(lobbypanel);
 				GAMESTATE.addObserver(CLIENT);
 				GAMESTATE.addObserver(GAMEWINDOW);
 				GAMESTATE.addObserver(lobbyinput);

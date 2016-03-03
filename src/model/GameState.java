@@ -19,6 +19,7 @@ public class GameState extends Observable{
 	private Map map = null;
 	private boolean gameOver;
 	private String name;
+	private String mapName="";
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
 	public GameState(){
@@ -46,10 +47,13 @@ public class GameState extends Observable{
 	}
 
 	
-	public void setup(int id, int maxPlayers, Map map){
+	public void setup(int id, int maxPlayers, Map map, String mapName){
 		this.id = id;
 		this.map = map;
-
+		this.mapName=mapName;
+		setChanged();
+		notifyObservers();
+		
 		//Init the quadtree with the size of the screen.
 		quadtree = new Quadtree(new Rectangle(0,0,map.getBackground().getWidth(),map.getBackground().getHeight()));
 				
@@ -219,4 +223,6 @@ public class GameState extends Observable{
 	public boolean getGameOver(){return gameOver;}
 	public void setName(String name){this.name=name;}
 	public String getName(){return name;}
+	public String getMapName(){return mapName;}
+	public Map getMap(){return map;}
 }

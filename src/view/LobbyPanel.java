@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -17,13 +19,16 @@ import javax.swing.SwingConstants;
 
 import arenaFighter.Main;
 import controller.LobbyInput;
+import map.Map;
+import model.GameState;
 
-public class LobbyPanel extends JPanel {
+public class LobbyPanel extends JPanel implements Observer{
 	private LobbyInput lobbyinput;
 	private BufferedImage mapImage;
 	private Image preGameArt;
 	private String mapName = "";
 	private int scaledWidth, scaledHeight;
+	private JTextField mapText;
 	
 	public LobbyPanel(LobbyInput lobbyinput, Image preGameArt) {
 		this.lobbyinput = lobbyinput;
@@ -35,15 +40,15 @@ public class LobbyPanel extends JPanel {
 		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);
 		Font font2 = new Font("Comic Sans MS", Font.PLAIN, 14);
 		
-		JTextField txtMapAlexanderspahitt = new JTextField();
-		txtMapAlexanderspahitt.setBackground(new Color(255, 255, 255));
-		txtMapAlexanderspahitt.setEditable(false);
-		txtMapAlexanderspahitt.setHorizontalAlignment(SwingConstants.CENTER);
-		txtMapAlexanderspahitt.setFont(font1);
-		txtMapAlexanderspahitt.setText("Map: " + mapName);
-		txtMapAlexanderspahitt.setBounds(60, 200, 400, 40);
-		add(txtMapAlexanderspahitt);
-		txtMapAlexanderspahitt.setColumns(10);
+		mapText = new JTextField();
+		mapText.setBackground(new Color(255, 255, 255));
+		mapText.setEditable(false);
+		mapText.setHorizontalAlignment(SwingConstants.CENTER);
+		mapText.setFont(font1);
+		mapText.setText("Map: " + mapName);
+		mapText.setBounds(60, 200, 400, 40);
+		add(mapText);
+		mapText.setColumns(10);
 		
 		JTextField txtPlayer = new JTextField();
 		txtPlayer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -95,6 +100,8 @@ public class LobbyPanel extends JPanel {
 		}
 
 		// Scales the map to a minimap
+	}
+	public void setMiniMap(){
 		if (mapImage != null) {
 			if (mapImage.getHeight()<=mapImage.getWidth()){
 				int scaledWidth = 400;
@@ -118,6 +125,18 @@ public class LobbyPanel extends JPanel {
 				picLabel.setBounds(0, 0, 800, 800);
 			}
 		}
-
+	}
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if(arg0 instanceof GameState && mapName==""){
+			GameState state=(GameState)arg0;
+			mapName=state.getMapName();
+			System.out.println(mapName);
+			Map map=state.getMap();
+			mapImage=map.getBackground();
+			
+			mapText.setText("Map: " + mapName);
+			setMiniMap();
+		}
 	}
 }
