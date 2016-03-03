@@ -120,6 +120,7 @@ public class Client implements Runnable, Observer{
 					int playerHP=receiveMessage.getPlayerHP();
 					
 					if(code==4){
+						state.setName(receiveMessage.getPlayerName());
 						state.setGameOver(true);
 						stop();
 					}
@@ -165,6 +166,7 @@ public class Client implements Runnable, Observer{
 		//OPCODE 0 is initpacket. server responds with your id.
 		Message message=new Message();
 		message.setCode(0);
+		message.setPlayerName(state.getName());
 		
 		try{
 			byte[] data=byteRepresenter.externByteRepresentation(message);

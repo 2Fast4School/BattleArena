@@ -160,14 +160,14 @@ public class Server extends Observable implements Runnable{
 				try{
 					byte[] buf=byteRepresenter.externByteRepresentation(sendMessage);
 					
-					clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
+					clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient,
+							receiveMessage.getPlayerName()));
 					
 					pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
 					
 					skt.send(pkt);
 					
 				}catch(IOException e){e.printStackTrace();}
-				
 			}
 			else if(code==99){
 				Message sendMessage=new Message();
@@ -207,6 +207,7 @@ public class Server extends Observable implements Runnable{
 			}
 			else{
 				int nrDead=0;
+				String winnerName=null;
 				for(ClientInfo c : clients){
 					if(c.getID()==id){
 						c.setAlive(alive);
@@ -214,14 +215,17 @@ public class Server extends Observable implements Runnable{
 					if(!c.getAlive()){
 						nrDead++;
 					}
+					else{
+						winnerName=c.getName();
+					}
 				}
 				if(maxPlayers-nrDead==1){
 					Message gameOverMessage=new Message();
 					gameOverMessage.setCode(4);
+					gameOverMessage.setPlayerName(winnerName);
 					try{
 						byte[] buf=byteRepresenter.externByteRepresentation(gameOverMessage);
 						
-						clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
 						for(ClientInfo c : clients){
 							pkt = new DatagramPacket(buf, buf.length, c.getIP(), c.getPort());
 							skt.send(pkt);
@@ -231,24 +235,6 @@ public class Server extends Observable implements Runnable{
 						stop();
 
 					}catch(IOException e){e.printStackTrace();}
-				}
-				else if(code == 0){
-					idToGiveClient += 1;
-					Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
-					sendMessage.setMaxNrPlayers(maxPlayers);
-					sendMessage.setMapName(mapName);
-					sendMessage.setMapType(type);
-					try{
-						byte[] buf=byteRepresenter.externByteRepresentation(sendMessage);
-						
-						clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
-						
-						pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
-						
-						skt.send(pkt);
-
-					}catch(IOException e){e.printStackTrace();}
-					
 				}
 				else if(code==3){
 					Message sendMessage=new Message();
@@ -333,11 +319,13 @@ public class Server extends Observable implements Runnable{
 		private int id;
 		private boolean ready;
 		private boolean alive;
+		private String name;
 		
-		public ClientInfo(InetAddress ip, int port, int id){
+		public ClientInfo(InetAddress ip, int port, int id, String name){
 			this.ip = ip;
 			this.port = port;
 			this.id = id;
+			this.name=name;
 			ready=false;
 			alive=true;
 		}
@@ -357,6 +345,7 @@ public class Server extends Observable implements Runnable{
 		public void setReady(boolean state){ready=state;}
 		public boolean getAlive(){return alive;}
 		public void setAlive(boolean state){alive=state;}
+		public String getName(){return name;}
 	}
 }
 

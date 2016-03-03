@@ -81,7 +81,7 @@ public class Game implements Runnable {
 		while(running){
 			if(GAMESTATE.getGameOver()){
 				GAMESTATE.setGameOver(false);	// Game is still running. Might want to join other game.
-				JOptionPane.showMessageDialog(null, "Game is over", "GameOver", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(null, GAMESTATE.getName()+" won!", "GameOver", JOptionPane.OK_OPTION);
 				meny.setView("BACK");
 				stop();
 			}
