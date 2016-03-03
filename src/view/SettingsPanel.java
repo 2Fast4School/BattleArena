@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import controller.SettingsInput;
+import model.GameState;
 
 public class SettingsPanel extends JPanel {
 	private SettingsInput settingsinput;
@@ -37,7 +38,7 @@ public class SettingsPanel extends JPanel {
 		this.preGameArt = preGameArt;
 		initDialog();
 	}
-	public void initDialog() {
+	private void initDialog() {
 		setLayout(null);
 		
 		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);

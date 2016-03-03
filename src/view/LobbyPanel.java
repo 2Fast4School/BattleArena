@@ -30,11 +30,11 @@ public class LobbyPanel extends JPanel {
 		this.preGameArt = preGameArt;
 		initDialog();
 	}
-	public void initDialog() {
+	private void initDialog() {
 		
 		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);
 		Font font2 = new Font("Comic Sans MS", Font.PLAIN, 14);
-		/*
+		
 		JTextField txtMapAlexanderspahitt = new JTextField();
 		txtMapAlexanderspahitt.setBackground(new Color(255, 255, 255));
 		txtMapAlexanderspahitt.setEditable(false);
@@ -76,13 +76,14 @@ public class LobbyPanel extends JPanel {
 		txtXyPlayersJoined_1.setBounds(600, 200, 140, 40);
 		add(txtXyPlayersJoined_1);
 		txtXyPlayersJoined_1.setColumns(10);
-		*/
+		
 		try {
 			mapImage = ImageIO.read(Main.class.getResource("/pregameart.png"));
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+		
 		if (preGameArt == null) {
 			try {
 				mapImage = ImageIO.read(new File("res/pregameart.png"));
@@ -119,5 +120,4 @@ public class LobbyPanel extends JPanel {
 		}
 
 	}
-
 }
