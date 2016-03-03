@@ -1,7 +1,5 @@
 package model;
 
-import java.io.Serializable;
-
 /**
  * A class which represents the spawnpoints in the map
  * Has it's own ArrayList in Map.

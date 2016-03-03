@@ -13,11 +13,24 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import controller.SettingsInput;
-import model.GameState;
 
+
+/**
+ * The Class SettingsPanel.
+ * Submenu which initiates a random name for the user
+ * and enables the user to change.
+ * @author Fred Hedenberg
+ * @version 1.0 2016-03-03
+ */
 public class SettingsPanel extends JPanel {
+	
+	/** The settingsinput. actionlistener for this components in this class */
 	private SettingsInput settingsinput;
+	
+	/** The name text field. */
 	private JTextField nameTextField;
+	
+	/** The name-list */
 	private String[] name =
 			{"Märta", "Ann-Britt", "Karin", "Majken", "Kerstin", "Viola", "Göta", "Inga", "Dagny", "Gerd", "Sixten", "Nils", "Birger",
 			"Sune", "Ture", "Harry", "Lars", "Per", "Ernst", "Gunnar", "Eva", "Gunnel", "Gunborg", "Birgit", "Astrid", "Ulla-Britt",
@@ -28,17 +41,29 @@ public class SettingsPanel extends JPanel {
 			"Jeanette", "Christine", "Maria", "Helena", "Caroline", "Annika", "Louise", "Malin", "Eva", "Fredrik", "Joachim", "Johan",
 			"Patrik", "Jimmy", "Jonas", "Christoffer", "Mattias", "Markus", "Johan", "Niklas", "Oskar", "Malin", "Helena", "Sofia",
 			"Johanna", "Anna", "Frida", "Emma", "Lisa", "Jannike", "Therese", "Åsa", "Elin", "Pernilla", "Josefine", "Jenny"};
+	
+	/** The background image for menus. */
 	private Image preGameArt;
 	
+	/** The settings "return to main-menu" btn. */
 	JButton settingsCloseBtn;
-	JButton settingsSaveBtn;
-	JCheckBox settingsToolTipsChk;
+	
+	/**
+	 * Instantiates the settings panel.
+	 *
+	 * @param settingsinput the associated actionlistener
+	 * @param preGameArt the background image for menus
+	 */
 	public SettingsPanel(SettingsInput settingsinput, Image preGameArt) {
 		this.settingsinput = settingsinput;
 		this.preGameArt = preGameArt;
-		initDialog();
+		initPanel();
 	}
-	private void initDialog() {
+	
+	/**
+	 * Inits the panel, its components with the associated actionlistener.
+	 */
+	private void initPanel() {
 		setLayout(null);
 		
 		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);
@@ -79,6 +104,11 @@ public class SettingsPanel extends JPanel {
 		
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return nameTextField.getText();
 	}

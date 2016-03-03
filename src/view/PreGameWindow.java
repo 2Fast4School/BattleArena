@@ -10,17 +10,41 @@ import javax.swing.JPanel;
 
 import controller.PreGameInput;
 
+/**
+ * The Class PreGameWindow.
+ * Main-menu which the user enters when starting the application.
+ * User can navigate to different submenus and choose to start a server here
+ * @author Fred Hedenberg
+ * @version 1.0 2016-03-03
+ */
 public class PreGameWindow extends JPanel{
 
 	
+	/** The background image for menus. */
 	private Image preGameArt;
+	
+	/** The pregameinput. Exclusive actionlistener for pregamewindow */
 	private PreGameInput preGameInput;
+	
+	/** The create game button. Starts a server */
 	private JButton createGameBtn;
+	
+	/** The connect game btn. Enters the submenu mode Connect*/
 	private JButton connectGameBtn;
-	private JButton findGameBtn;
+	
+	/** The settings btn. Enters the submenu mode settings*/
 	private JButton settingsBtn;
+	
+	/** The quit btn. Exits the application */
 	private JButton quitBtn;
 	
+	/**
+	 * Instantiates the main menu.
+	 * 
+	 *
+	 * @param preGameInput pregameinput, the exclusive actionlistener for pregamewindow
+	 * @param preGameArt the background image for menus
+	 */
 	public PreGameWindow(PreGameInput preGameInput, Image preGameArt) {
 		setLayout(null);
 		this.preGameInput = preGameInput;
@@ -28,6 +52,11 @@ public class PreGameWindow extends JPanel{
 		initPreGameWindow();
 	}
 	
+	/**
+	 * Inits the pre game window.
+	 * Creates all buttons and applies actionlisteners to them.
+	 * Sets the background
+	 */
 	private void initPreGameWindow() {
 		
 		

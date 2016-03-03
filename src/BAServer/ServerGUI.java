@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;

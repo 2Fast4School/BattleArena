@@ -1,7 +1,5 @@
 package model;
 
-import java.io.Serializable;
-
 /**
  * A simple class which basically does nothing.
  * 

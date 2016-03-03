@@ -6,8 +6,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,28 +20,71 @@ import controller.PreGameInput;
 import controller.SettingsInput;
 import model.GameState;
 
+/**
+ * The Class Meny.
+ * Creates the window for the whole game (both pregame and gameplay)
+ * Holds information about all the submenus with their associated actionlisteners
+ * @author Fred Hedenberg
+ * @version 1.0 2016-03-03
+ * 
+ */
 public class Meny extends JFrame {
 
+	/** The settingspanel. Submenu panel for settings*/
 	private SettingsPanel settingspanel;
+	
+	/** The pregamewindow. Main-menu panel*/
 	private PreGameWindow pregamewindow;
+	
+	/** The pregameinput. Exclusive actionlistener for pregamewindow */
 	private PreGameInput pregameinput;
+	
+	/** The connectpanel. Submenu for connecting to a server*/
 	private ConnectPanel connectpanel;
+	
+	/** The lobbypanel. Lobby-mode panel when already connected to a server, but not yet in-game*/
 	private LobbyPanel lobbypanel;
+	
+	/** The settingsinput. Exclusive actionlistener for settingspanel*/
 	private SettingsInput settingsinput;
+	
+	/** The connectinput. Exclusive actionlistener for connectpanel */
 	private ConnectInput connectinput;
+	
+	/** The lobbyinput. Exclusive actionlistener for lobbypanel*/
 	private LobbyInput lobbyinput;
+	
+	/** The contentpane of the frame*/
 	private JPanel contentpane;
+	
+	/** The cardlayout. To select which view to show. See setView method*/
 	private CardLayout cardlayout;
+	
+	/** The background image for menus. */
 	private Image preGameArt;
 
+	/** The client. Networking guy. Seen some stuff out there in the world */
 	private Client CLIENT;
+	
+	/** The gamestate. Holds information about objects/players in-game */
 	private GameState GAMESTATE;
+	
+	/** The gamewindow. In-game canvas which takes care of in-game GUI */
 	private GameWindow GAMEWINDOW;
+	
+	/** The gameinput. Exclusive actionlistener for gamewindow */
 	private GameInput GAMEINPUT;	
+	
+	/** The game. Makes the game run/tick/update */
 	private Game GAME;
 
 		
 	
+	/**
+	 * Instantiates a new meny.
+	 *
+	 * @param frameName the title of the window
+	 */
 	public Meny(String frameName) {
 		super(frameName);
 		try {
@@ -89,6 +130,10 @@ public class Meny extends JFrame {
 		setVisible(true);
 	}
 	
+	/**
+	 * Make other objects.
+	 * Creates all non-panel related objects
+	 */
 	private void makeOtherObjects(){
 		cardlayout = new CardLayout();
 		contentpane = new JPanel(cardlayout);
@@ -98,12 +143,15 @@ public class Meny extends JFrame {
 		GAMEINPUT = new GameInput();
 	}
 	
+	/**
+	 * Creates the panels (all menus and the in-game window)
+	 * Everything is created when application starts and then using
+	 * cardlayouts card-switching functionality chosen when needed.
+	 */
 	private void makeOtherPanels(){
 		
 		GAMEWINDOW = new GameWindow(null);
 		
-		
-		//lobbypanel = new LobbyPanel();
 		pregameinput = new PreGameInput(this);
 		pregamewindow = new PreGameWindow(pregameinput, preGameArt);
 		
@@ -125,6 +173,12 @@ public class Meny extends JFrame {
 		
 	}
 	
+	/**
+	 * Sets the view.
+	 * To change the panel currently showing.
+	 *
+	 * @param v the new view
+	 */
 	public void setView(String v){
 		switch(v){
 			case "LOBBY":

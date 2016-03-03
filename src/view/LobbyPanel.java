@@ -18,32 +18,62 @@ import javax.swing.SwingConstants;
 import arenaFighter.Main;
 import controller.LobbyInput;
 
+/**
+ * The Class LobbyPanel.
+ * When the user connects to a server it ends up in Lobby-mode
+ * to wait for all players to join and press ready.
+ * Has information about the game-map and who's joined the game
+ * 
+ * @author Fred Hedenberg
+ * @version 1.0 2016-03-03
+ */
 public class LobbyPanel extends JPanel {
+	
+	/** The lobbyinput. Exclusive actionlistener for this class */
 	private LobbyInput lobbyinput;
+	
+	/** The map image. To be displayed as a minimap */
 	private BufferedImage mapImage;
+	
+	/** The background image for menus. */
 	private Image preGameArt;
+	
+	/** The map name. */
 	private String mapName = "";
+	
+	/** The scaled (new) height and width of the minimap. */
 	private int scaledWidth, scaledHeight;
 	
+	/**
+	 * Instantiates a new lobby panel.
+	 *
+	 * @param lobbyinput the lobbyinput (actionlistener)
+	 * @param preGameArt the background image for menus
+	 */
 	public LobbyPanel(LobbyInput lobbyinput, Image preGameArt) {
 		this.lobbyinput = lobbyinput;
 		this.preGameArt = preGameArt;
-		initDialog();
+		initPanel();
 	}
-	private void initDialog() {
+	
+	/**
+	 * Inits the panel.
+	 */
+	private void initPanel() {
 		
 		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);
 		Font font2 = new Font("Comic Sans MS", Font.PLAIN, 14);
 		
-		JTextField txtMapAlexanderspahitt = new JTextField();
-		txtMapAlexanderspahitt.setBackground(new Color(255, 255, 255));
-		txtMapAlexanderspahitt.setEditable(false);
-		txtMapAlexanderspahitt.setHorizontalAlignment(SwingConstants.CENTER);
-		txtMapAlexanderspahitt.setFont(font1);
-		txtMapAlexanderspahitt.setText("Map: " + mapName);
-		txtMapAlexanderspahitt.setBounds(60, 200, 400, 40);
-		add(txtMapAlexanderspahitt);
-		txtMapAlexanderspahitt.setColumns(10);
+		setLayout(null);
+		JTextField miniMapNameTF = new JTextField();
+		miniMapNameTF.setBackground(new Color(255, 255, 255));
+		miniMapNameTF.setEditable(false);
+		miniMapNameTF.setHorizontalAlignment(SwingConstants.CENTER);
+		miniMapNameTF.setFont(font1);
+		miniMapNameTF.setText("Map: " + mapName);
+		miniMapNameTF.setBounds(60, 200, 400, 40);
+		add(miniMapNameTF);
+		miniMapNameTF.setColumns(10);
 		
 		JTextField txtPlayer = new JTextField();
 		txtPlayer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -53,29 +83,29 @@ public class LobbyPanel extends JPanel {
 		add(txtPlayer);
 		txtPlayer.setColumns(10);
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Ready");
-		chckbxNewCheckBox.setFont(font1);
-		chckbxNewCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-		chckbxNewCheckBox.setBounds(600, 550, 140, 40);
-		chckbxNewCheckBox.setActionCommand("chckbxReady");
-		chckbxNewCheckBox.addActionListener(lobbyinput);
-		add(chckbxNewCheckBox);
+		JCheckBox readyCheckBox = new JCheckBox("Ready");
+		readyCheckBox.setFont(font1);
+		readyCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
+		readyCheckBox.setBounds(600, 550, 140, 40);
+		readyCheckBox.setActionCommand("chckbxReady");
+		readyCheckBox.addActionListener(lobbyinput);
+		add(readyCheckBox);
 		
-		JButton btnNewButton_1 = new JButton("Leave");
-		btnNewButton_1.setActionCommand("leaveBtn");
-		btnNewButton_1.addActionListener(lobbyinput);
-		btnNewButton_1.setFont(font1);
-		btnNewButton_1.setBounds(600, 600, 140, 50);
-		add(btnNewButton_1);
+		JButton leaveBtn = new JButton("Leave");
+		leaveBtn.setActionCommand("leaveBtn");
+		leaveBtn.addActionListener(lobbyinput);
+		leaveBtn.setFont(font1);
+		leaveBtn.setBounds(600, 600, 140, 50);
+		add(leaveBtn);
 		
-		JTextField txtXyPlayersJoined_1 = new JTextField();
-		txtXyPlayersJoined_1.setFont(font2);
-		txtXyPlayersJoined_1.setEditable(false);
-		txtXyPlayersJoined_1.setHorizontalAlignment(SwingConstants.CENTER);
-		txtXyPlayersJoined_1.setText("xx/yy players joined");
-		txtXyPlayersJoined_1.setBounds(600, 200, 140, 40);
-		add(txtXyPlayersJoined_1);
-		txtXyPlayersJoined_1.setColumns(10);
+		JTextField playersJoinedTF = new JTextField();
+		playersJoinedTF.setFont(font2);
+		playersJoinedTF.setEditable(false);
+		playersJoinedTF.setHorizontalAlignment(SwingConstants.CENTER);
+		playersJoinedTF.setText("xx/yy players joined");
+		playersJoinedTF.setBounds(600, 200, 140, 40);
+		add(playersJoinedTF);
+		playersJoinedTF.setColumns(10);
 		
 		try {
 			mapImage = ImageIO.read(Main.class.getResource("/pregameart.png"));
@@ -94,7 +124,7 @@ public class LobbyPanel extends JPanel {
 			}
 		}
 
-		// Scales the map to a minimap
+		// Scales the game-map to a minimap
 		if (mapImage != null) {
 			if (mapImage.getHeight()<=mapImage.getWidth()){
 				int scaledWidth = 400;
@@ -112,6 +142,7 @@ public class LobbyPanel extends JPanel {
 			miniMapLabel.setBounds(60, 250, 400, 400);
 			add(miniMapLabel);
 
+			// Sets the background for the menu
 			if (preGameArt != null) {
 				JLabel picLabel = new JLabel(new ImageIcon(preGameArt));
 				add(picLabel);

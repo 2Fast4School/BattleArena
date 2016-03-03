@@ -13,28 +13,59 @@ import javax.swing.SwingConstants;
 
 import controller.ConnectInput;
 
+/**
+ * The Class ConnectPanel.
+ * ConnectPanel is the sub-menu (GUI) where the user inserts IP-address and port for the server.
+ *  It holds information the user inserts (IP and port) and passes it on to ConnectInput
+ * @author Fred Hedenberg
+ * @version 1.0 2016-03-03
+ */
 public class ConnectPanel extends JPanel {
+	
+	/** The connectinput, exclusive actionlistener for this class */
 	private ConnectInput connectinput;
+	
+	/** The text field for entering ip. */
 	private JTextField ipTextField;
+	
+	/** The text field for entering port. */
 	private JTextField portTextField;
-	private JLabel info;
+	
+	/** The background image for menus */
 	private Image preGameArt;
+	
+	/** The panel holding ip label and ip text field. */
 	private JPanel ipPanel;
+	
+	/** The panel holding port label and port text field. */
 	private JPanel portPanel;
+	
+	/** The port label. */
 	private JLabel portLabel;
+	
+	/** The ip label. */
 	private JLabel ipLabel;
 	
+	/**
+	 * Instantiates the connect panel.
+	 *
+	 * @param connectinput the connectinput (actionlistener)
+	 * @param preGameArt background image for menus
+	 */
 	public ConnectPanel(ConnectInput connectinput, Image preGameArt) {
 		this.connectinput = connectinput;
 		this.preGameArt = preGameArt;
-		initDialog();
+		initPanel();
 	}
-	private void initDialog() {
+	
+	/**
+	 * Inits the panel.
+	 */
+	private void initPanel() {
 		setLayout(null);
 		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);
 		Font font2 = new Font("Comic Sans MS", Font.PLAIN, 14);
 		
-		// Connect
 		JButton ipConnectBtn = new JButton("Connect");
 		ipConnectBtn.setFont(font1);
 		ipConnectBtn.setBounds(300, 240, 200, 60);
@@ -82,7 +113,6 @@ public class ConnectPanel extends JPanel {
 		portTextField.setActionCommand("portTextField");
 		portTextField.addActionListener(connectinput);
 		
-		// Cancel button under the IP textfield
 		JButton ipCancelBtn = new JButton("Back");
 		ipCancelBtn.setFont(font1);
 		ipCancelBtn.setBounds(300, 400, 200, 60);
@@ -99,6 +129,7 @@ public class ConnectPanel extends JPanel {
 		portPanel.add(portTextField);
 		add(ipCancelBtn);
 		
+		// Sets the background for the menu
 		if (preGameArt != null) {
 			JLabel picLabel = new JLabel(new ImageIcon(preGameArt));
 			add(picLabel);
@@ -107,10 +138,20 @@ public class ConnectPanel extends JPanel {
 		
 	}
 	
+	/**
+	 * Gets the ip.
+	 *
+	 * @return the ip
+	 */
 	public String getIp() {
 		return ipTextField.getText();
 	}
 	
+	/**
+	 * Gets the port.
+	 *
+	 * @return the port
+	 */
 	public String getPort() {
 		return portTextField.getText();
 	}
