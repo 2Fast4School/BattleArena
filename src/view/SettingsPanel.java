@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 
 
 import controller.SettingsInput;
+import model.GameState;
 
 public class SettingsPanel extends JPanel {
 	private SettingsInput settingsinput;

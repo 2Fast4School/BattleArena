@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
+import controller.ByteRepresenter;
 import map.Map;
 import model.Message;
 
@@ -44,6 +45,7 @@ public class Server extends Observable implements Runnable{
 	private String mapName="logicMap.png";;
 	private String type="grass";
 	private boolean safelyClosed=false;
+	private ByteRepresenter byteRepresenter;
 	
 	private boolean running;
 	private Thread thread;
@@ -56,6 +58,7 @@ public class Server extends Observable implements Runnable{
 	public Server(int port) throws IOException{
 		revSkt=new DatagramSocket(port);
 		clients=Collections.synchronizedList(new ArrayList<ClientInfo>());
+		byteRepresenter = new ByteRepresenter();
 	}
 	
 	public void setMap(Map map)
@@ -133,10 +136,7 @@ public class Server extends Observable implements Runnable{
 			this.bReceive=bReceive;
 				
 			try {
-				ByteArrayInputStream bIn=new ByteArrayInputStream(bReceive);
-				ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
-				receiveMessage=new Message();
-				receiveMessage.readExternal(oIn);
+				receiveMessage=byteRepresenter.bytesToExternObject(bReceive);
 				
 				code = receiveMessage.getCode();
 				id=receiveMessage.getID();
@@ -144,29 +144,21 @@ public class Server extends Observable implements Runnable{
 				//Create a new datagramsocket on an open port.
 				skt = new DatagramSocket();
 			}catch(IOException e){e.printStackTrace();}
-			catch(ClassNotFoundException f){}
 		}
 		
 		/**
 		 * Depending on the OP-CODE. Responds or forwards the packet.
 		 */
 		public void run(){	
-			System.out.println(mapName);
 			if(code == 0){
 				idToGiveClient += 1;
 				Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
 				sendMessage.setMaxNrPlayers(maxPlayers);;
 				sendMessage.setMapName(mapName);
 				sendMessage.setMapType(type);
-				System.out.println(type);
-				System.out.println(mapName);
+				
 				try{
-					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-					oOut.flush();
-					sendMessage.writeExternal(oOut);
-					oOut.flush();
-					byte[] buf=bOut.toByteArray();
+					byte[] buf=byteRepresenter.externByteRepresentation(sendMessage);
 					
 					clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
 					
@@ -187,7 +179,6 @@ public class Server extends Observable implements Runnable{
 						
 						if(receiveMessage.getReady()){
 							c.setReady(true);
-							System.out.println("READY: "+id);
 						} else {
 							c.setReady(false);
 						}
@@ -206,12 +197,7 @@ public class Server extends Observable implements Runnable{
 				}
 
 				try{
-					ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-					ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-					oOut.flush();
-					sendMessage.writeExternal(oOut);
-					oOut.flush();
-					byte[] buf=bOut.toByteArray();
+					byte[] buf=byteRepresenter.externByteRepresentation(sendMessage);
 					
 					pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
 					skt.send(pkt);
@@ -233,12 +219,7 @@ public class Server extends Observable implements Runnable{
 					Message gameOverMessage=new Message();
 					gameOverMessage.setCode(4);
 					try{
-						ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-						ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-						oOut.flush();
-						gameOverMessage.writeExternal(oOut);
-						oOut.flush();
-						byte[] buf=bOut.toByteArray();
+						byte[] buf=byteRepresenter.externByteRepresentation(gameOverMessage);
 						
 						clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
 						for(ClientInfo c : clients){
@@ -258,12 +239,7 @@ public class Server extends Observable implements Runnable{
 					sendMessage.setMapName(mapName);
 					sendMessage.setMapType(type);
 					try{
-						ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-						ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-						oOut.flush();
-						sendMessage.writeExternal(oOut);
-						oOut.flush();
-						byte[] buf=bOut.toByteArray();
+						byte[] buf=byteRepresenter.externByteRepresentation(sendMessage);
 						
 						clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
 						
@@ -290,12 +266,7 @@ public class Server extends Observable implements Runnable{
 						sendMessage.setReady(true);
 					}
 					try{
-						ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-						ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-						oOut.flush();
-						sendMessage.writeExternal(oOut);
-						oOut.flush();
-						byte[] buf=bOut.toByteArray();
+						byte[] buf=byteRepresenter.externByteRepresentation(sendMessage);
 						
 						for(ClientInfo c : clients){
 							DatagramPacket sendPacket=new DatagramPacket(buf, buf.length, c.getIP(), c.getPort());

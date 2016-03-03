@@ -14,7 +14,7 @@ public class PreGameInput implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(e.getActionCommand());
+		//System.out.println(e.getActionCommand());
 		switch (e.getActionCommand()) {
 		case "createGameBtn":
 			ServerMain m = ServerMain.getInstance();

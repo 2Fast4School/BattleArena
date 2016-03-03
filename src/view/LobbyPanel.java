@@ -38,14 +38,13 @@ public class LobbyPanel extends JPanel {
 		textArea.setRows(8);
 		textArea.setBounds(332, 11, 100, 166);
 		add(textArea);
+		textArea.setVisible(true);
 		
 		JCheckBox chckbxReady = new JCheckBox("READY");
 		chckbxReady.setActionCommand("chckbxReady");
 		chckbxReady.addActionListener(lobbyinput);
 		chckbxReady.setBounds(352, 184, 70, 23);
 		add(chckbxReady);
-		
-		
 		
 		try {
 			mapImage = ImageIO.read(new File("res/pregameart.png"));
@@ -68,22 +67,4 @@ public class LobbyPanel extends JPanel {
 		}
 		
 	}
-	
-	public void countDown(int counter){
-		if (counter == 3) {
-			System.out.println("test");
-			JLabel lblNewLabel_1 = new JLabel("Game starts in 3..");
-			lblNewLabel_1.setBounds(319, 203, 135, 29);
-			add(lblNewLabel_1);
-		}
-		else if (counter == 2) {
-			lblNewLabel_1.setText("Game starts in 3.. 2..");
-		}
-		else if(counter == 1){
-			lblNewLabel_1.setText("Game starts in 3.. 2.. 1..");
-		}
-		else{
-		}	
-	}
-
 }

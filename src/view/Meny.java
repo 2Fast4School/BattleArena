@@ -113,7 +113,7 @@ public class Meny extends JFrame {
 	public void setView(String v){
 		switch(v){
 			case "LOBBY":
-				//
+				GAMESTATE.setName(settingspanel.getName());
 				int port = connectinput.getPort();
 				String ip = connectinput.getIP();
 				GAME = new Game(GAMESTATE, this);

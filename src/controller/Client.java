@@ -40,6 +40,7 @@ public class Client implements Runnable, Observer{
 	private DatagramSocket socket;
 	private Map map;
 	private boolean ready;
+	private ByteRepresenter byteRepresenter;
 	
 	private boolean running;
 	private Thread thread;
@@ -54,6 +55,7 @@ public class Client implements Runnable, Observer{
 		this.srvport = srvport;
 		this.state = state;
 		ready=false;
+		byteRepresenter=new ByteRepresenter();
 		
 		try {
 			this.srvip = InetAddress.getByName(srvip);
@@ -165,7 +167,7 @@ public class Client implements Runnable, Observer{
 		message.setCode(0);
 		
 		try{
-			byte[] data=externByteRepresentation(message);
+			byte[] data=byteRepresenter.externByteRepresentation(message);
 			DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
 			socket.send(pkt);
 			
@@ -175,8 +177,8 @@ public class Client implements Runnable, Observer{
 			socket.setSoTimeout(10000);
 			socket.receive(pkt);
 			
-			Message receiveMessage=new Message();
-			bytesToExternObject(buf, receiveMessage);
+			Message receiveMessage;
+			receiveMessage=byteRepresenter.bytesToExternObject(buf);
 
 			BufferedImage logicMap=ImageIO.read(Main.class.getResource("/"+receiveMessage.getMapName()));
 			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
@@ -209,7 +211,7 @@ public class Client implements Runnable, Observer{
 				message.setID(state.getID());
 				
 				try{	
-					data=externByteRepresentation(message);
+					data=byteRepresenter.externByteRepresentation(message);
 					DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
 					socket.send(pkt);	
 				}catch(IOException e){}
@@ -237,9 +239,8 @@ public class Client implements Runnable, Observer{
 				//Regular / move OPCODE:1
 				message.setCode(1);
 			}
-			
 			try{
-				data=externByteRepresentation(message);
+				data=byteRepresenter.externByteRepresentation(message);
 				DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
 				socket.send(pkt);	
 			}catch(IOException e){}
@@ -264,6 +265,7 @@ public class Client implements Runnable, Observer{
 			e.printStackTrace();
 		}
 	}
+	
 	public byte[] externByteRepresentation(Object externializable){
 		try{
 			ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
