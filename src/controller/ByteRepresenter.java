@@ -10,7 +10,24 @@ import java.io.ObjectOutputStream;
 
 import model.Message;
 
+/**
+ *  <h1>ByteRepresenter</h1>
+ *  ByteRepresenter serves an interpreter to translate objects that implement
+ *  the externializable interface into a byte array and vice versa.<p>
+ *  <b>Known Information</b><p>
+ *  None
+ * @author William
+ * @version 1.0
+ * @since 2016-03-03
+ */
 public class ByteRepresenter {
+	/**
+	 * Retreives the byte representation of what's received from the writeExternal method
+	 * of an object implementing the externializable interface, and returns it.<p>
+	 * Currently only implemented for Class Message
+	 * @param externializable
+	 * @return byte[] bOut 
+	 */
 	public byte[] externByteRepresentation(Object externializable){
 		try{
 			ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
@@ -26,6 +43,13 @@ public class ByteRepresenter {
 			return bOut.toByteArray();
 		}catch(IOException e){e.printStackTrace();return null;}
 	}
+	/**
+	 * Recreates an object implementing the externializable interface using
+	 * the supplied byte array.<p>
+	 * Currently only implemented for class Message
+	 * @param byteRepresentation
+	 * @return Message message
+	 */
 	public Message bytesToExternObject(byte[] byteRepresentation){
 		try{
 			ByteArrayInputStream bIn=new ByteArrayInputStream(byteRepresentation);

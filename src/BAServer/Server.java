@@ -22,12 +22,12 @@ import model.Message;
 /**
 * <h1>Server</h1>
 * Server is just that, a server for the game application.
-* This Server doesn't hold any actual game information 
-* of it's own, instead it listens for DatagramPackets, and forwards
-* them. In other words it works by UDP <p>
-* Every packet is handled by it's own thread in the private class PacketHandler.
-* The server stores information about all the connected clients in an ArrayList of ClientInfo.
-* ClientInfo is also a private class.
+* Server passively forwards packets received on the chosen port.<p>
+*  <b><u>Known information:</u></b><p> 
+*  <b>maxPlayers:int</b> The maximum number of players in the game<p>
+*  <b>idToGiveClient:int</b> The id a joining client should receive<p>
+*  <b>mapName:String</b> The path to the map selected to be played<p>
+*   <b>type:String</b> The name of the texture chosen for the background<p>
 * @author  William Bjorklund / Victor Dahlberg
 * @version 2.0
 * @since   2016-02-26
@@ -107,18 +107,15 @@ public class Server extends Observable implements Runnable{
 
 	/**
 	* <h1>PacketHandler</h1>
-	* MiniServer is a private class to Server, and it's threaded.
-	* It continually listens to the Client it is associated with,
-	* and will forward any messages sent by that Client to all other
-	* clients.
-	* 
-	* Each time a packet is received, a packethandler is created and started.
-	* The packet handler then reads the OP-CODE of the packet and the ID of the pakcket, i.e who it came from.
-	* It then depending on OP-CODE and ID responds or forward the packet.
-	* 
-	* Create only one PacketHandler per packet.
-	* 
-	* @author  William Bj�rklund / Victor Dahlberg
+	*  Handles a received packet by reading required information and then forwarding a message to connected clients
+	*  as appropriate.<p>
+	*  <b><u>Known Information:</u></b><p>
+	*   <b>pkt:DatagramPacket</b> The received packet<p>
+	*   <b>code:int</b> The code given by the received packet<p>
+	*   <b>id</b> The id of the client that sent the packet<p>
+	*   <b>receiveMessage:Message</b> The instance of Message sent in the packet<p>
+	*   <b>alive:boolean</b> If the client is alive in the game<p>
+	* @author  William Bjorklund / Victor Dahlberg
 	* @version 1.0
 	* @since   2016-02-26
 	*/
@@ -127,13 +124,13 @@ public class Server extends Observable implements Runnable{
 		DatagramPacket pkt = null;
 		byte[] bReceive = null;
 		DatagramSocket skt = null;
-		String d[];
-		int code, id, nrDead;
+		int code, id;
 		Message receiveMessage;
 		boolean alive;
 		/**
-		 * 
-		 * @param pkt The DatagramPacket to be handled.
+		 * Initiates required fields and objects.
+		 * @param pkt The packet to be handled.<p>
+		 * bReceive:byte[] The byte field belonging to pkt
 		 */
 		public PacketHandler(DatagramPacket pkt, byte[] bReceive){
 			this.pkt = pkt;
@@ -151,7 +148,7 @@ public class Server extends Observable implements Runnable{
 		}
 		
 		/**
-		 * Depending on the OP-CODE. Responds or forwards the packet.
+		 * Selectes a response, or just forwards the packet, depending on it's contents.
 		 */
 		public void run(){	
 			if(code == 0){
@@ -287,11 +284,16 @@ public class Server extends Observable implements Runnable{
 		}
 	}
 	
+	/**
+	 * Resets the server's known clients to zero to let the server be reused.
+	 */
 	public void resetServer(){
 		clients.clear();
 		idToGiveClient=0;
 	}
-	
+	/**
+	 * Start the server's thread.
+	 */
 	public synchronized void start(){
 		if(running){return;}
 		running = true;
@@ -300,7 +302,7 @@ public class Server extends Observable implements Runnable{
 	}
 	
 	/**
-	 * Stop the main game thread.
+	 * Stop the server's thread.
 	 */
 	public synchronized void stop(){
 		if(running)
@@ -310,11 +312,18 @@ public class Server extends Observable implements Runnable{
 	}
 	
 	/**
-	 * A very simple class to store IP, Port and ID of a specific client.
-	 * Every client will most likely listen on different ports.
-	 * @author William Björklund / Victor Dahlberg
+	 * Holds selected information regarding a single client communicating with the server.<p>
+	 * <b><u>Known information:</u></b><p> 
+	 * <b>ip:InetAddress</b> - the InetAddress of the client<p>
+	 * <b>port:int</b> - the client's port<p>
+	 * <b>id:int</b> - the client's id<p>
+	 * <b>ready:boolean</b> - if the client is ready to start a game<p>
+	 * <b>alive:boolean</b> - if the client has died in the game<p>
+	 * <b>name:String</b> - the client's name
+	 * 
+	 * @author William Bjorklund / Victor Dahlberg
 	 * @version 1.0
-	 * @since 2016-02-26
+	 * @since 2016-03-03
 	 *
 	 */
 	private class ClientInfo{
