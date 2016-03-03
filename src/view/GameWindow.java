@@ -32,7 +32,7 @@ public class GameWindow extends Canvas implements Observer{
 	 * using triple-buffering.
 	 * Checks all entities and draws them.
 	 */
-	public void render(){
+	private void render(){
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null){
 			//Triple-buffer

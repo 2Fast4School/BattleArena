@@ -9,7 +9,7 @@ public class Message implements Externalizable{
 	boolean attacking;
 	int enemyID=-1;int enemyHP=-1;
 	int maxNrPlayers=-1;
-	String mapName;
+	String mapName, playerName;
 	String type;
 	boolean ready, tostart;
 	boolean alive, gameOver;
@@ -20,7 +20,7 @@ public class Message implements Externalizable{
 		this.id=id;this.attacking=attacking;this.xPos=xPos;
 		this.yPos=yPos;this.rotVar=rotVar;
 		ready=false;
-		gameOver=false;;
+		gameOver=false;
 	}
 	public int getCode(){return code;}
 	public void setCode(int code){this.code=code;}
@@ -50,6 +50,8 @@ public class Message implements Externalizable{
 	public void setAlive(boolean state){alive=state;}
 	public boolean getGameOver(){return gameOver;}
 	public void setGameOver(boolean state){gameOver=state;}
+	public String getPlayerName(){return playerName;}
+	public void setPlayerName(String playerName){this.playerName=playerName;}
 	
 	public void setToStart(boolean b){
 		tostart = b;
@@ -77,6 +79,7 @@ public class Message implements Externalizable{
 		tostart = arg0.readBoolean();
 		alive=arg0.readBoolean();
 		gameOver=arg0.readBoolean();
+		playerName=(String)arg0.readObject();
 	}
 	@Override
 	public void writeExternal(ObjectOutput arg0) throws IOException {
@@ -96,5 +99,6 @@ public class Message implements Externalizable{
 		arg0.writeBoolean(tostart);
 		arg0.writeBoolean(alive);
 		arg0.writeBoolean(gameOver);
+		arg0.writeObject(playerName);
 	}
 }

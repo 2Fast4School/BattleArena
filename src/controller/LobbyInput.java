@@ -29,6 +29,8 @@ public class LobbyInput implements ActionListener, Observer {
 			box.setEnabled(false);
 			state.setToReady();
 			break;
+		case "leaveBtn":
+			System.out.println("I really hoped you wouldn't press that button");
 		default:
 
 			break;

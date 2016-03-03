@@ -6,10 +6,13 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -18,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import arenaFighter.Main;
 
 /**
  * <h1>ServerGUI</h1>
@@ -36,12 +41,24 @@ public class ServerGUI implements Observer {
 	private static JPanel buttonArea, serverInfoArea;
 	private static JButton startGameBtn, endGameBtn, chooseMapBtn;
 	private Choice typeChoice;
-	
+	private boolean shutDown=false;
 	private static int port = 5050;
 
 	public ServerGUI() {
 		mainWindow = new JFrame("Battle Arena Dedicated Server");
-		mainWindow.setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
+		try {
+			mainWindow.setIconImage(ImageIO.read(Main.class.getResource("/testa.png")));
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			try {
+				mainWindow.setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
+			}
+			catch(Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+			
 		mainWindow.setLayout(new BorderLayout());
 		mainWindow.setSize(700, 400);
 
@@ -89,6 +106,8 @@ public class ServerGUI implements Observer {
 		infoArea.setBackground(Color.BLACK);
 		infoArea.setForeground(Color.GREEN);
 		endGameBtn.setEnabled(false);
+		chooseMapBtn.setEnabled(false);
+		typeChoice.setEnabled(false);
 
 		// add data to serverIp ComboBox
 		updateIpComboBox();
@@ -103,11 +122,17 @@ public class ServerGUI implements Observer {
 	 * update is used to send information to the terminal output from observed objects
 	 */
 	@Override
-	public void update(Observable o, Object arg) {
+	public void update(Observable o, Object arg){
 		if(arg instanceof Boolean){
-			infoArea.append("The game is over.\n");
-			toTerminal("Server shut down\n");
-			switchButtonState();
+			if(!shutDown && (Boolean)arg==true){
+				shutDown=(Boolean)arg;
+				infoArea.append("The game is over.\n");
+				toTerminal("Server shut down\n");
+				switchButtonState();
+			}
+			if((Boolean)arg==false){
+				shutDown=false;
+			}
 		}
 		else{
 			String[] message = new String((byte[])arg).trim().split(",");
@@ -166,6 +191,7 @@ public class ServerGUI implements Observer {
 		startGameBtn.addActionListener(controller);	
 		endGameBtn.addActionListener(controller);
 		chooseMapBtn.addActionListener(controller);	
+		typeChoice.addItemListener((ItemListener)controller);
 	} //addController()
 	
 	
@@ -178,11 +204,15 @@ public class ServerGUI implements Observer {
 		{
 			startGameBtn.setEnabled(false);
 			endGameBtn.setEnabled(true);
+			chooseMapBtn.setEnabled(true);
+			typeChoice.setEnabled(true);
 		}
 		else
 		{
 			startGameBtn.setEnabled(true);	
 			endGameBtn.setEnabled(false);
+			chooseMapBtn.setEnabled(false);
+			typeChoice.setEnabled(false);
 		}
 	}
 	public String getMapType(){

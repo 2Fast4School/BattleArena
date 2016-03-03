@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author Alexander Erenstedt - Modified 28-02-16
  * @version 1.0  28-02-16
  */
-public class WallTile extends Tile implements Serializable {
+public class WallTile extends Tile{
 	/**
 	 * The constructor, creates a Solid WallTile at x,y with the size of w and h
 	 * @param x The x-position of the WallTile.

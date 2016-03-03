@@ -1,5 +1,7 @@
 package view;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -17,54 +19,85 @@ public class ConnectPanel extends JPanel {
 	private JTextField portTextField;
 	private JLabel info;
 	private Image preGameArt;
+	private JPanel ipPanel;
+	private JPanel portPanel;
+	private JLabel portLabel;
+	private JLabel ipLabel;
 	
 	public ConnectPanel(ConnectInput connectinput, Image preGameArt) {
 		this.connectinput = connectinput;
 		this.preGameArt = preGameArt;
 		initDialog();
 	}
-	public void initDialog() {
-		
-		// Connect button over the IP textfield
-		JButton ipConnectBtn = new JButton("Connect");
+	private void initDialog() {
 		setLayout(null);
-		ipConnectBtn.setBounds(20, 20, 111, 21);
+		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);
+		Font font2 = new Font("Comic Sans MS", Font.PLAIN, 14);
+		
+		// Connect
+		JButton ipConnectBtn = new JButton("Connect");
+		ipConnectBtn.setFont(font1);
+		ipConnectBtn.setBounds(300, 240, 200, 60);
 		ipConnectBtn.setActionCommand("ipConnectBtn");
 		ipConnectBtn.addActionListener(connectinput);
 		ipConnectBtn.setVisible(true);
 		
 		
-
+		ipPanel = new JPanel();
+		ipPanel.setLayout(null);
+		ipPanel.setBounds(300, 310, 200, 30);
+		
+		ipLabel = new JLabel("IP:");
+		ipLabel.setFont(font1);
+		ipLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		ipLabel.setBounds(5, 0, 55, 30);
+		ipLabel.setBackground(Color.WHITE);
+		
 		ipTextField = new JTextField();
+		ipTextField.setFont(font2);
 		ipTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		ipTextField.setText("127.0.0.1");
-		ipTextField.setBounds(20, 45, 111, 21);
+		ipTextField.setBounds(60, 0, 140, 30);
 		ipTextField.setColumns(10);
 		ipTextField.setActionCommand("ipTextField");
 		ipTextField.addActionListener(connectinput);
 		
+		portPanel = new JPanel();
+		portPanel.setLayout(null);
+		portPanel.setBounds(300, 360, 200, 30);
+		
+		
+		portLabel = new JLabel("Port:");
+		portLabel.setFont(font1);
+		portLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		portLabel.setBounds(5, 0, 55, 30);
+		portLabel.setBackground(Color.WHITE);
+		
 		portTextField = new JTextField();
+		portTextField.setFont(font2);
 		portTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		portTextField.setText("5050");
-		portTextField.setBounds(135, 45, 40, 21);
+		portTextField.setBounds(60, 0, 140, 30);
 		portTextField.setColumns(10);
 		portTextField.setActionCommand("portTextField");
 		portTextField.addActionListener(connectinput);
 		
 		// Cancel button under the IP textfield
-		JButton ipCancelBtn = new JButton("Cancel");
-		ipCancelBtn.setBounds(20, 70, 111, 21);
+		JButton ipCancelBtn = new JButton("Back");
+		ipCancelBtn.setFont(font1);
+		ipCancelBtn.setBounds(300, 400, 200, 60);
 		ipCancelBtn.setActionCommand("ipCancelBtn");
 		ipCancelBtn.addActionListener(connectinput);
 		ipCancelBtn.setVisible(true);
 		
-		info = new JLabel("Avsluta med ENTER i textfältet för att ip respektive port ska registreras.");
-
+		add(portPanel);
+		add(ipPanel);
+		ipPanel.add(ipLabel);
+		portPanel.add(portLabel);
 		add(ipConnectBtn);
-		add(ipTextField);
-		add(portTextField);
+		ipPanel.add(ipTextField);
+		portPanel.add(portTextField);
 		add(ipCancelBtn);
-		add(info);
 		
 		if (preGameArt != null) {
 			JLabel picLabel = new JLabel(new ImageIcon(preGameArt));

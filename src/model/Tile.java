@@ -9,11 +9,10 @@ import java.io.Serializable;
  * @version 1.0  28-02-16
  * 
  */
-public abstract class Tile extends Entity implements Serializable{
+public abstract class Tile extends Entity{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5909650419706010850L;
 
 	/**
 	 * 
@@ -25,6 +24,5 @@ public abstract class Tile extends Entity implements Serializable{
 	 */
 	public Tile(int x, int y, int w, int h, boolean solid) {
 		super(x, y, w, h, solid);
-		
 	}
 }

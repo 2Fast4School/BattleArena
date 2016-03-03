@@ -9,11 +9,10 @@ import java.io.Serializable;
  * @version 1.0  
  * 
  */
-public class SpawnPoint extends Tile implements Serializable {
+public class SpawnPoint extends Tile{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5442735314110214660L;
 	private boolean isUsed;
 	
 	/**

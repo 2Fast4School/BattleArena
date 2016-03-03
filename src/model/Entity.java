@@ -11,11 +11,10 @@ import java.io.Serializable;
  * @author Victor Dahlberg
  * @version 1.0
  */
-public abstract class Entity implements Serializable{
+public abstract class Entity{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8210056978015432264L;
 	private boolean solid;
 	protected int x, y, w, h, rotation, hp;
 	protected transient BufferedImage sprite;

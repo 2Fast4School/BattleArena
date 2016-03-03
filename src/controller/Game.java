@@ -1,7 +1,13 @@
 package controller;
 
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+import arenaFighter.Main;
 import model.GameState;
 import view.Meny;
 
@@ -77,11 +83,13 @@ public class Game implements Runnable {
 		//Just a variable used to calculate when a second has passed.
 		long timer = System.currentTimeMillis();
 		
-		
 		while(running){
 			if(GAMESTATE.getGameOver()){
 				GAMESTATE.setGameOver(false);	// Game is still running. Might want to join other game.
-				JOptionPane.showMessageDialog(null, "Game is over", "GameOver", JOptionPane.OK_OPTION);
+				try{
+					JOptionPane.showMessageDialog(null, GAMESTATE.getName()+" won!", "GameOver", JOptionPane.OK_OPTION,
+							new ImageIcon(ImageIO.read(Main.class.getResource("/testa.png"))));
+				}catch(IOException e){}
 				meny.setView("BACK");
 				stop();
 			}

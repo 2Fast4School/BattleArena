@@ -5,6 +5,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -28,10 +29,16 @@ import model.Player;
 /**
 * <h1>Client</h1>
 
-* Client is the class which is responsible for sending packets including player information to the server and listen for incoming packets from the Server.
+* Client is responsible for sending packets to the server,
+* aswell as listening for incoming packets from the Server.<p>
+* <b><u>Known Information:</u></b><p>
+* <b>srvport:int</b> The port the server is listening on<p>
+* <b>srvip:InetAddress</b> The server's adddress<p>
+* <b>state:GameState</b> The game's current state, with all data regarding the current game<p>
+* <b>map:Map</b> The selected map<p>
 * @author  William Bjorklund / Victor Dahlberg
-* @version 2.0
-* @since   2016-02-26
+* @version 1.0
+* @since   2016-03-03
 */
 public class Client implements Runnable, Observer{
 	private int srvport;
@@ -39,14 +46,12 @@ public class Client implements Runnable, Observer{
 	private GameState state;
 	private DatagramSocket socket;
 	private Map map;
-	private boolean ready;
 	private ByteRepresenter byteRepresenter;
 	
 	private boolean running;
 	private Thread thread;
 	
-	/** The Constructor opens a DatagramSocket on an empty port.
-	 * 
+	/** The constructor initiates the necessary variables and objects of Client.<p>
 	 * @param srvport The port which the server listens on.
 	 * @param srvip The server's ip in form of a String.
 	 * @param state The GameState which should be updated when a packet is received.
@@ -54,7 +59,6 @@ public class Client implements Runnable, Observer{
 	public Client(int srvport, String srvip, GameState state){
 		this.srvport = srvport;
 		this.state = state;
-		ready=false;
 		byteRepresenter=new ByteRepresenter();
 		
 		try {
@@ -67,16 +71,9 @@ public class Client implements Runnable, Observer{
 	}
 
 	/**
-	* Each Client runs in it's own thread and listen for messages from
-	* the server, which it will react to depending on the contents.
-	* Messages are expected to come as byte[], and when translated into
-	* a String they should follow the format:<p>
-	* "OP-CODE, ID, [variable], [variable]....,Filler"<p>
-	* The individual parts of the message can then be extracted, and a
-	* proper reaction to the message can be done. An OP-CODE corresponds
-	* to what sort of reaction is desired, and the ID which player sent
-	* the message. These are always read. Further information might be
-	* sent depending on which OP-CODE it is.*/
+	 * The main loop that listens for packets from the server, and calls for changes in Gamestate
+	 * depending on the contents of an incoming packet.
+	 */
 	@Override
 	public void run() {
 		int id = 0, newx = 0, newy = 0, rot = 0;
@@ -120,6 +117,7 @@ public class Client implements Runnable, Observer{
 					int playerHP=receiveMessage.getPlayerHP();
 					
 					if(code==4){
+						state.setName(receiveMessage.getPlayerName());
 						state.setGameOver(true);
 						stop();
 					}
@@ -131,7 +129,6 @@ public class Client implements Runnable, Observer{
 							if(playerHP!=-1){
 								n.setHP(playerHP);
 							}
-							//Funger inte just nu..
 							if(attacking && !n.getHasAttacked()){
 								n.setHasAttacked(true);
 								n.doAttack();
@@ -156,15 +153,14 @@ public class Client implements Runnable, Observer{
 	
 	
 	/**
-	 * This method sends an "init-packet" to the server and waits for a response.
-	 * The Init-packet has OP-CODE: 0. Server knows this OP-code is a request and responds to the client which sent the packet with an id.
-	 * This is the id given to client.
-	 * This method will wait 10s for an init packet from the server.
+	 * The method by which Client makes the first communication with the Server,
+	 * preparing both for further, structured communication.
 	 */
 	public void requestConnection(){
-		//OPCODE 0 is initpacket. server responds with your id.
+		//OPCODE 0 is initpacket.
 		Message message=new Message();
 		message.setCode(0);
+		message.setPlayerName(state.getName());
 		
 		try{
 			byte[] data=byteRepresenter.externByteRepresentation(message);
@@ -179,8 +175,22 @@ public class Client implements Runnable, Observer{
 			
 			Message receiveMessage;
 			receiveMessage=byteRepresenter.bytesToExternObject(buf);
-
-			BufferedImage logicMap=ImageIO.read(Main.class.getResource("/"+receiveMessage.getMapName()));
+			
+			BufferedImage logicMap = null;
+			try {
+			logicMap = ImageIO.read(Main.class.getResource("/maps/"+receiveMessage.getMapName()));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (logicMap == null) {
+				try {
+					logicMap = ImageIO.read(new File("res/" + receiveMessage.getMapName()));
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+			}
 			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
 
 			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);
@@ -188,12 +198,10 @@ public class Client implements Runnable, Observer{
 		
 	}
 	
-	public void setReady(boolean state){ready=state;}
-	
 	/**
-	* Client is notified when there is information that needs
-	* to be sent to other clients. Depending on the parameters
-	* sent with this notification, a correct OP-CODE will be
+	* Client is notified when there has been a change in the local
+	* GameState which needs to be sent to the server.<p>
+	* The method also sends the change to the server
 	* chosen for the message.
 	* @param arg0 : GameState 
 	* @param arg1 : Player/null
@@ -246,6 +254,10 @@ public class Client implements Runnable, Observer{
 			}catch(IOException e){}
 		}
 	}
+	
+	/**
+	 * Starts the Client's thread.
+	 */
 	public synchronized void start(){
 		if(running){return;}
 		running = true;
@@ -254,7 +266,7 @@ public class Client implements Runnable, Observer{
 	}
 	
 	/**
-	 * Stop the main game thread.
+	 * Stop the Client's thread.
 	 */
 	public synchronized void stop(){
 		if(running)
@@ -264,31 +276,5 @@ public class Client implements Runnable, Observer{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public byte[] externByteRepresentation(Object externializable){
-		try{
-			ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-			ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-			oOut.flush();
-			if(externializable instanceof Message){
-				Message message=(Message)externializable;
-				message.writeExternal(oOut);
-			}
-			oOut.flush();
-			oOut.close();
-			bOut.close();
-			return bOut.toByteArray();
-		}catch(IOException e){e.printStackTrace();return null;}
-	}
-	public void bytesToExternObject(byte[] byteRepresentation, Message message){
-		try{
-			ByteArrayInputStream bIn=new ByteArrayInputStream(byteRepresentation);
-			ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
-			message.readExternal(oIn);
-			oIn.close();
-			bIn.close();
-		}catch(IOException e){e.printStackTrace();}
-		catch(ClassNotFoundException f){}
 	}
 }				

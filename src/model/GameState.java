@@ -202,8 +202,6 @@ public class GameState extends Observable{
 	public void startGame(){
 		alive = true;
 		ready = false;
-		//setChanged();
-		//notifyObservers();
 	}
 	
 	public boolean isAlive(){
@@ -220,4 +218,5 @@ public class GameState extends Observable{
 	public void setGameOver(boolean state){gameOver=state;}
 	public boolean getGameOver(){return gameOver;}
 	public void setName(String name){this.name=name;}
+	public String getName(){return name;}
 }

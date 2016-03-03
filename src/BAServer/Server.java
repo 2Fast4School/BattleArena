@@ -22,12 +22,12 @@ import model.Message;
 /**
 * <h1>Server</h1>
 * Server is just that, a server for the game application.
-* This Server doesn't hold any actual game information 
-* of it's own, instead it listens for DatagramPackets, and forwards
-* them. In other words it works by UDP <p>
-* Every packet is handled by it's own thread in the private class PacketHandler.
-* The server stores information about all the connected clients in an ArrayList of ClientInfo.
-* ClientInfo is also a private class.
+* Server passively forwards packets received on the chosen port.<p>
+*  <b><u>Known information:</u></b><p> 
+*  <b>maxPlayers:int</b> The maximum number of players in the game<p>
+*  <b>idToGiveClient:int</b> The id a joining client should receive<p>
+*  <b>mapName:String</b> The path to the map selected to be played<p>
+*   <b>type:String</b> The name of the texture chosen for the background<p>
 * @author  William Bjorklund / Victor Dahlberg
 * @version 2.0
 * @since   2016-02-26
@@ -66,8 +66,10 @@ public class Server extends Observable implements Runnable{
 		this.map=map;
 	}
 	
-	public void setMapName(String mapName, String type){
+	public void setMapName(String mapName){
 		this.mapName=mapName;
+	}
+	public void setMapType(String type){
 		this.type=type;
 	}
 	public String getMapName(){return mapName;}
@@ -87,6 +89,8 @@ public class Server extends Observable implements Runnable{
 	 * The only thing run does is listens for incoming packets and the distribute the work to Packethandler which actually does something with the received packet.
 	 */
 	public void run(){
+		setChanged();
+		notifyObservers(false);
 		while(running){
 			receive=new byte[1024];
 			packet=new DatagramPacket(receive, receive.length);
@@ -103,18 +107,15 @@ public class Server extends Observable implements Runnable{
 
 	/**
 	* <h1>PacketHandler</h1>
-	* MiniServer is a private class to Server, and it's threaded.
-	* It continually listens to the Client it is associated with,
-	* and will forward any messages sent by that Client to all other
-	* clients.
-	* 
-	* Each time a packet is received, a packethandler is created and started.
-	* The packet handler then reads the OP-CODE of the packet and the ID of the pakcket, i.e who it came from.
-	* It then depending on OP-CODE and ID responds or forward the packet.
-	* 
-	* Create only one PacketHandler per packet.
-	* 
-	* @author  William Bj�rklund / Victor Dahlberg
+	*  Handles a received packet by reading required information and then forwarding a message to connected clients
+	*  as appropriate.<p>
+	*  <b><u>Known Information:</u></b><p>
+	*   <b>pkt:DatagramPacket</b> The received packet<p>
+	*   <b>code:int</b> The code given by the received packet<p>
+	*   <b>id</b> The id of the client that sent the packet<p>
+	*   <b>receiveMessage:Message</b> The instance of Message sent in the packet<p>
+	*   <b>alive:boolean</b> If the client is alive in the game<p>
+	* @author  William Bjorklund / Victor Dahlberg
 	* @version 1.0
 	* @since   2016-02-26
 	*/
@@ -123,13 +124,13 @@ public class Server extends Observable implements Runnable{
 		DatagramPacket pkt = null;
 		byte[] bReceive = null;
 		DatagramSocket skt = null;
-		String d[];
-		int code, id, nrDead;
+		int code, id;
 		Message receiveMessage;
 		boolean alive;
 		/**
-		 * 
-		 * @param pkt The DatagramPacket to be handled.
+		 * Initiates required fields and objects.
+		 * @param pkt The packet to be handled.<p>
+		 * bReceive:byte[] The byte field belonging to pkt
 		 */
 		public PacketHandler(DatagramPacket pkt, byte[] bReceive){
 			this.pkt = pkt;
@@ -147,7 +148,7 @@ public class Server extends Observable implements Runnable{
 		}
 		
 		/**
-		 * Depending on the OP-CODE. Responds or forwards the packet.
+		 * Selectes a response, or just forwards the packet, depending on it's contents.
 		 */
 		public void run(){	
 			if(code == 0){
@@ -160,14 +161,14 @@ public class Server extends Observable implements Runnable{
 				try{
 					byte[] buf=byteRepresenter.externByteRepresentation(sendMessage);
 					
-					clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
+					clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient,
+							receiveMessage.getPlayerName()));
 					
 					pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
 					
 					skt.send(pkt);
 					
 				}catch(IOException e){e.printStackTrace();}
-				
 			}
 			else if(code==99){
 				Message sendMessage=new Message();
@@ -207,6 +208,7 @@ public class Server extends Observable implements Runnable{
 			}
 			else{
 				int nrDead=0;
+				String winnerName=null;
 				for(ClientInfo c : clients){
 					if(c.getID()==id){
 						c.setAlive(alive);
@@ -214,14 +216,17 @@ public class Server extends Observable implements Runnable{
 					if(!c.getAlive()){
 						nrDead++;
 					}
+					else{
+						winnerName=c.getName();
+					}
 				}
 				if(maxPlayers-nrDead==1){
 					Message gameOverMessage=new Message();
 					gameOverMessage.setCode(4);
+					gameOverMessage.setPlayerName(winnerName);
 					try{
 						byte[] buf=byteRepresenter.externByteRepresentation(gameOverMessage);
 						
-						clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
 						for(ClientInfo c : clients){
 							pkt = new DatagramPacket(buf, buf.length, c.getIP(), c.getPort());
 							skt.send(pkt);
@@ -231,24 +236,6 @@ public class Server extends Observable implements Runnable{
 						stop();
 
 					}catch(IOException e){e.printStackTrace();}
-				}
-				else if(code == 0){
-					idToGiveClient += 1;
-					Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
-					sendMessage.setMaxNrPlayers(maxPlayers);
-					sendMessage.setMapName(mapName);
-					sendMessage.setMapType(type);
-					try{
-						byte[] buf=byteRepresenter.externByteRepresentation(sendMessage);
-						
-						clients.add(new ClientInfo(pkt.getAddress(), pkt.getPort(), idToGiveClient));
-						
-						pkt = new DatagramPacket(buf, buf.length, pkt.getAddress(), pkt.getPort());
-						
-						skt.send(pkt);
-
-					}catch(IOException e){e.printStackTrace();}
-					
 				}
 				else if(code==3){
 					Message sendMessage=new Message();
@@ -297,11 +284,16 @@ public class Server extends Observable implements Runnable{
 		}
 	}
 	
+	/**
+	 * Resets the server's known clients to zero to let the server be reused.
+	 */
 	public void resetServer(){
 		clients.clear();
 		idToGiveClient=0;
 	}
-	
+	/**
+	 * Start the server's thread.
+	 */
 	public synchronized void start(){
 		if(running){return;}
 		running = true;
@@ -310,7 +302,7 @@ public class Server extends Observable implements Runnable{
 	}
 	
 	/**
-	 * Stop the main game thread.
+	 * Stop the server's thread.
 	 */
 	public synchronized void stop(){
 		if(running)
@@ -320,11 +312,18 @@ public class Server extends Observable implements Runnable{
 	}
 	
 	/**
-	 * A very simple class to store IP, Port and ID of a specific client.
-	 * Every client will most likely listen on different ports.
-	 * @author William Björklund / Victor Dahlberg
+	 * Holds selected information regarding a single client communicating with the server.<p>
+	 * <b><u>Known information:</u></b><p> 
+	 * <b>ip:InetAddress</b> - the InetAddress of the client<p>
+	 * <b>port:int</b> - the client's port<p>
+	 * <b>id:int</b> - the client's id<p>
+	 * <b>ready:boolean</b> - if the client is ready to start a game<p>
+	 * <b>alive:boolean</b> - if the client has died in the game<p>
+	 * <b>name:String</b> - the client's name
+	 * 
+	 * @author William Bjorklund / Victor Dahlberg
 	 * @version 1.0
-	 * @since 2016-02-26
+	 * @since 2016-03-03
 	 *
 	 */
 	private class ClientInfo{
@@ -333,11 +332,13 @@ public class Server extends Observable implements Runnable{
 		private int id;
 		private boolean ready;
 		private boolean alive;
+		private String name;
 		
-		public ClientInfo(InetAddress ip, int port, int id){
+		public ClientInfo(InetAddress ip, int port, int id, String name){
 			this.ip = ip;
 			this.port = port;
 			this.id = id;
+			this.name=name;
 			ready=false;
 			alive=true;
 		}
@@ -357,6 +358,7 @@ public class Server extends Observable implements Runnable{
 		public void setReady(boolean state){ready=state;}
 		public boolean getAlive(){return alive;}
 		public void setAlive(boolean state){alive=state;}
+		public String getName(){return name;}
 	}
 }
 
