@@ -71,6 +71,7 @@ public class Meny extends JFrame {
 
 		makeOtherObjects();
 		makeOtherPanels();
+		setView("MENY");
 		setVisible(true);
 	}
 	

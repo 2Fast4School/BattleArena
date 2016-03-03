@@ -5,6 +5,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -177,8 +178,22 @@ public class Client implements Runnable, Observer{
 			
 			Message receiveMessage=new Message();
 			bytesToExternObject(buf, receiveMessage);
-
-			BufferedImage logicMap=ImageIO.read(Main.class.getResource("/"+receiveMessage.getMapName()));
+			
+			BufferedImage logicMap = null;
+			try {
+			logicMap = ImageIO.read(Main.class.getResource("/"+receiveMessage.getMapName()));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (logicMap == null) {
+				try {
+					logicMap = ImageIO.read(new File("res/" + receiveMessage.getMapName()));
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+			}
 			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
 
 			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);
