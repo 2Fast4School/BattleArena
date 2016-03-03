@@ -108,9 +108,13 @@ public class ServerGUI implements Observer {
 		}
 	}
 	
+	/**
+	 * Print text to server terminal window
+	 * @param text
+	 */
 	public void toTerminal(String text)
 	{
-		infoArea.append(text);
+		infoArea.append(text+"\n");
 	}
 
 	/**
