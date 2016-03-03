@@ -89,6 +89,8 @@ public class Server extends Observable implements Runnable{
 	 * The only thing run does is listens for incoming packets and the distribute the work to Packethandler which actually does something with the received packet.
 	 */
 	public void run(){
+		setChanged();
+		notifyObservers(false);
 		while(running){
 			receive=new byte[1024];
 			packet=new DatagramPacket(receive, receive.length);
