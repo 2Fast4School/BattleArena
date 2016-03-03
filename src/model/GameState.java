@@ -20,6 +20,7 @@ public class GameState extends Observable{
 	private boolean gameOver;
 	private String name;
 	private String mapName="";
+	private int nrPlayers=1;private int maxPlayers;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
 	public GameState(){
@@ -51,6 +52,7 @@ public class GameState extends Observable{
 		this.id = id;
 		this.map = map;
 		this.mapName=mapName;
+		this.maxPlayers=maxPlayers;
 		setChanged();
 		notifyObservers();
 		
@@ -225,4 +227,7 @@ public class GameState extends Observable{
 	public String getName(){return name;}
 	public String getMapName(){return mapName;}
 	public Map getMap(){return map;}
+	public void setNrPlayers(int nrPlayers){this.nrPlayers=nrPlayers;}
+	public int getNrPlayers(){return nrPlayers;}
+	public int getMaxNrPlayers(){return maxPlayers;}
 }

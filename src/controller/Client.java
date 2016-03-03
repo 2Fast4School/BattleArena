@@ -101,6 +101,7 @@ public class Client implements Runnable, Observer{
 				int code=receiveMessage.getCode();
 				
 				if(code == 99){ //LOBBY-CODE
+					state.setNrPlayers(receiveMessage.getNrPlayers());
 					if(receiveMessage.toStart()){
 						state.startGame();
 					}

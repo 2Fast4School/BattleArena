@@ -29,6 +29,9 @@ public class LobbyPanel extends JPanel implements Observer{
 	private String mapName = "";
 	private int scaledWidth, scaledHeight;
 	private JTextField mapText;
+	private JTextField txtPlayer;
+	private JTextField txtXyPlayersJoined_1;
+	private int nrPlayers;
 	
 	public LobbyPanel(LobbyInput lobbyinput, Image preGameArt) {
 		this.lobbyinput = lobbyinput;
@@ -36,6 +39,8 @@ public class LobbyPanel extends JPanel implements Observer{
 		initDialog();
 	}
 	private void initDialog() {
+		
+		setLayout(null);
 		
 		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);
 		Font font2 = new Font("Comic Sans MS", Font.PLAIN, 14);
@@ -50,7 +55,7 @@ public class LobbyPanel extends JPanel implements Observer{
 		add(mapText);
 		mapText.setColumns(10);
 		
-		JTextField txtPlayer = new JTextField();
+		txtPlayer = new JTextField();
 		txtPlayer.setHorizontalAlignment(SwingConstants.CENTER);
 		txtPlayer.setEditable(false);
 		txtPlayer.setText("Player 1");
@@ -73,7 +78,7 @@ public class LobbyPanel extends JPanel implements Observer{
 		btnNewButton_1.setBounds(600, 600, 140, 50);
 		add(btnNewButton_1);
 		
-		JTextField txtXyPlayersJoined_1 = new JTextField();
+		txtXyPlayersJoined_1 = new JTextField();
 		txtXyPlayersJoined_1.setFont(font2);
 		txtXyPlayersJoined_1.setEditable(false);
 		txtXyPlayersJoined_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -128,15 +133,21 @@ public class LobbyPanel extends JPanel implements Observer{
 	}
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		if(arg0 instanceof GameState && mapName==""){
+		if(arg0 instanceof GameState){
 			GameState state=(GameState)arg0;
-			mapName=state.getMapName();
-			System.out.println(mapName);
-			Map map=state.getMap();
-			mapImage=map.getBackground();
-			
-			mapText.setText("Map: " + mapName);
-			setMiniMap();
+			if(nrPlayers!=state.getNrPlayers()){
+				nrPlayers=state.getNrPlayers();
+				txtXyPlayersJoined_1.setText(nrPlayers+"/"+state.getMaxNrPlayers()+" players joined");
+			}
+			if(mapName==""){
+				mapName=state.getMapName();
+				System.out.println(mapName);
+				Map map=state.getMap();
+				mapImage=map.getBackground();
+				txtPlayer.setText(state.getName());
+				mapText.setText("Map: " + mapName);
+				setMiniMap();
+			}
 		}
 	}
 }

@@ -173,19 +173,16 @@ public class Server extends Observable implements Runnable{
 			else if(code==99){
 				Message sendMessage=new Message();
 				sendMessage.setCode(code);
+				sendMessage.setNrPlayers(idToGiveClient);
 				boolean tostart = true;
 				for(ClientInfo c : clients){
-					
 					if(c.getID()==id){
-						
 						if(receiveMessage.getReady()){
 							c.setReady(true);
 						} else {
 							c.setReady(false);
 						}
-						
 					}
-					
 					if(!c.getReady()){
 						tostart = false;
 					}
