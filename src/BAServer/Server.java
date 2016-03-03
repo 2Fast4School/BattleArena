@@ -66,8 +66,10 @@ public class Server extends Observable implements Runnable{
 		this.map=map;
 	}
 	
-	public void setMapName(String mapName, String type){
+	public void setMapName(String mapName){
 		this.mapName=mapName;
+	}
+	public void setMapType(String type){
 		this.type=type;
 	}
 	public String getMapName(){return mapName;}

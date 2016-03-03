@@ -202,8 +202,6 @@ public class GameState extends Observable{
 	public void startGame(){
 		alive = true;
 		ready = false;
-		//setChanged();
-		//notifyObservers();
 	}
 	
 	public boolean isAlive(){

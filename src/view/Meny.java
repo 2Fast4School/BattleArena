@@ -3,15 +3,15 @@ package view;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import arenaFighter.Main;
-import model.GameState;
 import controller.Client;
 import controller.ConnectInput;
 import controller.Game;
@@ -19,6 +19,7 @@ import controller.GameInput;
 import controller.LobbyInput;
 import controller.PreGameInput;
 import controller.SettingsInput;
+import model.GameState;
 
 public class Meny extends JFrame {
 
@@ -45,7 +46,9 @@ public class Meny extends JFrame {
 	
 	public Meny(String frameName) {
 		super(frameName);
-		setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
+		try{
+			setIconImage(ImageIO.read(Main.class.getResource("/testa.png")));
+		}catch(IOException e){}
 		setPreferredSize(new Dimension(800,800));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +59,7 @@ public class Meny extends JFrame {
 		try {
 			preGameArt = ImageIO.read(Main.class.getResource("/pregameart.png"));
 		}
-		catch(Exception e) {
+		catch(IOException e) {
 			e.printStackTrace();
 		}
 		if (preGameArt == null) {

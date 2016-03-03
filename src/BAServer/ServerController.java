@@ -1,7 +1,10 @@
 package BAServer;
 
 
+import java.awt.Choice;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +20,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  */
 
-public class ServerController implements ActionListener {
+public class ServerController implements ItemListener, ActionListener{
 	Server model;
 	ServerGUI view;
 
@@ -40,6 +43,13 @@ public class ServerController implements ActionListener {
 		}
 		
 	} //actionPerformed()
+
+	@Override
+	public void itemStateChanged(ItemEvent arg0) {
+		if(arg0.getItemSelectable() instanceof Choice){
+			model.setMapType(view.getMapType());
+		}
+	}
 
 	public void addModel(Server m){
 		System.out.println("Controller: adding model");
@@ -99,6 +109,6 @@ public class ServerController implements ActionListener {
 	    if(mapName==null){
 	    	mapName="logicMap.png";
 	    }
-	    model.setMapName(chooser.getSelectedFile().getName(), view.getMapType());
+	    model.setMapName(chooser.getSelectedFile().getName());
 	}
 }

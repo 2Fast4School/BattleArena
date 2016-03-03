@@ -6,6 +6,7 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
@@ -89,6 +90,7 @@ public class ServerGUI implements Observer {
 		infoArea.setBackground(Color.BLACK);
 		infoArea.setForeground(Color.GREEN);
 		endGameBtn.setEnabled(false);
+		chooseMapBtn.setEnabled(false);
 
 		// add data to serverIp ComboBox
 		updateIpComboBox();
@@ -162,6 +164,7 @@ public class ServerGUI implements Observer {
 		startGameBtn.addActionListener(controller);	
 		endGameBtn.addActionListener(controller);
 		chooseMapBtn.addActionListener(controller);	
+		typeChoice.addItemListener((ItemListener)controller);
 	} //addController()
 	
 	
@@ -174,11 +177,13 @@ public class ServerGUI implements Observer {
 		{
 			startGameBtn.setEnabled(false);
 			endGameBtn.setEnabled(true);
+			chooseMapBtn.setEnabled(true);
 		}
 		else
 		{
 			startGameBtn.setEnabled(true);	
 			endGameBtn.setEnabled(false);
+			chooseMapBtn.setEnabled(false);
 		}
 	}
 	public String getMapType(){
