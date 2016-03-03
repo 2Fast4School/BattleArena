@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import controller.GameInput;
 import model.Entity;
 import model.GameState;
 import model.Tile;
@@ -28,7 +27,6 @@ public class GameWindow extends Canvas implements Observer{
 		this.img = img;
 	}
 
-	
 	/**
 	 * The actual drawing of the current GameState
 	 * using triple-buffering.

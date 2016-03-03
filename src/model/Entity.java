@@ -18,7 +18,7 @@ public abstract class Entity implements Serializable{
 	private static final long serialVersionUID = -8210056978015432264L;
 	private boolean solid;
 	protected int x, y, w, h, rotation, hp;
-	protected BufferedImage sprite;
+	protected transient BufferedImage sprite;
 	
 	/**
 	 * Constructor for Entity. 

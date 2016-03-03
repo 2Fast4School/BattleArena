@@ -15,8 +15,7 @@ import model.SpawnPoint;
 public class Map implements Serializable {
 	private static final long serialVersionUID = -771730320380106281L;
 	private ArrayList<Tile> tiles; 
-	//private ArrayList<BufferedImage> background;
-	private MyBufferedImage background;	
+	private BufferedImage background;
 	private ArrayList<SpawnPoint> spawnPoints;
 	
 	/**
@@ -24,7 +23,7 @@ public class Map implements Serializable {
 	 * Initializes the background image as null temporarily
 	 */
 	public Map(){
-		background = new MyBufferedImage();
+		background = null;
 		tiles = new ArrayList<Tile>();
 		spawnPoints = new ArrayList<SpawnPoint>();
 	}
@@ -33,7 +32,7 @@ public class Map implements Serializable {
 	 * @param img The background image for the board
 	 */
 	public void setBackground(BufferedImage img){
-		background.setImage(img);
+		background = img;
 	}
 	
 	/**
@@ -54,7 +53,7 @@ public class Map implements Serializable {
 	 * @return Returns the background as a BufferedImage, could be null
 	 */
 	public BufferedImage getBackground(){
-		return background.getImage();
+		return background;
 	}
 	
 	/**

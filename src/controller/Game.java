@@ -2,8 +2,8 @@ package controller;
 
 import javax.swing.JOptionPane;
 
-import model.*;
-import view.GameFrame;
+import model.GameState;
+import view.Meny;
 
 /**
  * The Game class is in charge of the main game thread.
@@ -15,15 +15,15 @@ public class Game implements Runnable {
 	private GameState GAMESTATE;
 	private boolean running;
 	private Thread thread;
-	private GameFrame frame;
+	private Meny meny;
 	
 	/**
 	 * Constructor.
 	 * @param GAMESTATE The gamestate which the game class will be responsible of "running".
 	 */
-	public Game(GameState GAMESTATE, GameFrame frame){
+	public Game(GameState GAMESTATE, Meny meny){
 		this.GAMESTATE = GAMESTATE;
-		this.frame=frame;
+		this.meny=meny;
 		running = false;
 	}
 
@@ -34,6 +34,7 @@ public class Game implements Runnable {
 		if(running){return;}
 			
 		running = true;
+
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -78,38 +79,39 @@ public class Game implements Runnable {
 		
 		
 		while(running){
-			//The current time in nanoseconds.
-			long now = System.nanoTime();
-			
-			 
-			// We divide the time a loop takes with our ns variable. delta will then achieve approx >1 every 1/60 of a second.
-			delta += (now - lastTime) / ns;
-			
-			//set lasttime to now, so we can calculate how long each "loop" takes.
-			lastTime = now;
-								
-			//Wait until 1/60 of a second has passed by and then update gamestate.
 			if(GAMESTATE.getGameOver()){
-				JOptionPane.showMessageDialog(frame, "Game over, returning to main menu..", "Game Over", JOptionPane.OK_OPTION);
-				frame.switchToPreGameWindow();
+				GAMESTATE.setGameOver(false);	// Game is still running. Might want to join other game.
+				JOptionPane.showMessageDialog(null, "Game is over", "GameOver", JOptionPane.OK_OPTION);
+				meny.setView("BACK");
 				stop();
 			}
 			else{
-				while(delta >= 1){ 
-					//Update the gamestate.
-					GAMESTATE.tick();
-					updates++;
-					
-					//Decrement the tick with 1. We don't set it to 0 because if we would loose a couple of ticks, we want the next second to tick a few more times than 60.
-					delta--;
-	
-				}
-				//Used to print number of "ticks" the last second.
-				if(System.currentTimeMillis() - timer > 1000){
-					timer += 1000;
-					//System.out.println("TICKS: "+updates);
-					updates = 0;
-				}
+				//The current time in nanoseconds.
+				long now = System.nanoTime();
+				
+				 
+				// We divide the time a loop takes with our ns variable. delta will then achieve approx >1 every 1/60 of a second.
+				delta += (now - lastTime) / ns;
+				
+				//set lasttime to now, so we can calculate how long each "loop" takes.
+				lastTime = now;
+									
+				//Wait until 1/60 of a second has passed by and then update gamestate.
+					while(delta >= 1){ 
+						//Update the gamestate.
+						GAMESTATE.tick();
+						updates++;
+						
+						//Decrement the tick with 1. We don't set it to 0 because if we would loose a couple of ticks, we want the next second to tick a few more times than 60.
+						delta--;
+		
+					}
+					//Used to print number of "ticks" the last second.
+					if(System.currentTimeMillis() - timer > 1000){
+						timer += 1000;
+						//System.out.println("TICKS: "+updates);
+						updates = 0;
+					}
 			}
 		}
 		

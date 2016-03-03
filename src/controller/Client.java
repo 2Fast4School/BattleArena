@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -15,8 +16,11 @@ import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.imageio.ImageIO;
+
 import arenaFighter.Main;
 import map.Map;
+import map.MapGenerator;
 import model.Enemy;
 import model.GameState;
 import model.Message;
@@ -36,6 +40,7 @@ public class Client implements Runnable, Observer{
 	private DatagramSocket socket;
 	private Map map;
 	private boolean ready;
+	private ByteRepresenter byteRepresenter;
 	
 	private boolean running;
 	private Thread thread;
@@ -46,11 +51,11 @@ public class Client implements Runnable, Observer{
 	 * @param srvip The server's ip in form of a String.
 	 * @param state The GameState which should be updated when a packet is received.
 	 */
-	public Client(int srvport, String srvip, GameState state, Map map){
+	public Client(int srvport, String srvip, GameState state){
 		this.srvport = srvport;
 		this.state = state;
-		this.map = map;
 		ready=false;
+		byteRepresenter=new ByteRepresenter();
 		
 		try {
 			this.srvip = InetAddress.getByName(srvip);
@@ -80,7 +85,7 @@ public class Client implements Runnable, Observer{
 		DatagramPacket pkt;
 		
 		
-		while(true){
+		while(running){
 			pkt = new DatagramPacket(data, data.length);
 			
 			try {
@@ -96,38 +101,53 @@ public class Client implements Runnable, Observer{
 				Message receiveMessage=new Message();
 				receiveMessage.readExternal(oIn);
 				
-				int code=receiveMessage.getCode();int enemyID=receiveMessage.getEnemeyID();
-				id=receiveMessage.getID();newx=receiveMessage.getXPos();newy=receiveMessage.getYPos();
-				rot=receiveMessage.getRotVar();attacking=receiveMessage.getAttacking();
-				int playerHP=receiveMessage.getPlayerHP();
+				int code=receiveMessage.getCode();
 				
-				if(code==4){
-					state.setGameOver();
-					stop();
-				}
-				
-				for(Enemy n : state.getTheEnemies()){
-					if(id == n.getID()){
-						n.setX(newx); n.setY(newy); n.setRotVar(rot);
-						
-						if(playerHP!=-1){
-							n.setHP(playerHP);
+				if(code == 99){ //LOBBY-CODE
+					if(receiveMessage.toStart()){
+						state.startGame();
+					}
+			
+				} else {
+					
+					int enemyID=receiveMessage.getEnemeyID();
+					id=receiveMessage.getID();
+					newx=receiveMessage.getXPos();
+					newy=receiveMessage.getYPos();
+					rot=receiveMessage.getRotVar();
+					attacking=receiveMessage.getAttacking();
+					
+					int playerHP=receiveMessage.getPlayerHP();
+					
+					if(code==4){
+						state.setGameOver(true);
+						stop();
+					}
+					
+					for(Enemy n : state.getTheEnemies()){
+						if(id == n.getID()){
+							n.setX(newx); n.setY(newy); n.setRotVar(rot);
+							
+							if(playerHP!=-1){
+								n.setHP(playerHP);
+							}
+							//Funger inte just nu..
+							if(attacking && !n.getHasAttacked()){
+								n.setHasAttacked(true);
+								n.doAttack();
+							}
+							else if(!attacking){
+								n.setHasAttacked(false);
+							}
 						}
-						
-						if(attacking && !n.getHasAttacked()){
-							n.setHasAttacked(true);
-							n.doAttack();
-						}
-						else if(!attacking){
-							n.setHasAttacked(false);
+						else if(enemyID==n.getID()){
+							n.setHP(receiveMessage.getEnemyHP());
 						}
 					}
-					else if(enemyID==n.getID()){
-						n.setHP(receiveMessage.getEnemyHP());
+					if(enemyID==state.getID()){
+						state.returnPlayer().setHP(receiveMessage.getEnemyHP());
 					}
-				}
-				if(enemyID==state.getID()){
-					state.returnPlayer().setHP(receiveMessage.getEnemyHP());
+				
 				}
 			}catch(IOException e){}
 			catch(ClassNotFoundException f){}
@@ -147,83 +167,26 @@ public class Client implements Runnable, Observer{
 		message.setCode(0);
 		
 		try{
-			ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-			ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-			oOut.flush();
-			message.writeExternal(oOut);
-			oOut.flush();
-			byte[] data=bOut.toByteArray();
-
+			byte[] data=byteRepresenter.externByteRepresentation(message);
 			DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
-			
 			socket.send(pkt);
+			
 			byte []buf = new byte[1024];
 			pkt = new DatagramPacket(buf, buf.length);
 			
 			socket.setSoTimeout(10000);
 			socket.receive(pkt);
 			
-			ByteArrayInputStream bIn=new ByteArrayInputStream(buf);
-			ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
-			Message receiveMessage=new Message();
-			receiveMessage.readExternal(oIn);
-			
+			Message receiveMessage;
+			receiveMessage=byteRepresenter.bytesToExternObject(buf);
+
+			BufferedImage logicMap=ImageIO.read(Main.class.getResource("/"+receiveMessage.getMapName()));
+			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
+
 			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);
-		}catch(IOException e){System.out.println("couldnt connect");}	
-		catch(ClassNotFoundException f){}
+		}catch(IOException e){System.out.println("couldnt connect");e.printStackTrace();}	
+		
 	}
-	
-	public void startLobbyProtocol(){
-		new Thread(new LobbyProtocol()).start();
-	}
-	
-	private class LobbyProtocol implements Runnable{
-		public LobbyProtocol(){
-			
-		}
-		@Override
-		public void run() {
-			DatagramSocket sendSocket;
-			try{
-				sendSocket=new DatagramSocket();
-				
-				Message message=new Message(state.getID(), -1, -1, -1, false);
-				message.setCode(3);message.setReady(ready);
-				ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-				ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-				oOut.flush();
-				message.writeExternal(oOut);
-				oOut.flush();
-				byte[] bSend=bOut.toByteArray();
-				
-				DatagramPacket sendPacket=new DatagramPacket(bSend, bSend.length, srvip, srvport);
-				sendSocket.send(sendPacket);
-			}catch(IOException e){}
-			while(true){
-				byte[] bReceive=new byte[1024];
-				DatagramPacket receivePacket=new DatagramPacket(bReceive, bReceive.length);
-				try{
-					socket.receive(receivePacket);
-				}catch(IOException e){}
-				
-				try{
-					ByteArrayInputStream bIn=new ByteArrayInputStream(bReceive);
-					ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
-					Message receiveMessage=new Message();
-					receiveMessage.readExternal(oIn);
-					boolean startGame=receiveMessage.getReady();
-
-					if(startGame){
-						Main.startGame();
-						Main.runClient();
-						break;
-					}
-				}catch(IOException e){}
-				catch(ClassNotFoundException e){}
-			}			
-		}
-	}	
-
 	
 	public void setReady(boolean state){ready=state;}
 	
@@ -237,18 +200,36 @@ public class Client implements Runnable, Observer{
 	*/
 	@Override
 	public void update(Observable arg0, Object arg1){
+		
+		if(arg0 instanceof GameState){
+			
+			if(!state.isAlive()){
+				byte[] data;
+				Message message = new Message(); //LOBBYCODE
+				message.setCode(99); 
+				message.setReady(state.isReady());
+				message.setID(state.getID());
+				
+				try{	
+					data=byteRepresenter.externByteRepresentation(message);
+					DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
+					socket.send(pkt);	
+				}catch(IOException e){}
+			}
+			
+		}
 
 		if(arg1 instanceof Player){
 			Player player=(Player)arg1;
 			Enemy enemy = state.gotHit();
-			//Default-sträng som alltid ska med.
+
 			byte[] data;
 			Message message=new Message(state.getID(),player.getX(),player.getY(),player.getRotVar(),
 					player.getWeapon().isAttacking());
 
 			message.setPlayerHP(player.getHP());
 			message.setAlive(player.isAlive());
-
+			
 			//hp-change OPCODE:2
 			if(enemy != null) {
 				message.setCode(2);
@@ -258,17 +239,10 @@ public class Client implements Runnable, Observer{
 				//Regular / move OPCODE:1
 				message.setCode(1);
 			}
-			
 			try{
-				ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-				ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-				oOut.flush();
-				message.writeExternal(oOut);
-				oOut.flush();
-				data=bOut.toByteArray();
-				
+				data=byteRepresenter.externByteRepresentation(message);
 				DatagramPacket pkt = new DatagramPacket(data, data.length, srvip, srvport);
-				socket.send(pkt);
+				socket.send(pkt);	
 			}catch(IOException e){}
 		}
 	}
@@ -285,11 +259,36 @@ public class Client implements Runnable, Observer{
 	public synchronized void stop(){
 		if(running)
 			running = false;
-		
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public byte[] externByteRepresentation(Object externializable){
+		try{
+			ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
+			ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
+			oOut.flush();
+			if(externializable instanceof Message){
+				Message message=(Message)externializable;
+				message.writeExternal(oOut);
+			}
+			oOut.flush();
+			oOut.close();
+			bOut.close();
+			return bOut.toByteArray();
+		}catch(IOException e){e.printStackTrace();return null;}
+	}
+	public void bytesToExternObject(byte[] byteRepresentation, Message message){
+		try{
+			ByteArrayInputStream bIn=new ByteArrayInputStream(byteRepresentation);
+			ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
+			message.readExternal(oIn);
+			oIn.close();
+			bIn.close();
+		}catch(IOException e){e.printStackTrace();}
+		catch(ClassNotFoundException f){}
 	}
 }				

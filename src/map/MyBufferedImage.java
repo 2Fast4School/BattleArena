@@ -1,13 +1,12 @@
 package map;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-import javax.imageio.ImageIO;
-
+/**
+ * DEPRECATED DONT FUCKING USE IT yet...
+ * @author Alexander
+ *
+ */
 public class MyBufferedImage implements Serializable{
 	private static final long serialVersionUID = -8565146954702818348L;
 	private transient BufferedImage image;
@@ -34,10 +33,10 @@ public class MyBufferedImage implements Serializable{
 	 * @param out
 	 * @throws IOException
 	 */
-	private void writeObject(ObjectOutputStream out) throws IOException {
+	/*private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         ImageIO.write(image, "png", out); // png is lossless
-    }
+    }*/
 	
 	/**
 	 * http://stackoverflow.com/questions/15058663/how-to-serialize-an-object-that-includes-bufferedimages
@@ -45,8 +44,8 @@ public class MyBufferedImage implements Serializable{
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
+   /* private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    	in.defaultReadObject();
         image = ImageIO.read(in);
-    }
+    }*/
 }

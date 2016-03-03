@@ -1,8 +1,6 @@
 package map;
 
-import model.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -143,7 +141,7 @@ public class MapGenerator { //Perhaps implement serialization
 		}
 		
 		//prints the number of entities created
-		System.out.println(map.getTiles().size()+map.getSpawnPoints().size()); 
+		//System.out.println(map.getTiles().size()+map.getSpawnPoints().size()); 
 		map.setBackground(background);
 		return map;
 	}

@@ -2,7 +2,9 @@ package BAServer;
 
 
 import java.awt.BorderLayout;
+import java.awt.Choice;
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Observable;
@@ -33,11 +35,13 @@ public class ServerGUI implements Observer {
 	private static JScrollPane infoScrollPane;
 	private static JPanel buttonArea, serverInfoArea;
 	private static JButton startGameBtn, endGameBtn, chooseMapBtn;
+	private Choice typeChoice;
 	
 	private static int port = 5050;
 
 	public ServerGUI() {
 		mainWindow = new JFrame("Battle Arena Dedicated Server");
+		mainWindow.setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
 		mainWindow.setLayout(new BorderLayout());
 		mainWindow.setSize(700, 400);
 
@@ -49,12 +53,16 @@ public class ServerGUI implements Observer {
 		infoArea = new JTextArea("");
 		infoScrollPane = new JScrollPane(infoArea);
 		startGameBtn = new JButton("Start Game");
-		endGameBtn = new JButton("End Game");
+		endGameBtn = new JButton("Reset Server");
 		chooseMapBtn = new JButton("Choose Map");
 		JLabel IPLabel = new JLabel("IP adresses:");
 		JLabel portLabel = new JLabel("Port:");
 		JLabel nrOfPlayersLabel = new JLabel("Number of players:");
-
+		typeChoice=new Choice();
+		typeChoice.add("grass");
+		typeChoice.add("lava");
+		typeChoice.add("desert");
+		
 		// Add components to mainFrame
 		mainWindow.add(serverInfoArea, BorderLayout.NORTH);
 		mainWindow.add(infoScrollPane);
@@ -62,6 +70,7 @@ public class ServerGUI implements Observer {
 		buttonArea.add(startGameBtn);
 		buttonArea.add(endGameBtn);
 		buttonArea.add(chooseMapBtn);
+		buttonArea.add(typeChoice);
 		serverInfoArea.add(IPLabel);
 		serverInfoArea.add(serverIp);
 		serverInfoArea.add(portLabel);
@@ -95,16 +104,22 @@ public class ServerGUI implements Observer {
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
+		if(arg instanceof Boolean){
+			infoArea.append("The game is over.\n");
+			toTerminal("Server shut down\n");
+			switchButtonState();
+		}
+		else{
+			String[] message = new String((byte[])arg).trim().split(",");
+			int OPcode = Integer.parseInt(message[0]);
+			String id = message[1];
 		
-		String[] message = new String((byte[])arg).trim().split(",");
-		int OPcode = Integer.parseInt(message[0]);
-		String id = message[1];
-	
-		//Check if attack OP = 2
-		if(OPcode == 2)
-		{
-			infoArea.append(id + " is attacking!\n");
-			infoArea.setCaretPosition(infoArea.getDocument().getLength());
+			//Check if attack OP = 2
+			if(OPcode == 2)
+			{
+				infoArea.append(id + " is attacking!\n");
+				infoArea.setCaretPosition(infoArea.getDocument().getLength());
+			}
 		}
 	}
 	
@@ -169,5 +184,8 @@ public class ServerGUI implements Observer {
 			startGameBtn.setEnabled(true);	
 			endGameBtn.setEnabled(false);
 		}
+	}
+	public String getMapType(){
+		return typeChoice.getSelectedItem();
 	}
 }

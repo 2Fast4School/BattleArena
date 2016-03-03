@@ -1,26 +1,19 @@
 package view;
 
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.awt.Font;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import arenaFighter.Main;
 import controller.PreGameInput;
 
 public class PreGameWindow extends JPanel{
-	private GameFrame frame;
+
+	
 	private Image preGameArt;
-	private JLabel picLabel;
 	private PreGameInput preGameInput;
 	private JButton createGameBtn;
 	private JButton connectGameBtn;
@@ -28,30 +21,17 @@ public class PreGameWindow extends JPanel{
 	private JButton settingsBtn;
 	private JButton quitBtn;
 	
-	private ConnectDialog connectDialog;
-	private SettingsDialog settingsDialog;
-	private LobbyDialog lobbyDialog;
-	
-	private boolean toolTipsEnabled = false;
-	
-	public PreGameWindow(GameFrame frame) {
-		this.frame = frame;
+	public PreGameWindow(PreGameInput preGameInput, Image preGameArt) {
+		setLayout(null);
+		this.preGameInput = preGameInput;
+		this.preGameArt = preGameArt;
 		initPreGameWindow();
 	}
 	
 	private void initPreGameWindow() {
-		//Image of gameArt~
-		try {
-			preGameArt = ImageIO.read(Main.class.getResource("/pregameart.png"));
-		}
-		catch(IOException e) {
-			e.printStackTrace();
-			preGameArt = new BufferedImage(800,800, BufferedImage.TYPE_INT_ARGB);
-		}
+		
 		
 		// imagePanel.clearImage(); to make it disappear.
-		
-		PreGameInput preGameInput = new PreGameInput(this);
 				//Overlapping the image with the following buttons:
 		//setBackground(Color.GRAY);
 		setBounds(0, 0, 800, 800);
@@ -70,13 +50,7 @@ public class PreGameWindow extends JPanel{
 		connectGameBtn.setBounds(311, 244, 192, 59);
 		connectGameBtn.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		connectGameBtn.setActionCommand("connectGameBtn");
-		connectGameBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if ((connectDialog instanceof ConnectDialog) == false || connectDialog.isShowing() == false) {
-					connectDialog = new ConnectDialog(frame);
-				}
-			}
-		});
+		connectGameBtn.addActionListener(preGameInput);
 		add(connectGameBtn);
 					// Find game (checks RSS feed)
 		JButton findGameBtn = new JButton("Find a game");
@@ -90,13 +64,7 @@ public class PreGameWindow extends JPanel{
 		settingsBtn.setBounds(311, 384, 192, 59);
 		settingsBtn.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		settingsBtn.setActionCommand("settingsBtn");
-		settingsBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if ((settingsDialog instanceof SettingsDialog) == false || settingsDialog.isShowing() == false) {
-					settingsDialog = new SettingsDialog(frame);
-				}
-			}
-		});
+		settingsBtn.addActionListener(preGameInput);
 		add(settingsBtn);
 					// Quit
 		JButton quitBtn = new JButton("Quit");
@@ -108,37 +76,12 @@ public class PreGameWindow extends JPanel{
 		quitBtn.repaint();
 		
 		// picLabel is added last because it will then be painted first in the JPanel
-		JLabel picLabel = new JLabel(new ImageIcon(preGameArt));
-		add(picLabel);
-		picLabel.setBounds(0, 0, 800, 800);
-		
-	}
-	
-		//
-		
-		// method - Create game
-		
-		// method - Connect by IP
-	
-	public void toggleToolTips(boolean toggleToolTips) {
-		if (toggleToolTips) {
-			createGameBtn.setToolTipText("Creates a server in a separate window and tries to connect to it");
-			connectGameBtn.setToolTipText("Tries to connect to a server using an IPv4 address");
-			findGameBtn.setToolTipText("Using black magic, it is possible to search for available public games");
-			settingsBtn.setToolTipText("Change your displaying name and more");
-			quitBtn.setToolTipText("Exits the BattleArena game (I know, this is a stupid button. Why would you wanna quit?)");
+		if (preGameArt != null) {
+			JLabel picLabel = new JLabel(new ImageIcon(preGameArt));
+			add(picLabel);
+			picLabel.setBounds(0, 0, 800, 800);
 		}
-		else {
-			createGameBtn.setToolTipText(null);
-			connectGameBtn.setToolTipText(null);
-			findGameBtn.setToolTipText(null);
-			settingsBtn.setToolTipText(null);
-			quitBtn.setToolTipText(null);
-		}
-		toolTipsEnabled = toggleToolTips;
+		
 	}
 	
-	public boolean checkToolTipsEnabled() {
-		return toolTipsEnabled;
-	}
 }

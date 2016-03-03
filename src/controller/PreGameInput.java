@@ -3,36 +3,40 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import view.Meny;
 import BAServer.ServerMain;
-import view.PreGameWindow;
 
 public class PreGameInput implements ActionListener {
-	private PreGameWindow preGameWindow;
-	public PreGameInput(PreGameWindow preGameWindow) {
-		this.preGameWindow = preGameWindow;
+	private Meny theFrame;
+	
+	public PreGameInput(Meny theFrame) {
+		this.theFrame = theFrame;
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(e.getActionCommand());
+		//System.out.println(e.getActionCommand());
 		switch (e.getActionCommand()) {
 		case "createGameBtn":
 			ServerMain m = ServerMain.getInstance();
 			break;
-		case "connectGameBtn":
-
-			break;
-		case "findGameBtn":
 			
-			break;
-		case "settingsBtn":
+		case "connectGameBtn":
+			theFrame.setView("CONNECT");
 
 			break;
+			
+		case "findGameBtn":
+
+			break;
+			
+		case "settingsBtn":
+			theFrame.setView("SETTINGS");
+			break;
+			
 		case "quitBtn":
 			System.exit(0);
 			break;
-		case "dialogConnectBtn":
-
-			break;
+			
 		default:
 			System.out.println("Other");
 			break;
