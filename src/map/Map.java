@@ -12,8 +12,7 @@ import model.SpawnPoint;
  * @author Alexander Erenstedt - Modified: 28-02-16 
  * @version 1.0 
  */
-public class Map implements Serializable {
-	private static final long serialVersionUID = -771730320380106281L;
+public class Map{
 	private ArrayList<Tile> tiles; 
 	private BufferedImage background;
 	private ArrayList<SpawnPoint> spawnPoints;
