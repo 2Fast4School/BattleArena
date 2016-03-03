@@ -26,7 +26,7 @@ public class LobbyPanel extends JPanel {
 		this.preGameArt = preGameArt;
 		initDialog();
 	}
-	public void initDialog() {
+	private void initDialog() {
 
 		
 		JLabel lblMap = new JLabel("Map: " + "VAD MAPPEN HETER");

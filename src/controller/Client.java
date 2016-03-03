@@ -267,30 +267,4 @@ public class Client implements Runnable, Observer{
 			e.printStackTrace();
 		}
 	}
-	
-	public byte[] externByteRepresentation(Object externializable){
-		try{
-			ByteArrayOutputStream bOut=new ByteArrayOutputStream(5000);
-			ObjectOutputStream oOut=new ObjectOutputStream(new BufferedOutputStream(bOut));
-			oOut.flush();
-			if(externializable instanceof Message){
-				Message message=(Message)externializable;
-				message.writeExternal(oOut);
-			}
-			oOut.flush();
-			oOut.close();
-			bOut.close();
-			return bOut.toByteArray();
-		}catch(IOException e){e.printStackTrace();return null;}
-	}
-	public void bytesToExternObject(byte[] byteRepresentation, Message message){
-		try{
-			ByteArrayInputStream bIn=new ByteArrayInputStream(byteRepresentation);
-			ObjectInputStream oIn=new ObjectInputStream(new BufferedInputStream(bIn));
-			message.readExternal(oIn);
-			oIn.close();
-			bIn.close();
-		}catch(IOException e){e.printStackTrace();}
-		catch(ClassNotFoundException f){}
-	}
 }				

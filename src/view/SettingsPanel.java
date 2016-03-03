@@ -17,8 +17,8 @@ import model.GameState;
 public class SettingsPanel extends JPanel {
 	private SettingsInput settingsinput;
 	private JTextField nameTextField;
-	public static String name = "Player";
-	public static boolean toolTipsEnabled = false;
+	private static String name = "Player";
+	private static boolean toolTipsEnabled = false;
 	private Image preGameArt;
 	
 	JButton settingsCloseBtn;
@@ -29,7 +29,7 @@ public class SettingsPanel extends JPanel {
 		this.preGameArt = preGameArt;
 		initDialog();
 	}
-	public void initDialog() {
+	private void initDialog() {
 		setLayout(null);
 		// Save button under the IP textfield
 		JButton settingsSaveBtn = new JButton("Save");

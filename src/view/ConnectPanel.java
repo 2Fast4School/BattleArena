@@ -23,7 +23,7 @@ public class ConnectPanel extends JPanel {
 		this.preGameArt = preGameArt;
 		initDialog();
 	}
-	public void initDialog() {
+	private void initDialog() {
 		
 		// Connect button over the IP textfield
 		JButton ipConnectBtn = new JButton("Connect");

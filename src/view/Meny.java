@@ -34,7 +34,6 @@ public class Meny extends JFrame {
 	private JPanel contentpane;
 	private CardLayout cardlayout;
 	private Image preGameArt;
-	
 
 	private Client CLIENT;
 	private GameState GAMESTATE;
