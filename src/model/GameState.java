@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
@@ -50,7 +51,8 @@ public class GameState extends Observable{
 			if(e instanceof Enemy){
 				ens.add((Enemy)e);
 			}
-		} return ens;
+		}
+		return ens;
 		//return theEnemies;
 	}
 
