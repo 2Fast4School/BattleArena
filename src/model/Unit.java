@@ -63,6 +63,11 @@ public abstract class Unit extends Entity{
 		if(newHp <= 0){
 			hp = 0;
 			alive = false;
+			if(this instanceof Player){
+				Player player = (Player)this;
+				player.setdx(0);
+				player.setdy(0);
+			}
 		} else {
 			hp = newHp;
 		}

@@ -159,7 +159,7 @@ public class LobbyPanel extends JPanel implements Observer{
 			}
 			if(mapName==""){
 				mapName=state.getMapName();
-				System.out.println(mapName);
+				mapName=mapName.substring(0, mapName.length()-4);
 				Map map=state.getMap();
 				mapImage=map.getBackground();
 				txtPlayer.setText(state.getName());
