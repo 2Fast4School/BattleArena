@@ -79,6 +79,8 @@ public class ServerGUI implements Observer {
 		typeChoice.add("grass");
 		typeChoice.add("lava");
 		typeChoice.add("desert");
+		typeChoice.setForeground(Color.GREEN);
+		typeChoice.setBackground(Color.BLACK);
 
 		// Add components to mainFrame
 		mainWindow.add(serverInfoArea, BorderLayout.NORTH);
