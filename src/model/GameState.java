@@ -11,6 +11,7 @@ import map.Map;
 
 public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
+	private ArrayList<Enemy> enemies;
 	private ArrayList<Entity> objInNode;
 	private ArrayList<Weapon> arrows;
 	private Enemy gotHit;
@@ -30,6 +31,7 @@ public class GameState extends Observable{
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		arrows = new ArrayList<Weapon>();
+		enemies=new ArrayList<Enemy>();
 		gotHit = null;
 		spawnPoints = new ArrayList<SpawnPoint>();
 		alive = false;
@@ -43,13 +45,7 @@ public class GameState extends Observable{
 	 * @return A list with all the enemies in the game.
 	 */
 	public List<Enemy> getTheEnemies(){
-		ArrayList<Enemy> ens = new ArrayList<Enemy>();
-		for(Entity e : gameObjects){
-			if(e instanceof Enemy){
-				ens.add((Enemy)e);
-			}
-		} return ens;
-		//return theEnemies;
+		return enemies;
 	}
 
 	
@@ -94,6 +90,7 @@ public class GameState extends Observable{
 				Enemy en = new Enemy(spawnPoints.get(i-1).getX(), spawnPoints.get(i-1).getY(), 40, 40);
 				en.setID(i);
 				gameObjects.add(en);
+				enemies.add(en);
 			}
 			
 		}

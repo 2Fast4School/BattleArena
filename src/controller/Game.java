@@ -104,7 +104,7 @@ public class Game implements Runnable {
 				lastTime = now;
 									
 				//Wait until 1/60 of a second has passed by and then update gamestate.
-					while(delta >= 1){ 
+					if(delta >= 1){ 
 						//Update the gamestate.
 						GAMESTATE.tick();
 						updates++;
@@ -113,6 +113,9 @@ public class Game implements Runnable {
 						delta--;
 		
 					}
+					/*else{
+						thread.sleep();
+					}*/
 					//Used to print number of "ticks" the last second.
 					if(System.currentTimeMillis() - timer > 1000){
 						timer += 1000;
