@@ -41,7 +41,7 @@ public class Map{
 	}
 	
 	/**
-	 * @param e Adds spawnpoints
+	 * @param sp Adds spawnpoints
 	 */
 	public void addSpawnPoint(SpawnPoint sp){
 		spawnPoints.add(sp);

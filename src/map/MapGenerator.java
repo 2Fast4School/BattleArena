@@ -21,7 +21,7 @@ public class MapGenerator {
 	/**
 	 * Enormous method which generates entities as boundaries in the Map object it returns
 	 * and paints the background depending on the parameter type.
-	 * @param The logicMap which will be used to create walls and such, cannot be null
+	 * @param logicMap The logicmap which will be used to create walls and such, cannot be null
 	 * @param type The desired theme of the map generated
 	 * @param sizeOfPixel The size each pixel in the logicMap should represent in the game view (16 or 8)
 	 * @return The map it created
