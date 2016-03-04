@@ -6,7 +6,7 @@ package BAServer;
  * The class uses the Singleton design pattern.
  * 
  * @author Oscar Hall
- * @version 2.0
+ * @version 1.0
  */
 public class ServerMain {
 	private ServerController sc;
