@@ -9,11 +9,15 @@ import java.util.Observable;
 
 import map.Map;
 
+/**
+ * Contains all the information about everything in the game. I.e Units, weapons, tiles etc.
+ * @author Victor Dahlberg
+ * @version 04-03-16
+ */
 public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private ArrayList<Entity> objInNode;
 	private ArrayList<Weapon> arrows;
-	private List<Enemy> theEnemies;
 	private Enemy gotHit;
 	private ArrayList<SpawnPoint> spawnPoints;
 	private boolean alive;
@@ -27,11 +31,14 @@ public class GameState extends Observable{
 	private String name;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
+	
+	/**
+	 * Creates a new GameState, creates all the Lists that stores the various Entities.
+	 */
 	public GameState(){
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		arrows = new ArrayList<Weapon>();
-		theEnemies = Collections.synchronizedList(new ArrayList<Enemy>());
 		gotHit = null;
 		spawnPoints = new ArrayList<SpawnPoint>();
 		alive = false;
@@ -55,6 +62,12 @@ public class GameState extends Observable{
 	}
 
 	
+	/**
+	 * Setups the Gamestate with a map, new spawnpoints, it also creates the player.
+	 * @param id The id to give the gamestate.
+	 * @param maxPlayers The maximum amount of players in the current game.
+	 * @param map The map which the game should be run on.
+	 */
 	public void setup(int id, int maxPlayers, Map map){
 		this.id = id;
 		this.map = map;
@@ -72,21 +85,7 @@ public class GameState extends Observable{
 		for(SpawnPoint e : map.getSpawnPoints()){
 			spawnPoints.add(e);
 		}
-
-/*		Random randomGenerator = new Random();
 		
-		if(spawnPoints.size() > numberOfPlayers){
-			int spawnPointIndex = randomGenerator.nextInt(spawnPoints.size());
-			spawnPoints.get(spawnPointIndex).setUsed();
-			player = new Player(spawnPoints.get(spawnPointIndex).getX(), spawnPoints.get(spawnPointIndex).getY(), 40, 40);
-			
-		}else{
-			player=new Player((int)(Math.random()*400+200), (int)(Math.random()*400+200), 40, 40);
-			
-		}
-		gameObjects.add(player);
-
-*/		
 
 		player=new Player(spawnPoints.get(id-1).getX(), spawnPoints.get(id-1).getY(), 40, 40);
 		gameObjects.add(player);
@@ -103,6 +102,9 @@ public class GameState extends Observable{
 		
 	}
 	
+	/**
+	 * If the Game has started. do the "game-tick", otherwise notify the observers with no information.
+	 */
 	public void tick(){
 		if(isAlive()){
 			actualtick();
@@ -113,6 +115,10 @@ public class GameState extends Observable{
 		}
 	}
 	
+	/**
+	 * Basically does everything in the game when it is active. It checks for collision, makes sure all objects to be rendered
+	 * are in the proper List. It makes sure every object's "tick" is called. Makes the game move forward.
+	 */
 	public void actualtick(){
 		//Clear the QuadTree every tick.
 		quadtree.clear();
@@ -225,42 +231,115 @@ public class GameState extends Observable{
 			notifyObservers();
 		}		
 	}
-	
-	public void addEntity(Entity e){
-		if(e != null){
-			gameObjects.add(e);
-		}
+	//END OF ACTUALTICK.
+
+	/**
+	 * 
+	 * @return The enemy which got hit, if an enemy got hit, otherwise null.
+	 */
+	public Enemy gotHit(){
+		return gotHit;
 	}
 	
-	public Enemy gotHit(){return gotHit;}
-	public ArrayList<Entity> getList(){return gameObjects;}
-	public ArrayList<SpawnPoint> getSpawns(){return spawnPoints;}
-	public Player returnPlayer(){return player;}
-	public int getID(){ return id; }
+	/**
+	 * 
+	 * @return The complete list of every object in the game.
+	 */
+	public ArrayList<Entity> getList(){
+		return gameObjects;
+	}
+	
+	/**
+	 * 
+	 * @return A list of spawnpoints associated with the current map.
+	 */
+	public ArrayList<SpawnPoint> getSpawns(){
+		return spawnPoints;
+	}
+	
+	/**
+	 * 
+	 * @return the gamestates player.
+	 */
+	public Player returnPlayer(){
+		return player;
+	}
+	
+	/**
+	 * 
+	 * @return the gamestates ID.
+	 */
+	public int getID(){ 
+		return id; 
+	}
+	
+	/**
+	 * 
+	 * @return The background image.
+	 */
 	public BufferedImage getBackground(){
 		return map.getBackground();
 	}
 	
+	/**
+	 * Starts the game.
+	 */
 	public void startGame(){
 		alive = true;
 		ready = false;
 	}
 	
+	/**
+	 * 
+	 * @return true if the game is alive, false otherwise.
+	 */
 	public boolean isAlive(){
 		return alive;
 	}
 	
+	/**
+	 * 
+	 * @return true if the gamestate is ready to start, false otherwise.
+	 */
 	public boolean isReady(){
 		return ready;
 	}
 	
+	/**
+	 * Sets the gamestate to be ready.
+	 */
 	public void setToReady(){
 		ready = true;
 	}
+	
+	/**
+	 * Set gameover.
+	 * @param state setgameover.
+	 */
 	public void setGameOver(boolean state){gameOver=state;}
+	
+	/**
+	 * 
+	 * @return true if the game is over. false otherwise.
+	 */
 	public boolean getGameOver(){return gameOver;}
+	
+	/**
+	 * Set's the gamestates name.
+	 * @param name the gamestates new name.
+	 */
 	public void setName(String name){this.name=name;}
+	
+	/**
+	 * 
+	 * @return the gamestates name.
+	 */
 	public String getName(){return name;}
+	
+	/**
+	 * 
+	 * @return true if there has been an arrow-attack. false otherwise.
+	 */
 	public boolean getNewBowAttack(){
 		if(sendArrow){
 			sendArrow = false;

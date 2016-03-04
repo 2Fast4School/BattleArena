@@ -2,28 +2,26 @@ package model;
 
 import java.awt.Rectangle;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 import javax.imageio.ImageIO;
 
 import arenaFighter.Main;
 
 /**
- * <h1>Weapon</h1>
- * Weapon stores data about a weapon. Each Player will have at least one weapon.
- * @author William Bj�rklund. // Victor Dahlberg
- * @version 2.0
+ * <h1>SweepSword</h1>
+ * Stores information of a sweep-swords current state and information.
+ * @author Victor Dahlberg
+ * @version 21-02-16
  */
 public class SweepSword extends Weapon{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2923628820029911684L;
 	private int x,y;
 	private int weaponRotation;
 	private int radius;
+	
+	/**
+	 * An attack can not be ongoing forever. The duration tells if the attack should and or not.
+	 */
 	private int duration;
 	
 	/**
@@ -31,6 +29,7 @@ public class SweepSword extends Weapon{
 	 * @param owner The Owner of the weapon.
 	 * @param width The width of the weapon / weapon-sprite.
 	 * @param height The height of the weapon/weapon-sprite.
+	 * @param dmg The damage of the weapon.
 	 */
 	public SweepSword(Unit owner, int width, int height, int dmg){
 		super(owner, width, height, dmg);
@@ -40,6 +39,9 @@ public class SweepSword extends Weapon{
 		}catch(IOException e){}
 	}
 	
+	/**
+	 * If the SweepSword is currently not attacking, it starts a new attack.
+	 */
 	public void attack(){
 		if(!attacking){
 			attacking = true;
@@ -49,7 +51,10 @@ public class SweepSword extends Weapon{
 		}
 	}
 	
-
+	/**
+	 * If an attack is ongoing, it proceeds the attack and change's the sweep-sword's, rotation etc.
+	 * Otherwise, it does nothing.
+	 */
 	public void tick() {
 		/*
 		 * If an attack is ongoing. Otherwise do nothing.

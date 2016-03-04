@@ -5,13 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Quadtree is 
+ * <h1>Quadtree</h1>
+ * This class splits up the game area to smaller pieces to reduce the area that has to be checked for collission.<p>
+ * The Quadtree class is heavily based of off
+ * <a href="http://gamedevelopment.tutsplus.com/tutorials/quick-tip-use-quadtrees-to-detect-likely-collisions-in-2d-space--gamedev-374">this article. </a>
  * @author  Victor Dahlberg
+ * @version 21-02-16
  *
  */
 public class Quadtree {
 	
-	private int MAX_OBJECTS = 100;
+	private int MAX_OBJECTS = 25;
 	private int MAX_LEVELS = 5;
 	 
 	private int level;
@@ -20,7 +24,7 @@ public class Quadtree {
 	private Quadtree[] nodes;
 	 
 	/**
-	 * 
+	 * Creates a new Quadtree. 
 	 * @param bounds The Bounds of the quadtree in form of a Rectangle. Should be the size of the screen.
 	 */
 	public Quadtree(Rectangle bounds) {
@@ -30,6 +34,11 @@ public class Quadtree {
 	  	nodes = new Quadtree[4];
 	}
 
+	/**
+	 * The Quadtree creates a new Quadtree using this constructor. So a Quadtree can contain severl Quadtrees.
+	 * @param level which level the new quadtree should be created at.
+	 * @param bounds the bounds (size) of the level.
+	 */
 	private Quadtree(int level, Rectangle bounds){
 		this.level = level;
 	  	this.bounds = bounds;
@@ -38,6 +47,9 @@ public class Quadtree {
 	}
 	
 	
+	/**
+	 * Clears the entire Quadtree.
+	 */
 	public void clear(){
 		objects.clear();
 		
@@ -49,6 +61,9 @@ public class Quadtree {
 		}
 	}
 	
+	/**
+	 * Splits a Quadtree and create four new ones in the Quadtree.
+	 */
 	private void split(){
 		int w = (int)(bounds.getWidth() / 2);
 		int h = (int)(bounds.getHeight() / 2);
@@ -61,6 +76,11 @@ public class Quadtree {
 		nodes[3] = new Quadtree(level+1, new Rectangle(x+w, y+h, w, h));
 	}
 	
+	/**
+	 * 
+	 * @param e
+	 * @return The index of the node of the Quadtree the specified Entity is currently in. 
+	 */
 	private int getIndex(Entity e){
 		int index = -1;
 		double centerX = bounds.getX() + bounds.getWidth() / 2;
@@ -84,6 +104,10 @@ public class Quadtree {
 		return index;
 	}
 	
+	/**
+	 * Inserts the Entity e in the correct place in the Quadtree.
+	 * @param e
+	 */
 	public void insert(Entity e){
 		if(nodes[0] != null){
 			int index = getIndex(e);
@@ -113,6 +137,12 @@ public class Quadtree {
 		}
 	}
 	
+	/**
+	 * Returns a list of objects in the same node as the Entity e, not returning the specified Entity.
+	 * @param returnObjects the List which to add Entities in the nodes to.
+	 * @param e The specific Entity where you want to return the objects in the same node as this Entity.
+	 * @return a list of the objects in the node where Entity e belongs.
+	 */
 	public ArrayList<Entity> retrive(ArrayList<Entity> returnObjects, Entity e){
 		int index = getIndex(e);
 		if(index != -1 && nodes[0] != null){

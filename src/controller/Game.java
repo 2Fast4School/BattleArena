@@ -12,8 +12,10 @@ import view.Meny;
 
 /**
  * The Game class is in charge of the main game thread.
+ * The Game class is heavily based off of
+ * <a href="http://gameprogrammingpatterns.com/game-loop.html">this article</a>, as well as various discussion threads on stackexchange.
  * @author Victor Dahlberg
- *
+ * @version 22-02-16
  */
 public class Game implements Runnable {
 
@@ -60,7 +62,7 @@ public class Game implements Runnable {
 	}
 	
 	/**
-	 * 
+	 * Run the main game loop.
 	 */
 	public void run() {
 

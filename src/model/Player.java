@@ -9,9 +9,9 @@ import javax.imageio.ImageIO;
 import arenaFighter.Main;
 /**
  * <h1>Player</h1>
- * Player class extends the Entity Class. Used to store the data of YOUR player. Only one player per Game.
+ * Used to store the data of the player. The player stores all the essential inputs.
  * @author Victor Dahlberg.
- * @version 1.0
+ * @version 22-02-16
  */
 public class Player extends Unit{
 	private int dx, dy;
@@ -117,10 +117,18 @@ public class Player extends Unit{
 		this.dy = dy;
 	}
 	
+	/**
+	 * 
+	 * @return The players horizontal velocity.
+	 */
 	public int getdx(){
 		return dx;
 	}
 	
+	/**
+	 * 
+	 * @return The Players vertical velocity
+	 */
 	public int getdy(){
 		return dy;
 	}
