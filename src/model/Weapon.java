@@ -1,12 +1,25 @@
 package model;
 
 
+/**
+ * The Weapon class stores basic information about a Weapon.
+ * @author Victor Dahlberg
+ * @version 03-03-16
+ *
+ */
 public abstract class Weapon extends Entity {
 
 	protected boolean attacking, dmgDone;
 	protected Unit owner;
 	private int damage;
 	
+	/**
+	 * 
+	 * @param owner The Unit who is the owner of the Weapon.
+	 * @param width The Weapons width.
+	 * @param height The Weapons Height.
+	 * @param damage The Weapons damage.
+	 */
 	public Weapon(Unit owner, int width, int height, int damage) {
 		super(owner.getCenterX(), owner.getCenterY(), width, height, true);
 		this.owner = owner;
@@ -14,19 +27,20 @@ public abstract class Weapon extends Entity {
 		this.damage = damage;
 	}
 	
+	/**
+	 * 
+	 * @return The Owner of the Weapon.
+	 */
 	public Unit getOwner(){
 		return owner;
 	}
 	
 	
 	/**
-	 * Call this method for the weapon to start an attack. It will only start an attack if an attack isn't already ongoing.
+	 * Initiate an attack.
 	 */
 	public abstract void attack();
 	
-	/**
-	 * Loads the weapon with a Sprite.
-	 */
 
 	/**
 	 * 
@@ -45,14 +59,14 @@ public abstract class Weapon extends Entity {
 	}
 	
 	/**
-	 * Called this if damage's been dealt, the sweep-sword will finish it sweep but you can't do damage to multiple enemies in one sweep.
+	 * Call this if damage's been dealt, the sweep-sword will finish it sweep but you can't do damage to multiple enemies in one sweep.
 	 */
 	public void damageDone(){
 		dmgDone = true;
 	}
 	
 	/**
-	 * Call this method to stop an attack. This is the method that is called when an attack has "finished".
+	 * Stop the current Attack.
 	 */
 	public void stopAttack(){
 		attacking = false;
@@ -61,7 +75,7 @@ public abstract class Weapon extends Entity {
 	
 	/**
 	 * 
-	 * @return isAttacking returns true if this weapon is currently attacking.
+	 * @return True if this weapon is currently attacking.
 	 */
 	public boolean isAttacking(){
 		return attacking;

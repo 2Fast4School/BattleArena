@@ -2,6 +2,7 @@ package BAServer;
 
 
 import java.awt.Choice;
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -49,7 +50,21 @@ public class ServerController implements ItemListener, ActionListener{
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 		if(arg0.getItemSelectable() instanceof Choice){
+			Choice choice=(Choice)arg0.getSource();
 			model.setMapType(view.getMapType());
+			switch(view.getMapType()){
+			case "lava":
+				choice.setForeground(Color.RED);
+				break;
+			case "grass":
+				choice.setForeground(Color.GREEN);
+				break;
+			case "desert":
+				choice.setForeground(Color.ORANGE);
+				break;
+			default:
+				break;	
+			}
 		}
 	}
 

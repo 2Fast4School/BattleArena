@@ -35,8 +35,7 @@ import arenaFighter.Main;
 * <b>state:GameState</b> The game's current state, with all data regarding the current game<p>
 * <b>map:Map</b> The selected map<p>
 * @author  William Bjorklund / Victor Dahlberg
-* @version 1.0
-* @since   2016-03-03
+* @version 1.0 2016-03-03
 */
 public class Client implements Runnable, Observer{
 	private int srvport;
@@ -99,6 +98,7 @@ public class Client implements Runnable, Observer{
 				int code=receiveMessage.getCode();
 				
 				if(code == 99){ //LOBBY-CODE
+					state.setNrPlayers(receiveMessage.getNrPlayers());
 					if(receiveMessage.toStart()){
 						state.startGame();
 					}
@@ -197,7 +197,7 @@ public class Client implements Runnable, Observer{
 			System.out.println(receiveMessage.getID());
 			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
 
-			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);
+			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map, receiveMessage.getMapName());
 		}catch(IOException e){System.out.println("couldnt connect");e.printStackTrace();}	
 		
 	}

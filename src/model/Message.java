@@ -8,7 +8,7 @@ public class Message implements Externalizable{
 	int code=-1;int id;int xPos;int yPos;int rotVar;int playerHP=-1;
 	boolean attacking;
 	int enemyID=-1;int enemyHP=-1;
-	int maxNrPlayers=-1;
+	int maxNrPlayers=-1;int nrPlayers;
 	String mapName, playerName;
 	String type;
 	boolean ready, tostart;
@@ -60,6 +60,8 @@ public class Message implements Externalizable{
 	public void setGameOver(boolean state){gameOver=state;}
 	public String getPlayerName(){return playerName;}
 	public void setPlayerName(String playerName){this.playerName=playerName;}
+	public void setNrPlayers(int nrPlayers){this.nrPlayers=nrPlayers;}
+	public int getNrPlayers(){return nrPlayers;}
 	
 	public void setToStart(boolean b){
 		tostart = b;
@@ -97,6 +99,7 @@ public class Message implements Externalizable{
 		gameOver=arg0.readBoolean();
 		playerName=(String)arg0.readObject();
 		weapon = arg0.readInt();
+		nrPlayers=arg0.readInt();
 	}
 	@Override
 	public void writeExternal(ObjectOutput arg0) throws IOException {
@@ -118,5 +121,6 @@ public class Message implements Externalizable{
 		arg0.writeBoolean(gameOver);
 		arg0.writeObject(playerName);
 		arg0.writeInt(weapon);
+		arg0.writeInt(nrPlayers);
 	}
 }

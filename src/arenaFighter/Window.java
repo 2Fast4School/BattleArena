@@ -196,6 +196,7 @@ public class Window extends JFrame {
 				CLIENT.requestConnection();
 
 				GAMEINPUT.setup(GAMESTATE.returnPlayer());
+				GAMESTATE.addObserver(lobbyPanel);
 				GAMESTATE.addObserver(CLIENT);
 				GAMESTATE.addObserver(GAMECANVAS);
 				GAMESTATE.addObserver(lobbyinput);

@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,12 +10,13 @@ import javax.imageio.ImageIO;
 import arenaFighter.Main;
 /**
  * <h1>Player</h1>
- * Player class extends the Entity Class. Used to store the data of YOUR player. Only one player per Game.
+ * Used to store the data of the player. The player stores all the essential inputs.
  * @author Victor Dahlberg.
- * @version 1.0
+ * @version 22-02-16
  */
 public class Player extends Unit{
 	private int dx, dy;
+	private int tx = 0, ty = 0;
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
 	/**
 	 * Constructor.
@@ -34,10 +36,36 @@ public class Player extends Unit{
 	public void tick(){}
 	
 	/**
+	 * Updates the variables holding the mousecursor's position.
+	 * @param p
+	 */
+	public void setTarget(Point p){
+		tx = (int) p.getX();
+		ty = (int) p.getY();
+	}
+	
+	/**
 	 * An override of the usual tick because this tick needs to know about the objects closeby so it can check for collission.
 	 * @param closeObjects Possible object the Player can collide with.
 	 */
 	public void tick(ArrayList<Entity> closeObjects){
+		
+		//Calculates the angle between the mouse-pointer and the player's central coordinates.
+		int angle = (int) Math.round(Math.toDegrees(Math.atan2(ty - getCenterY(), tx - getCenterX())));
+		
+		/*
+		 * We need to add 90 degrees because for us, 0 degrees angle is straight up,
+		 * but we calculate it as if it were to the right. Think about the unit circle, (SE Enhetscirkeln).
+		 */
+		angle += 90;
+		
+		//Instead of using negative angles, we just add 360 degrees to get the positive value of the same angle.
+		if(angle < 0){
+			angle += 360;
+		}
+		
+		setRotVar(angle);
+				
 		this.closeObjects.clear();
 		this.closeObjects.addAll(closeObjects);
 		move(dx, dy);
@@ -117,10 +145,18 @@ public class Player extends Unit{
 		this.dy = dy;
 	}
 	
+	/**
+	 * 
+	 * @return The players horizontal velocity.
+	 */
 	public int getdx(){
 		return dx;
 	}
 	
+	/**
+	 * 
+	 * @return The Players vertical velocity
+	 */
 	public int getdy(){
 		return dy;
 	}

@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -111,22 +112,8 @@ public class GameInput implements KeyListener, MouseListener, MouseMotionListene
 	
 	public void mouseMoved(MouseEvent e) {
 		//System.out.println(e.toString());
-		if(p.isAlive()){
-			//Calculates the angle between the mouse-pointer and the player's central coordinates.
-			int angle = (int)Math.toDegrees(Math.atan2(e.getY() - p.getCenterY(), e.getX() - p.getCenterX()));
-			
-			/*
-			 * We need to add 90 degrees because for us, 0 degrees angle is straight up,
-			 * but we calculate it as if it were to the right. Think about the unit circle, (SE Enhetscirkeln).
-			 */
-			angle += 90;
-			
-			//Instead of using negative angles, we just add 360 degrees to get the positive value of the same angle.
-			if(angle < 0){
-				angle += 360;
-			}
-			
-			p.setRotVar(angle);
+		if(p.isAlive()){;
+			p.setTarget(new Point(e.getX(), e.getY()));
 		}
 	}
 

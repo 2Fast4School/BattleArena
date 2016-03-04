@@ -17,8 +17,7 @@ import model.Message;
  *  <b>Known Information</b><p>
  *  None
  * @author William
- * @version 1.0
- * @since 2016-03-03
+ * @version 1.0 2016-03-03
  */
 public class ByteRepresenter {
 	/**

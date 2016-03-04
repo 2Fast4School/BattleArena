@@ -28,7 +28,7 @@ import arenaFighter.Main;
  * buttons to start and end game.
  * 
  * @author Oscar Hall
- * @version 2016-03-03
+ * @version 1.0 2016-03-03
  */
 public class ServerGUI implements Observer {
 
@@ -79,6 +79,8 @@ public class ServerGUI implements Observer {
 		typeChoice.add("grass");
 		typeChoice.add("lava");
 		typeChoice.add("desert");
+		typeChoice.setForeground(Color.GREEN);
+		typeChoice.setBackground(Color.BLACK);
 
 		// Add components to mainFrame
 		mainWindow.add(serverInfoArea, BorderLayout.NORTH);

@@ -8,8 +8,8 @@ import javax.imageio.ImageIO;
 import arenaFighter.Main;
 /**
  * Each instance represents a player placed on a different client.
- * @author Victor Dahlberg - Modified 28-02-16
- * @version 1.0
+ * @author Victor Dahlberg
+ * @version 28-02-16
  */
 public class Enemy extends Unit {
 	private int ID;
@@ -29,6 +29,9 @@ public class Enemy extends Unit {
 		loadImages();
 	}
 
+	/**
+	 * The tick for enemy does nothing. The Enemy is instead updated by the Client.
+	 */
 	public void tick() {}
 	
 	/**
@@ -55,6 +58,16 @@ public class Enemy extends Unit {
 			sprite = ImageIO.read(Main.class.getResource("/testa.png"));
 		}catch(IOException e){}	
 	}
+	
+	/**
+	 * 
+	 * @param state
+	 */
 	public void setHasAttacked(boolean state){hasAttacked=state;}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean getHasAttacked(){return hasAttacked;}
 }

@@ -23,8 +23,7 @@ import model.Message;
 *  <b>mapName:String</b> The path to the map selected to be played<p>
 *   <b>type:String</b> The name of the texture chosen for the background<p>
 * @author  William Bjorklund / Victor Dahlberg
-* @version 2.0
-* @since   2016-02-26
+* @version 1.0 2016-02-26
 */
 
 public class Server extends Observable implements Runnable{
@@ -167,19 +166,16 @@ public class Server extends Observable implements Runnable{
 			else if(code==99){
 				Message sendMessage=new Message();
 				sendMessage.setCode(code);
+				sendMessage.setNrPlayers(idToGiveClient);
 				boolean tostart = true;
 				for(ClientInfo c : clients){
-					
 					if(c.getID()==id){
-						
 						if(receiveMessage.getReady()){
 							c.setReady(true);
 						} else {
 							c.setReady(false);
 						}
-						
 					}
-					
 					if(!c.getReady()){
 						tostart = false;
 					}
