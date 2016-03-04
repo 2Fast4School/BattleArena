@@ -78,7 +78,7 @@ public class Quadtree {
 	
 	/**
 	 * 
-	 * @param e
+	 * @param e, entity
 	 * @return The index of the node of the Quadtree the specified Entity is currently in. 
 	 */
 	private int getIndex(Entity e){

@@ -59,14 +59,6 @@ public class GameState extends Observable{
 	public List<Enemy> getTheEnemies(){
 		return enemies;
 	}
-
-	
-	/**
-	 * 
-	 * @param id 
-	 * @param maxPlayers 
-	 * @param map
-	 */
 	
 	/**
 	 * Setups the Gamestate with a map, new spawnpoints, it also creates the player.
@@ -359,10 +351,25 @@ public class GameState extends Observable{
 			return true;
 		} return false;
 	}
+	/**
+	 * @return map name
+	 */
 	public String getMapName(){return mapName;}
+	/**
+	 * @return Map
+	 */
 	public Map getMap(){return map;}
+	/**
+	 * @param nrPlayers, how many players in the game
+	 */
 	public void setNrPlayers(int nrPlayers){this.nrPlayers=nrPlayers;}
+	/**
+	 * @return nrPlayers, number of players
+	 */
 	public int getNrPlayers(){return nrPlayers;}
+	/**
+	 * @return maxPlayers, max number of players
+	 */
 	public int getMaxNrPlayers(){return maxPlayers;}
 
 }

@@ -15,10 +15,10 @@ public class Message implements Externalizable{
 	boolean alive, gameOver;
 	private int weapon; //1 = sword, 2 = Bow.
 	
-	
+
 	public Message(){
-		
 	}
+	
 	public Message(int id, int xPos, int yPos, int rotVar, int weapon){
 		this.id=id; this.xPos=xPos;
 		this.yPos=yPos;this.rotVar=rotVar;

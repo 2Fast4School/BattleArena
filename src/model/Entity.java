@@ -8,12 +8,10 @@ import java.awt.image.BufferedImage;
  * Entity is an abstract class and therefore used as a superclass.
  * 
  * @author Victor Dahlberg
- * @version 1.0
+ * @version 1.0 2016-03-04
  */
 public abstract class Entity {
-	/**
-	 * 
-	 */
+
 	private boolean solid;
 	protected int x, y, w, h, rotation, hp;
 	protected transient BufferedImage sprite;
@@ -138,7 +136,10 @@ public abstract class Entity {
 	public int getCenterY(){
 		return y+(getHeight()/2);
 	}
-	
+	/** 
+	 * 
+	 * @return boolean, if the object is solid or not
+	 */
 	public boolean isSolid(){
 		return solid;
 	}
