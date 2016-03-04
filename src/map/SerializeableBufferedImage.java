@@ -5,8 +5,9 @@ import java.io.Serializable;
 /**
  * Used to wrap a BufferedImage for serialization
  * Not fully implemented yet.
+ * Unused
  * @author Alexander
- *
+ * @version 1.0 2016-03-04
  */
 public class SerializeableBufferedImage implements Serializable{
 	private static final long serialVersionUID = -8565146954702818348L;

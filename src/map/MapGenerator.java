@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import arenaFighter.Main;
+import main.Main;
 import model.DamageTile;
 import model.WallTile;
 import model.SpawnPoint;

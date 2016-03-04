@@ -78,7 +78,7 @@ public class Quadtree {
 	
 	/**
 	 * 
-	 * @param e
+	 * @param e, entity
 	 * @return The index of the node of the Quadtree the specified Entity is currently in. 
 	 */
 	private int getIndex(Entity e){
@@ -106,7 +106,7 @@ public class Quadtree {
 	
 	/**
 	 * Inserts the Entity e in the correct place in the Quadtree.
-	 * @param e
+	 * @param e The Entity to add
 	 */
 	public void insert(Entity e){
 		if(nodes[0] != null){

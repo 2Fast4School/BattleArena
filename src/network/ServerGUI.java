@@ -1,4 +1,4 @@
-package BAServer;
+package network;
 
 import java.awt.BorderLayout;
 import java.awt.Choice;
@@ -20,7 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import arenaFighter.Main;
+import main.Main;
 
 /**
  * <h1>ServerGUI</h1> ServerGUI creates a graphic interface for a game server
@@ -151,7 +151,7 @@ public class ServerGUI implements Observer {
 	/**
 	 * Print text to server terminal window
 	 * 
-	 * @param text
+	 * @param text The text that should be printed to the terminal
 	 */
 	public void toTerminal(String text) {
 		infoArea.append(text + "\n");
@@ -170,22 +170,35 @@ public class ServerGUI implements Observer {
 		serverIp.setSelectedIndex(serverIp.getItemCount() - 1);
 	}
 
+	/**
+	 * Gets the IP address
+	 * @return string of ip address
+	 */
 	public String getIpAddress() {
 		return serverIp.getSelectedItem().toString();
 	}
 
+	/**
+	 * Gets the port address
+	 * @return int of port address
+	 */
 	public int getPort() {
 		return Integer.parseInt(serverPort.getText());
 	}
 
 	/**
-	 * 
+	 * Returns the number of wanted players
 	 * @return int Number of players set.
+
 	 */
 	public int getNrOfPlayers() {
 		return Integer.parseInt(nrOfPlayers.getText().trim());
 	}
 
+	/**
+	 * Adds the associated actionlistener-class for this GUI
+	 * @param controller ServerController
+	 */
 	public void addController(ActionListener controller) {
 		startGameBtn.addActionListener(controller);
 		endGameBtn.addActionListener(controller);
@@ -210,6 +223,10 @@ public class ServerGUI implements Observer {
 		}
 	}
 
+	/**
+	 * Gets the map type/theme
+	 * @return string of the type
+	 */
 	public String getMapType() {
 		return typeChoice.getSelectedItem();
 	}

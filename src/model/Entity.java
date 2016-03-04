@@ -8,20 +8,17 @@ import java.awt.image.BufferedImage;
  * Entity is an abstract class and therefore used as a superclass.
  * 
  * @author Victor Dahlberg
- * @version 1.0
+ * @version 1.0 2016-03-04
  */
 public abstract class Entity {
-	/**
-	 * 
-	 */
+
 	private boolean solid;
 	protected int x, y, w, h, rotation, hp;
 	protected transient BufferedImage sprite;
 	
 	/**
-	 * Constructor for Entity. 
+	 * Constructor for Entity.  
 	 * Temporarily sets the Sprite of the Image to null.
-	 * @param id This is the id of the Entity.
 	 * @param x The x-position of the Entity.
 	 * @param y	The y-position of the Entity
 	 * @param w	The width of the Entity.
@@ -43,7 +40,7 @@ public abstract class Entity {
 	}
 	/**
 	 * Used to set the sprite for the Entity
-	 * @param sprite
+	 * @param sprite The new sprite
 	 */
 	public void setSprite(BufferedImage sprite){
 		this.sprite = sprite;
@@ -100,8 +97,6 @@ public abstract class Entity {
 	/**
 	 * Returns a Rectangle, used to check collission.
 	 * Check collission in front of the Object. So for example x + dx, as the parameter x.
-	 * @param x The x-pos of the Rectangle.
-	 * @param y The y-pos of The Rectangle.
 	 * @return A Rectangle specified by the parameters with the same width and height as the Entity.
 	 */
 	public Rectangle getBounds(){
@@ -111,7 +106,7 @@ public abstract class Entity {
 	/**
 	 * UNUSED
 	 * Set a rotation-variable.
-	 * @param rotation
+	 * @param rotation The new rotation of the entity
 	 */
 	public void setRotVar(int rotation){
 		this.rotation = rotation;
@@ -141,7 +136,10 @@ public abstract class Entity {
 	public int getCenterY(){
 		return y+(getHeight()/2);
 	}
-	
+	/** 
+	 * 
+	 * @return boolean, if the object is solid or not
+	 */
 	public boolean isSolid(){
 		return solid;
 	}

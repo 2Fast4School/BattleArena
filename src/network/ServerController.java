@@ -1,4 +1,4 @@
-package BAServer;
+package network;
 
 
 import java.awt.Choice;
@@ -22,7 +22,10 @@ public class ServerController implements ItemListener, ActionListener{
 	Server model;
 	ServerGUI view;
 
-	//invoked when a button is pressed
+	/**
+	 * Checks for actionevents for components in the ServerGUI
+	 * and handles it
+	 */
 	public void actionPerformed(java.awt.event.ActionEvent e){
 		
 		//System.out.println("Controller: acting on Model");

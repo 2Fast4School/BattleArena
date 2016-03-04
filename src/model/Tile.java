@@ -3,15 +3,11 @@ package model;
 /**
  * A simple class which basically does nothing.
  * 
- * @author Alexander Erenstedt - Modified 28-02-16
+ * @author Alexander Erenstedt
  * @version 1.0  28-02-16
  * 
  */
 public abstract class Tile extends Entity{
-	/**
-	 * 
-	 */
-
 	/**
 	 * 
 	 * @param x The x-position of the Tile.

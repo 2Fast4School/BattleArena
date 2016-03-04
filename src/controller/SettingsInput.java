@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-import arenaFighter.Window;
+import main.Window;
 import view.SettingsPanel;
 
 /**

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import arenaFighter.Main;
+import main.Main;
 /**
  * <h1>Player</h1>
  * Used to store the data of the player. The player stores all the essential inputs.
@@ -20,7 +20,6 @@ public class Player extends Unit{
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
 	/**
 	 * Constructor.
-	 * @param id ID of the entity.
 	 * @param x The players x position.
 	 * @param y The player y position.
 	 * @param w The player's hitbox-width.
@@ -37,7 +36,7 @@ public class Player extends Unit{
 	
 	/**
 	 * Updates the variables holding the mousecursor's position.
-	 * @param p
+	 * @param p The point where the PLayer should look at
 	 */
 	public void setTarget(Point p){
 		tx = (int) p.getX();

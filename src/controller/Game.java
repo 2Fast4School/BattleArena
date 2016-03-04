@@ -6,8 +6,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import arenaFighter.Main;
-import arenaFighter.Window;
+import main.Main;
+import main.Window;
 import model.GameState;
 
 /**
@@ -27,6 +27,7 @@ public class Game implements Runnable {
 	/**
 	 * Constructor.
 	 * @param GAMESTATE The gamestate which the game class will be responsible of "running".
+	 * @param meny The window the game should jump to when the game is over
 	 */
 	public Game(GameState GAMESTATE, Window meny){
 		this.GAMESTATE = GAMESTATE;

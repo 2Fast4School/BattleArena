@@ -59,15 +59,14 @@ public class GameState extends Observable{
 	public List<Enemy> getTheEnemies(){
 		return enemies;
 	}
-
 	
 	/**
 	 * Setups the Gamestate with a map, new spawnpoints, it also creates the player.
 	 * @param id The id to give the gamestate.
 	 * @param maxPlayers The maximum amount of players in the current game.
 	 * @param map The map which the game should be run on.
+	 * @param mapName The name of the map
 	 */
-
 	public void setup(int id, int maxPlayers, Map map, String mapName){
 
 		this.id = id;
@@ -352,10 +351,25 @@ public class GameState extends Observable{
 			return true;
 		} return false;
 	}
+	/**
+	 * @return map name
+	 */
 	public String getMapName(){return mapName;}
+	/**
+	 * @return Map
+	 */
 	public Map getMap(){return map;}
+	/**
+	 * @param nrPlayers, how many players in the game
+	 */
 	public void setNrPlayers(int nrPlayers){this.nrPlayers=nrPlayers;}
+	/**
+	 * @return nrPlayers, number of players
+	 */
 	public int getNrPlayers(){return nrPlayers;}
+	/**
+	 * @return maxPlayers, max number of players
+	 */
 	public int getMaxNrPlayers(){return maxPlayers;}
 
 }

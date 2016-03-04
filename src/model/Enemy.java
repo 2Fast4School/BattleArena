@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import arenaFighter.Main;
+import main.Main;
 /**
  * Each instance represents a player placed on a different client.
  * @author Victor Dahlberg
@@ -60,14 +60,14 @@ public class Enemy extends Unit {
 	}
 	
 	/**
-	 * 
-	 * @param state
+	 * Method to set the hasAttacked
+	 * @param state Sets if the Enemy returned or not
 	 */
 	public void setHasAttacked(boolean state){hasAttacked=state;}
 	
 	/**
-	 * 
-	 * @return
+	 * Method check if the EnemyObject has attacked
+	 * @return true/false if the enemyobject has attacked
 	 */
 	public boolean getHasAttacked(){return hasAttacked;}
 }
