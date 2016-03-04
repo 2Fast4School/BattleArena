@@ -10,17 +10,41 @@ import javax.swing.JPanel;
 
 import controller.PreGameInput;
 
+/**
+ * The Class PreGameWindow.
+ * Main-menu which the user enters when starting the application.
+ * User can navigate to different submenus and choose to start a server here
+ * @author Fred Hedenberg
+ * @version 1.0 2016-03-03
+ */
 public class PreGameWindow extends JPanel{
 
 	
+	/** The background image for menus. */
 	private Image preGameArt;
+	
+	/** The pregameinput. Exclusive actionlistener for pregamewindow */
 	private PreGameInput preGameInput;
+	
+	/** The create game button. Starts a server */
 	private JButton createGameBtn;
+	
+	/** The connect game btn. Enters the submenu mode Connect*/
 	private JButton connectGameBtn;
-	private JButton findGameBtn;
+	
+	/** The settings btn. Enters the submenu mode settings*/
 	private JButton settingsBtn;
+	
+	/** The quit btn. Exits the application */
 	private JButton quitBtn;
 	
+	/**
+	 * Instantiates the main menu.
+	 * 
+	 *
+	 * @param preGameInput pregameinput, the exclusive actionlistener for pregamewindow
+	 * @param preGameArt the background image for menus
+	 */
 	public PreGameWindow(PreGameInput preGameInput, Image preGameArt) {
 		setLayout(null);
 		this.preGameInput = preGameInput;
@@ -28,48 +52,43 @@ public class PreGameWindow extends JPanel{
 		initPreGameWindow();
 	}
 	
+	/**
+	 * Inits the pre game window.
+	 * Creates all buttons and applies actionlisteners to them.
+	 * Sets the background
+	 */
 	private void initPreGameWindow() {
 		
 		
-		// imagePanel.clearImage(); to make it disappear.
-				//Overlapping the image with the following buttons:
-		//setBackground(Color.GRAY);
 		setBounds(0, 0, 800, 800);
+		
+		Font font = new Font("Comic Sans MS", Font.PLAIN, 21);
 		
 					// Create game
 		JButton createGameBtn = new JButton("Create a game");
-		createGameBtn.setBounds(311, 174, 192, 59);
-		createGameBtn.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
+		createGameBtn.setBounds(300, 240, 200, 60);
+		createGameBtn.setFont(font);
 		createGameBtn.setActionCommand("createGameBtn");
 		createGameBtn.addActionListener(preGameInput);
 		add(createGameBtn);
-		
-						// In the server terminal that is started there should be a "Make public" button.
 					// Connect game (by IP)
 		JButton connectGameBtn = new JButton("Connect by IP");
-		connectGameBtn.setBounds(311, 244, 192, 59);
-		connectGameBtn.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
+		connectGameBtn.setBounds(300, 320, 200, 60);
+		connectGameBtn.setFont(font);
 		connectGameBtn.setActionCommand("connectGameBtn");
 		connectGameBtn.addActionListener(preGameInput);
 		add(connectGameBtn);
-					// Find game (checks RSS feed)
-		JButton findGameBtn = new JButton("Find a game");
-		findGameBtn.setBounds(311, 314, 192, 59);
-		findGameBtn.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
-		findGameBtn.setActionCommand("findGameBtn");
-		findGameBtn.addActionListener(preGameInput);
-		add(findGameBtn);
 					// Settings
 		JButton settingsBtn = new JButton("Settings");
-		settingsBtn.setBounds(311, 384, 192, 59);
-		settingsBtn.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
+		settingsBtn.setBounds(300, 400, 200, 60);
+		settingsBtn.setFont(font);
 		settingsBtn.setActionCommand("settingsBtn");
 		settingsBtn.addActionListener(preGameInput);
 		add(settingsBtn);
 					// Quit
 		JButton quitBtn = new JButton("Quit");
-		quitBtn.setBounds(311, 454, 192, 59);
-		quitBtn.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
+		quitBtn.setBounds(300, 480, 200, 60);
+		quitBtn.setFont(font);
 		quitBtn.setActionCommand("quitBtn");
 		quitBtn.addActionListener(preGameInput);
 		add(quitBtn);

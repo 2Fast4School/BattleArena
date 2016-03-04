@@ -1,7 +1,6 @@
 package model;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
 
 /**
  * <h1>Entity</h1>

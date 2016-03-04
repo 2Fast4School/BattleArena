@@ -3,6 +3,7 @@ package controller;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
@@ -175,8 +176,22 @@ public class Client implements Runnable, Observer{
 			
 			Message receiveMessage;
 			receiveMessage=byteRepresenter.bytesToExternObject(buf);
-
-			BufferedImage logicMap=ImageIO.read(Main.class.getResource("/maps/"+receiveMessage.getMapName()));
+			
+			BufferedImage logicMap = null;
+			try {
+			logicMap = ImageIO.read(Main.class.getResource("/maps/"+receiveMessage.getMapName()));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (logicMap == null) {
+				try {
+					logicMap = ImageIO.read(new File("res/" + receiveMessage.getMapName()));
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+			}
 			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
 
 			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);

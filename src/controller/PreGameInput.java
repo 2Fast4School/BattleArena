@@ -6,12 +6,34 @@ import java.awt.event.ActionListener;
 import view.Meny;
 import BAServer.ServerMain;
 
+
+/**
+ * The Class PreGameInput.
+ * Exclusive actionlistener for mainmenu components.
+ * Gets actionevent when the user presses any button.
+ * Takes care of starting a server, showing a submenu or exiting the game.
+ * @author Fred Hedenberg
+ * @version 1.0 2016-03-03
+ */
 public class PreGameInput implements ActionListener {
+	
+	/** The frame, application window */
 	private Meny theFrame;
 	
+	/**
+	 * Instantiates the main-menu input.
+	 *
+	 * @param theFrame the application window
+	 */
 	public PreGameInput(Meny theFrame) {
 		this.theFrame = theFrame;
 	}
+	
+	/**
+	 * Takes care of any actionevent within the
+	 * the main-menu.
+	 * Can start sub-menus, server or exit application
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//System.out.println(e.getActionCommand());
@@ -41,10 +63,5 @@ public class PreGameInput implements ActionListener {
 			System.out.println("Other");
 			break;
 		}
-		// Create game
-		// Connect by IP
-		// Find a game
-		// Settings
-		// Quit
 	}
 }

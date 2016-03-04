@@ -1,7 +1,5 @@
 package model;
 
-import java.io.Serializable;
-
 /**
  * A simple class which represents a wall in game
  * @author Alexander Erenstedt - Modified 28-02-16

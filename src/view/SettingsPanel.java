@@ -1,6 +1,8 @@
 package view;
 
+import java.awt.Font;
 import java.awt.Image;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -10,57 +12,89 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-
 import controller.SettingsInput;
-import model.GameState;
 
+
+/**
+ * The Class SettingsPanel.
+ * Submenu which initiates a random name for the user
+ * and enables the user to change.
+ * @author Fred Hedenberg
+ * @version 1.0 2016-03-03
+ */
 public class SettingsPanel extends JPanel {
+	
+	/** The settingsinput. actionlistener for this components in this class */
 	private SettingsInput settingsinput;
+	
+	/** The name text field. */
 	private JTextField nameTextField;
-	private static String name = "Player";
-	private static boolean toolTipsEnabled = false;
+	
+	/** The name-list */
+	private String[] name =
+			{"Märta", "Ann-Britt", "Karin", "Majken", "Kerstin", "Viola", "Göta", "Inga", "Dagny", "Gerd", "Sixten", "Nils", "Birger",
+			"Sune", "Ture", "Harry", "Lars", "Per", "Ernst", "Gunnar", "Eva", "Gunnel", "Gunborg", "Birgit", "Astrid", "Ulla-Britt",
+			"Berit", "Sonja", "Vanja", "Jan", "Åke", "Sven", "Olof", "Allan", "Harald", "Bertil", "Gösta", "Bengt", "Birgitta", "Margareta",
+			"Christina", "Marianne", "Ingrid", "Inger", "Gertrud", "Doris", "Kerstin", "Elisabeth", "Maj-Britt", "Anita", "Britt-Marie",
+			"Barbro", "Lars", "Per-Erik", "Kjell", "Kurt", "Håkan", "Leif", "Roland", "Bert", "Åke", "Göran", "Monica", "Katarina",
+			"Eva", "Christina", "Agneta", "Lena", "Peter", "Krister", "Stefan", "Mats", "Patrik", "Niklas", "Henrik", "Susanne",
+			"Jeanette", "Christine", "Maria", "Helena", "Caroline", "Annika", "Louise", "Malin", "Eva", "Fredrik", "Joachim", "Johan",
+			"Patrik", "Jimmy", "Jonas", "Christoffer", "Mattias", "Markus", "Johan", "Niklas", "Oskar", "Malin", "Helena", "Sofia",
+			"Johanna", "Anna", "Frida", "Emma", "Lisa", "Jannike", "Therese", "Åsa", "Elin", "Pernilla", "Josefine", "Jenny"};
+	
+	/** The background image for menus. */
 	private Image preGameArt;
 	
+	/** The settings "return to main-menu" btn. */
 	JButton settingsCloseBtn;
-	JButton settingsSaveBtn;
-	JCheckBox settingsToolTipsChk;
+	
+	/**
+	 * Instantiates the settings panel.
+	 *
+	 * @param settingsinput the associated actionlistener
+	 * @param preGameArt the background image for menus
+	 */
 	public SettingsPanel(SettingsInput settingsinput, Image preGameArt) {
 		this.settingsinput = settingsinput;
 		this.preGameArt = preGameArt;
-		initDialog();
+		initPanel();
 	}
-	private void initDialog() {
+	
+	/**
+	 * Inits the panel, its components with the associated actionlistener.
+	 */
+	private void initPanel() {
 		setLayout(null);
-		// Save button under the IP textfield
-		JButton settingsSaveBtn = new JButton("Save");
-		settingsSaveBtn.setBounds(20, 20, 111, 21);
-		settingsSaveBtn.setActionCommand("settingsSaveBtn");
-		settingsSaveBtn.addActionListener(settingsinput);
-		settingsSaveBtn.setVisible(true);
 		
-		nameTextField = new JTextField();
-		nameTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		nameTextField.setText(name);
-		nameTextField.setBounds(20, 45, 111, 21);
-		nameTextField.setColumns(10);
+		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);
+		Font font2 = new Font("Comic Sans MS", Font.PLAIN, 14);
 		
-		JCheckBox settingsToolTipsChk = new JCheckBox("Show Tooltips");
-		settingsToolTipsChk.setSelected(toolTipsEnabled);
-		settingsToolTipsChk.setActionCommand("settingsToolTipsChk");
-		settingsToolTipsChk.addActionListener(settingsinput);
-		settingsToolTipsChk.setBounds(20, 70, 111, 21);
-		
-		// Cancel button under the name textfield
 		JButton settingsCloseBtn = new JButton("Cancel");
-		settingsCloseBtn.setBounds(20, 95, 111, 21);
+		settingsCloseBtn.setFont(font1);
+		settingsCloseBtn.setBounds(300, 320, 200, 60);
 		settingsCloseBtn.setActionCommand("settingsCloseBtn");
 		settingsCloseBtn.addActionListener(settingsinput);
-		settingsCloseBtn.setVisible(true);
-
-		add(nameTextField);
 		add(settingsCloseBtn);
-		add(settingsSaveBtn);
-		add(settingsToolTipsChk);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(300, 240, 200, 60);
+		panel.setLayout(null);
+		add(panel);
+		
+		nameTextField = new JTextField();
+		nameTextField.setFont(font2);
+		nameTextField.setBounds(70, 0, 130, 60);
+		nameTextField.setHorizontalAlignment(SwingConstants.CENTER);
+		System.out.println(name.length);
+		nameTextField.setText(name[new Random().nextInt(name.length+1)]);
+		nameTextField.setColumns(10);
+		panel.add(nameTextField);
+		
+		JLabel nameLabel = new JLabel("Name:");
+		nameLabel.setFont(font1);
+		nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		nameLabel.setBounds(5, 0, 65, 60);
+		panel.add(nameLabel);
 		
 		if (preGameArt != null) {
 			JLabel picLabel = new JLabel(new ImageIcon(preGameArt));
@@ -70,10 +104,11 @@ public class SettingsPanel extends JPanel {
 		
 	}
 	
-	public void setName(String newName) {
-		name = newName;
-	}
-	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return nameTextField.getText();
 	}

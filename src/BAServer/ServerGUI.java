@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -20,12 +21,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import arenaFighter.Main;
+
 /**
  * <h1>ServerGUI</h1>
- * ServerGUI creates a graphic interface for a dedicated game server with a terminal output,
+ * ServerGUI creates a graphic interface for a game server with a terminal output,
  * a comboBox for option of network interfaces and buttons to start and end game.
  * @author Oscar Hall
- *
+ * @version 2016-03-03
  */
 public class ServerGUI implements Observer {
 
@@ -40,9 +43,24 @@ public class ServerGUI implements Observer {
 	private boolean shutDown=false;
 	private static int port = 5050;
 
+	/**
+	 * Constructor
+	 */
 	public ServerGUI() {
-		mainWindow = new JFrame("Battle Arena Dedicated Server");
-		mainWindow.setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
+		mainWindow = new JFrame("Battle Arena Server");
+		try {
+			mainWindow.setIconImage(ImageIO.read(Main.class.getResource("/testa.png")));
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			try {
+				mainWindow.setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
+			}
+			catch(Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+			
 		mainWindow.setLayout(new BorderLayout());
 		mainWindow.setSize(700, 400);
 
@@ -132,9 +150,13 @@ public class ServerGUI implements Observer {
 		}
 	}
 	
+	/**
+	 * Print text to server terminal window
+	 * @param text
+	 */
 	public void toTerminal(String text)
 	{
-		infoArea.append(text);
+		infoArea.append(text+"\n");
 	}
 
 	/**
@@ -161,6 +183,10 @@ public class ServerGUI implements Observer {
 		return Integer.parseInt(serverPort.getText());
 	}
 	
+	/**
+	 * 
+	 * @return hej
+	 */
 	public int getNrOfPlayers()
 	{
 		return Integer.parseInt(nrOfPlayers.getText().trim());
