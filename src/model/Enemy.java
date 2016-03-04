@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import arenaFighter.Main;
+import main.Main;
 /**
  * Each instance represents a player placed on a different client.
  * @author Victor Dahlberg

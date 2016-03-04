@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import arenaFighter.Main;
+import main.Main;
 /**
  * <h1>Player</h1>
  * Used to store the data of the player. The player stores all the essential inputs.

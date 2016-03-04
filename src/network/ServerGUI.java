@@ -1,4 +1,4 @@
-package BAServer;
+package network;
 
 import java.awt.BorderLayout;
 import java.awt.Choice;
@@ -20,7 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import arenaFighter.Main;
+import main.Main;
 
 /**
  * <h1>ServerGUI</h1> ServerGUI creates a graphic interface for a game server
