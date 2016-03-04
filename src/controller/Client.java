@@ -99,6 +99,7 @@ public class Client implements Runnable, Observer{
 				int code=receiveMessage.getCode();
 				
 				if(code == 99){ //LOBBY-CODE
+					state.setNrPlayers(receiveMessage.getNrPlayers());
 					if(receiveMessage.toStart()){
 						state.startGame();
 					}
@@ -197,7 +198,7 @@ public class Client implements Runnable, Observer{
 			System.out.println(receiveMessage.getID());
 			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
 
-			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);
+			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map, receiveMessage.getMapName());
 		}catch(IOException e){System.out.println("couldnt connect");e.printStackTrace();}	
 		
 	}
