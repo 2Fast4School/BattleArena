@@ -7,8 +7,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import arenaFighter.Main;
+import arenaFighter.Window;
 import model.GameState;
-import view.Meny;
 
 /**
  * The Game class is in charge of the main game thread.
@@ -20,13 +20,13 @@ public class Game implements Runnable {
 	private GameState GAMESTATE;
 	private boolean running;
 	private Thread thread;
-	private Meny meny;
+	private Window meny;
 	
 	/**
 	 * Constructor.
 	 * @param GAMESTATE The gamestate which the game class will be responsible of "running".
 	 */
-	public Game(GameState GAMESTATE, Meny meny){
+	public Game(GameState GAMESTATE, Window meny){
 		this.GAMESTATE = GAMESTATE;
 		this.meny=meny;
 		running = false;

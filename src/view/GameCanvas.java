@@ -17,13 +17,13 @@ import model.Tile;
 import model.Unit;
 import model.Weapon;
 
-public class GameWindow extends Canvas implements Observer{
+public class GameCanvas extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Entity> gameObjects;
 	private BufferedImage img = null;
 	
 	//Kanske ta bort
-	public GameWindow(BufferedImage img){
+	public GameCanvas(BufferedImage img){
 		this.img = img;
 	}
 
