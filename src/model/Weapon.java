@@ -1,15 +1,13 @@
 package model;
 
-import java.io.IOException;
+import java.io.Externalizable;
+import java.io.Serializable;
 
-import javax.imageio.ImageIO;
 
-import arenaFighter.Main;
+public abstract class Weapon extends Entity {
 
-public abstract class Weapon extends Entity{
-	
 	protected boolean attacking, dmgDone;
-	protected Entity owner;
+	protected Unit owner;
 	private int damage;
 	
 	public Weapon(Unit owner, int width, int height, int damage) {
@@ -17,7 +15,10 @@ public abstract class Weapon extends Entity{
 		this.owner = owner;
 		attacking = false;
 		this.damage = damage;
-		loadImages();
+	}
+	
+	public Unit getOwner(){
+		return owner;
 	}
 	
 	
@@ -29,11 +30,6 @@ public abstract class Weapon extends Entity{
 	/**
 	 * Loads the weapon with a Sprite.
 	 */
-	private void loadImages(){
-		try{
-			sprite = ImageIO.read(Main.class.getResource("/sw.png"));
-		}catch(IOException e){}
-	}
 
 	/**
 	 * 

@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author Victor Dahlberg
  * @version 1.0
  */
-public abstract class Entity{
+public abstract class Entity {
 	/**
 	 * 
 	 */

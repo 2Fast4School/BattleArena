@@ -2,12 +2,9 @@ package controller;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -18,13 +15,14 @@ import java.util.Observer;
 
 import javax.imageio.ImageIO;
 
-import arenaFighter.Main;
 import map.Map;
 import map.MapGenerator;
+import model.Bow;
 import model.Enemy;
 import model.GameState;
 import model.Message;
 import model.Player;
+import arenaFighter.Main;
 /**
 * <h1>Client</h1>
 
@@ -112,6 +110,7 @@ public class Client implements Runnable, Observer{
 					newy=receiveMessage.getYPos();
 					rot=receiveMessage.getRotVar();
 					attacking=receiveMessage.getAttacking();
+					int wepID = receiveMessage.getWeaponByID();
 					
 					int playerHP=receiveMessage.getPlayerHP();
 					
@@ -124,6 +123,7 @@ public class Client implements Runnable, Observer{
 					for(Enemy n : state.getTheEnemies()){
 						if(id == n.getID()){
 							n.setX(newx); n.setY(newy); n.setRotVar(rot);
+							n.setWeaponID(wepID);
 							
 							if(playerHP!=-1){
 								n.setHP(playerHP);
@@ -132,6 +132,7 @@ public class Client implements Runnable, Observer{
 								n.setHasAttacked(true);
 								n.doAttack();
 							}
+							
 							else if(!attacking){
 								n.setHasAttacked(false);
 							}
@@ -217,11 +218,17 @@ public class Client implements Runnable, Observer{
 			Enemy enemy = state.gotHit();
 
 			byte[] data;
-			Message message=new Message(state.getID(),player.getX(),player.getY(),player.getRotVar(),
-					player.getWeapon().isAttacking());
+			Message message=new Message(state.getID(),player.getX(),player.getY(),player.getRotVar(), player.getWeaponID());
 
 			message.setPlayerHP(player.getHP());
 			message.setAlive(player.isAlive());
+			
+			if(player.getWeapon() instanceof Bow){
+				message.setAttacking(state.getNewBowAttack());
+			} else {
+				
+				message.setAttacking(player.getWeapon().isAttacking());
+			}
 			
 			//hp-change OPCODE:2
 			if(enemy != null) {

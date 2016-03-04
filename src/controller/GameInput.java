@@ -21,6 +21,7 @@ import model.Player;
 public class GameInput implements KeyListener, MouseListener, MouseMotionListener{
 	private Player p;
 	private final int VELOCITY = 2;
+	private boolean cantSwitchWep = false;
 
 	/**
 	 * Initiliazes the Input object with the specified Player object.
@@ -50,6 +51,13 @@ public class GameInput implements KeyListener, MouseListener, MouseMotionListene
 				p.setdx(VELOCITY);
 			}
 			
+			if(e.getKeyCode() == KeyEvent.VK_Q && !cantSwitchWep){
+				cantSwitchWep = true;
+				p.switchWeapon();		
+			}
+			
+			
+			
 			//Force shut down the game.
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 				System.exit(1);
@@ -62,6 +70,9 @@ public class GameInput implements KeyListener, MouseListener, MouseMotionListene
 	 */
 	public void keyReleased(KeyEvent e) {
 		if(p.isAlive()){
+			if(e.getKeyCode() == KeyEvent.VK_Q){
+				cantSwitchWep = false;
+			}
 			if(e.getKeyCode() == KeyEvent.VK_W){
 				p.setdy(0);
 			}
@@ -77,12 +88,16 @@ public class GameInput implements KeyListener, MouseListener, MouseMotionListene
 			if(e.getKeyCode() == KeyEvent.VK_D){
 				p.setdx(0);
 			}
+			
+
 		}
 	}
 	
 	//Unused
-	public void keyTyped(KeyEvent e) {}
-
+	public void keyTyped(KeyEvent e) {
+		
+	}
+	
 	//Unused
 	public void mouseDragged(MouseEvent e) {
 		//System.out.println(e.toString());

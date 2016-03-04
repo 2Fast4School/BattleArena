@@ -3,6 +3,8 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Message implements Externalizable{
 	int code=-1;int id;int xPos;int yPos;int rotVar;int playerHP=-1;
@@ -13,15 +15,20 @@ public class Message implements Externalizable{
 	String type;
 	boolean ready, tostart;
 	boolean alive, gameOver;
+	private int weapon; //1 = sword, 2 = Bow.
+	
+	
 	public Message(){
 		
 	}
-	public Message(int id, int xPos, int yPos, int rotVar, boolean attacking){
-		this.id=id;this.attacking=attacking;this.xPos=xPos;
+	public Message(int id, int xPos, int yPos, int rotVar, int weapon){
+		this.id=id; this.xPos=xPos;
 		this.yPos=yPos;this.rotVar=rotVar;
 		ready=false;
 		gameOver=false;
+		this.weapon = weapon;
 	}
+	
 	public int getCode(){return code;}
 	public void setCode(int code){this.code=code;}
 	public int getID(){return id;}
@@ -32,6 +39,9 @@ public class Message implements Externalizable{
 	public int getYPos(){return yPos;}
 	public int getRotVar(){return rotVar;}
 	public boolean getAttacking(){return attacking;}
+	public void setAttacking(boolean b){
+		attacking = b;
+	}
 	public int getEnemeyID(){return enemyID;}
 	public void setEnemyID(int enemyID){this.enemyID=enemyID;}
 	public int getMaxNrPlayers(){return maxNrPlayers;}
@@ -61,6 +71,14 @@ public class Message implements Externalizable{
 		return tostart;
 	}
 	
+	public void setWeaponByID(int weapon){
+		this.weapon = weapon;
+	}
+	
+	public int getWeaponByID(){
+		return weapon;
+	}
+	
 	@Override
 	public void readExternal(ObjectInput arg0) throws IOException, ClassNotFoundException {
 		code=arg0.readInt();
@@ -80,6 +98,7 @@ public class Message implements Externalizable{
 		alive=arg0.readBoolean();
 		gameOver=arg0.readBoolean();
 		playerName=(String)arg0.readObject();
+		weapon = arg0.readInt();
 	}
 	@Override
 	public void writeExternal(ObjectOutput arg0) throws IOException {
@@ -100,5 +119,6 @@ public class Message implements Externalizable{
 		arg0.writeBoolean(alive);
 		arg0.writeBoolean(gameOver);
 		arg0.writeObject(playerName);
+		arg0.writeInt(weapon);
 	}
 }

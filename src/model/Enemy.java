@@ -23,7 +23,6 @@ public class Enemy extends Unit {
 	 */
 	public Enemy(int x, int y, int w, int h){
 		super(x, y, w ,h, true);
-		setWeapon(new SweepSword(this, 8, 50));
 		hasAttacked=false;
 		//Init the enemies Id with -1 which means this enemy object dont have a "human counter-part".
 		setID(-1);

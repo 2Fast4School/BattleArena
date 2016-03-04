@@ -1,6 +1,13 @@
 package model;
 
 import java.awt.Rectangle;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
+import javax.imageio.ImageIO;
+
+import arenaFighter.Main;
 
 /**
  * <h1>Weapon</h1>
@@ -10,6 +17,10 @@ import java.awt.Rectangle;
  */
 public class SweepSword extends Weapon{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2923628820029911684L;
 	private int x,y;
 	private int weaponRotation;
 	private int radius;
@@ -21,9 +32,12 @@ public class SweepSword extends Weapon{
 	 * @param width The width of the weapon / weapon-sprite.
 	 * @param height The height of the weapon/weapon-sprite.
 	 */
-	public SweepSword(Unit owner, int width, int height){
-		super(owner, width, height, 5);
+	public SweepSword(Unit owner, int width, int height, int dmg){
+		super(owner, width, height, dmg);
 		radius = (owner.getHeight() / 2);
+		try{
+			sprite = ImageIO.read(Main.class.getResource("/sw.png"));
+		}catch(IOException e){}
 	}
 	
 	public void attack(){
@@ -91,6 +105,5 @@ public class SweepSword extends Weapon{
 	public int getCenterY(){
 		return owner.getCenterY();
 	}
-	
 	
 }

@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Quadtree {
 	
-	private int MAX_OBJECTS = 20;
+	private int MAX_OBJECTS = 100;
 	private int MAX_LEVELS = 5;
 	 
 	private int level;

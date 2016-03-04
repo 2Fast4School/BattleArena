@@ -39,7 +39,7 @@ public class Server extends Observable implements Runnable{
 	private DatagramPacket packet;
 	private byte[] receive;
 	private int idToGiveClient=0;
-	private int maxPlayers = 4;
+	private int maxPlayers = 0;
 	private List<ClientInfo> clients;
 	private Map map = null;
 	private String mapName="logicMap.png";;
@@ -153,7 +153,7 @@ public class Server extends Observable implements Runnable{
 		public void run(){	
 			if(code == 0){
 				idToGiveClient += 1;
-				Message sendMessage=new Message(idToGiveClient, -1, -1, -1, false);
+				Message sendMessage=new Message(idToGiveClient, -1, -1, -1, 0);
 				sendMessage.setMaxNrPlayers(maxPlayers);;
 				sendMessage.setMapName(mapName);
 				sendMessage.setMapType(type);
