@@ -3,29 +3,29 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import view.Meny;
 import BAServer.ServerMain;
+import arenaFighter.Window;
 
 
 /**
- * The Class PreGameInput.
+ * The Class MenuInput.
  * Exclusive actionlistener for mainmenu components.
  * Gets actionevent when the user presses any button.
  * Takes care of starting a server, showing a submenu or exiting the game.
  * @author Fred Hedenberg
  * @version 1.0 2016-03-03
  */
-public class PreGameInput implements ActionListener {
+public class MenuInput implements ActionListener {
 	
 	/** The frame, application window */
-	private Meny theFrame;
+	private Window theFrame;
 	
 	/**
 	 * Instantiates the main-menu input.
 	 *
 	 * @param theFrame the application window
 	 */
-	public PreGameInput(Meny theFrame) {
+	public MenuInput(Window theFrame) {
 		this.theFrame = theFrame;
 	}
 	
@@ -39,7 +39,7 @@ public class PreGameInput implements ActionListener {
 		//System.out.println(e.getActionCommand());
 		switch (e.getActionCommand()) {
 		case "createGameBtn":
-			ServerMain m = ServerMain.getInstance();
+			ServerMain.getInstance();
 			break;
 			
 		case "connectGameBtn":

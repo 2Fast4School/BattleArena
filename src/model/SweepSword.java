@@ -2,9 +2,6 @@ package model;
 
 import java.awt.Rectangle;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
 import javax.imageio.ImageIO;
 
 import arenaFighter.Main;

@@ -8,23 +8,24 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import controller.PreGameInput;
+import controller.MenuInput;
 
 /**
- * The Class PreGameWindow.
+ * The Class MenuPanel.
  * Main-menu which the user enters when starting the application.
  * User can navigate to different submenus and choose to start a server here
  * @author Fred Hedenberg
  * @version 1.0 2016-03-03
  */
-public class PreGameWindow extends JPanel{
+@SuppressWarnings("serial")
+public class MenuPanel extends JPanel{
 
 	
 	/** The background image for menus. */
 	private Image preGameArt;
 	
-	/** The pregameinput. Exclusive actionlistener for pregamewindow */
-	private PreGameInput preGameInput;
+	/** The menuInput. Exclusive actionlistener for menupanel */
+	private MenuInput menuInput;
 	
 	/** The create game button. Starts a server */
 	private JButton createGameBtn;
@@ -42,22 +43,22 @@ public class PreGameWindow extends JPanel{
 	 * Instantiates the main menu.
 	 * 
 	 *
-	 * @param preGameInput pregameinput, the exclusive actionlistener for pregamewindow
+	 * @param menuInput menuinput, the exclusive actionlistener for menuPanel
 	 * @param preGameArt the background image for menus
 	 */
-	public PreGameWindow(PreGameInput preGameInput, Image preGameArt) {
+	public MenuPanel(MenuInput menuInput, Image preGameArt) {
 		setLayout(null);
-		this.preGameInput = preGameInput;
+		this.menuInput = menuInput;
 		this.preGameArt = preGameArt;
-		initPreGameWindow();
+		initMenuPanel();
 	}
 	
 	/**
-	 * Inits the pre game window.
+	 * Inits the menu window.
 	 * Creates all buttons and applies actionlisteners to them.
 	 * Sets the background
 	 */
-	private void initPreGameWindow() {
+	private void initMenuPanel() {
 		
 		
 		setBounds(0, 0, 800, 800);
@@ -69,28 +70,28 @@ public class PreGameWindow extends JPanel{
 		createGameBtn.setBounds(300, 240, 200, 60);
 		createGameBtn.setFont(font);
 		createGameBtn.setActionCommand("createGameBtn");
-		createGameBtn.addActionListener(preGameInput);
+		createGameBtn.addActionListener(menuInput);
 		add(createGameBtn);
 					// Connect game (by IP)
 		JButton connectGameBtn = new JButton("Connect by IP");
 		connectGameBtn.setBounds(300, 320, 200, 60);
 		connectGameBtn.setFont(font);
 		connectGameBtn.setActionCommand("connectGameBtn");
-		connectGameBtn.addActionListener(preGameInput);
+		connectGameBtn.addActionListener(menuInput);
 		add(connectGameBtn);
 					// Settings
 		JButton settingsBtn = new JButton("Settings");
 		settingsBtn.setBounds(300, 400, 200, 60);
 		settingsBtn.setFont(font);
 		settingsBtn.setActionCommand("settingsBtn");
-		settingsBtn.addActionListener(preGameInput);
+		settingsBtn.addActionListener(menuInput);
 		add(settingsBtn);
 					// Quit
 		JButton quitBtn = new JButton("Quit");
 		quitBtn.setBounds(300, 480, 200, 60);
 		quitBtn.setFont(font);
 		quitBtn.setActionCommand("quitBtn");
-		quitBtn.addActionListener(preGameInput);
+		quitBtn.addActionListener(menuInput);
 		add(quitBtn);
 		quitBtn.repaint();
 		

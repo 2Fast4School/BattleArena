@@ -1,4 +1,4 @@
-package view;
+package arenaFighter;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -10,40 +10,46 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import arenaFighter.Main;
 import controller.Client;
 import controller.ConnectInput;
 import controller.Game;
 import controller.GameInput;
 import controller.LobbyInput;
-import controller.PreGameInput;
+import controller.MenuInput;
 import controller.SettingsInput;
 import model.GameState;
+import view.ConnectPanel;
+import view.GameCanvas;
+import view.LobbyPanel;
+import view.MenuPanel;
+import view.SettingsPanel;
 
 /**
- * The Class Meny.
+ * The Class Window.
  * Creates the window for the whole game (both pregame and gameplay)
- * Holds information about all the submenus with their associated actionlisteners
+ * Holds information about all the submenus with their associated actionlisteners,
+ * From user inputs the class also starts gamestate
  * @author Fred Hedenberg
  * @version 1.0 2016-03-03
  * 
  */
-public class Meny extends JFrame {
+@SuppressWarnings("serial")
+public class Window extends JFrame {
 
 	/** The settingspanel. Submenu panel for settings*/
-	private SettingsPanel settingspanel;
+	private SettingsPanel settingsPanel;
 	
 	/** The pregamewindow. Main-menu panel*/
-	private PreGameWindow pregamewindow;
+	private MenuPanel menuPanel;
 	
 	/** The pregameinput. Exclusive actionlistener for pregamewindow */
-	private PreGameInput pregameinput;
+	private MenuInput menuInput;
 	
 	/** The connectpanel. Submenu for connecting to a server*/
-	private ConnectPanel connectpanel;
+	private ConnectPanel connectPanel;
 	
 	/** The lobbypanel. Lobby-mode panel when already connected to a server, but not yet in-game*/
-	private LobbyPanel lobbypanel;
+	private LobbyPanel lobbyPanel;
 	
 	/** The settingsinput. Exclusive actionlistener for settingspanel*/
 	private SettingsInput settingsinput;
@@ -69,10 +75,10 @@ public class Meny extends JFrame {
 	/** The gamestate. Holds information about objects/players in-game */
 	private GameState GAMESTATE;
 	
-	/** The gamewindow. In-game canvas which takes care of in-game GUI */
-	private GameWindow GAMEWINDOW;
+	/** The gamecanvas. In-game canvas which takes care of in-game GUI */
+	private GameCanvas GAMECANVAS;
 	
-	/** The gameinput. Exclusive actionlistener for gamewindow */
+	/** The gameinput. Exclusive actionlistener for gamecanvas */
 	private GameInput GAMEINPUT;	
 	
 	/** The game. Makes the game run/tick/update */
@@ -81,11 +87,11 @@ public class Meny extends JFrame {
 		
 	
 	/**
-	 * Instantiates a new meny.
+	 * Instantiates the Window.
 	 *
 	 * @param frameName the title of the window
 	 */
-	public Meny(String frameName) {
+	public Window(String frameName) {
 		super(frameName);
 		try {
 			setIconImage(ImageIO.read(Main.class.getResource("/testa.png")));
@@ -126,7 +132,7 @@ public class Meny extends JFrame {
 
 		makeOtherObjects();
 		makeOtherPanels();
-		setView("MENY");
+		setView("MENU");
 		setVisible(true);
 	}
 	
@@ -144,32 +150,32 @@ public class Meny extends JFrame {
 	}
 	
 	/**
-	 * Creates the panels (all menus and the in-game window)
+	 * Creates the panels (all menus and the in-game canvas)
 	 * Everything is created when application starts and then using
 	 * cardlayouts card-switching functionality chosen when needed.
 	 */
 	private void makeOtherPanels(){
 		
-		GAMEWINDOW = new GameWindow(null);
+		GAMECANVAS = new GameCanvas(null);
 		
-		pregameinput = new PreGameInput(this);
-		pregamewindow = new PreGameWindow(pregameinput, preGameArt);
+		menuInput = new MenuInput(this);
+		menuPanel = new MenuPanel(menuInput, preGameArt);
 		
 		connectinput = new ConnectInput(this);
-		connectpanel = new ConnectPanel(connectinput, preGameArt);
+		connectPanel = new ConnectPanel(connectinput, preGameArt);
 		
 		settingsinput = new SettingsInput(this);
-		settingspanel = new SettingsPanel(settingsinput, preGameArt);
+		settingsPanel = new SettingsPanel(settingsinput, preGameArt);
 		
 		lobbyinput = new LobbyInput(this, GAMESTATE);
-		lobbypanel = new LobbyPanel(lobbyinput, preGameArt);
+		lobbyPanel = new LobbyPanel(lobbyinput, preGameArt);
 		
 		//contentpane.add(pregamewindow, "LOBBY");
-		contentpane.add(connectpanel, "CONNECT");
-		contentpane.add(settingspanel, "SETTINGS");
-		contentpane.add(pregamewindow, "MENY");
-		contentpane.add(GAMEWINDOW, "GAME");
-		contentpane.add(lobbypanel, "LOBBY");
+		contentpane.add(connectPanel, "CONNECT");
+		contentpane.add(settingsPanel, "SETTINGS");
+		contentpane.add(menuPanel, "MENU");
+		contentpane.add(GAMECANVAS, "GAME");
+		contentpane.add(lobbyPanel, "LOBBY");
 		
 	}
 	
@@ -182,7 +188,7 @@ public class Meny extends JFrame {
 	public void setView(String v){
 		switch(v){
 			case "LOBBY":
-				GAMESTATE.setName(settingspanel.getName());
+				GAMESTATE.setName(settingsPanel.getName());
 				int port = connectinput.getPort();
 				String ip = connectinput.getIP();
 				GAME = new Game(GAMESTATE, this);
@@ -191,7 +197,7 @@ public class Meny extends JFrame {
 
 				GAMEINPUT.setup(GAMESTATE.returnPlayer());
 				GAMESTATE.addObserver(CLIENT);
-				GAMESTATE.addObserver(GAMEWINDOW);
+				GAMESTATE.addObserver(GAMECANVAS);
 				GAMESTATE.addObserver(lobbyinput);
 				
 				GAME.start();
@@ -211,9 +217,9 @@ public class Meny extends JFrame {
 				
 			case "GAME":
 				this.setSize(GAMESTATE.getBackground().getWidth(),GAMESTATE.getBackground().getHeight());
-				GAMEWINDOW.addKeyListener(GAMEINPUT);
-				GAMEWINDOW.addMouseListener(GAMEINPUT);
-				GAMEWINDOW.addMouseMotionListener(GAMEINPUT);
+				GAMECANVAS.addKeyListener(GAMEINPUT);
+				GAMECANVAS.addMouseListener(GAMEINPUT);
+				GAMECANVAS.addMouseMotionListener(GAMEINPUT);
 				
 				cardlayout.show(contentpane, "GAME");
 				break;
@@ -221,11 +227,11 @@ public class Meny extends JFrame {
 			case "BACK":
 				makeOtherObjects();
 				makeOtherPanels();
-				setView("MENY");
+				setView("MENU");
 				setVisible(true);
-			case "MENY":
+			case "MENU":
 				this.setSize(800,800);
-				cardlayout.show(contentpane, "MENY");
+				cardlayout.show(contentpane, "MENU");
 				break;
 				
 			default:

@@ -5,8 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import arenaFighter.Window;
 import view.ConnectPanel;
-import view.Meny;
 
 /**
  * The Class ConnectInput.
@@ -19,7 +19,7 @@ import view.Meny;
 public class ConnectInput implements ActionListener {
 	
 	/** The frame. */
-	private Meny frame;
+	private Window frame;
 	
 	/** The ip and port. */
 	private String ip, port;
@@ -29,7 +29,7 @@ public class ConnectInput implements ActionListener {
 	 *
 	 * @param frame the application window
 	 */
-	public ConnectInput(Meny frame) {
+	public ConnectInput(Window frame) {
 		this.frame = frame;
 	}
 	
@@ -71,7 +71,7 @@ public class ConnectInput implements ActionListener {
 			frame.setView("LOBBY");
 			break;	
 		case "ipCancelBtn":
-			frame.setView("MENY");
+			frame.setView("MENU");
 			break;
 		default:
 			break;

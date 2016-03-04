@@ -143,6 +143,7 @@ public class Client implements Runnable, Observer{
 							n.setHP(receiveMessage.getEnemyHP());
 						}
 					}
+					
 					if(enemyID==state.getID()){
 						state.returnPlayer().setHP(receiveMessage.getEnemyHP());
 					}

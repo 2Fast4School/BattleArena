@@ -20,6 +20,7 @@ import controller.ConnectInput;
  * @author Fred Hedenberg
  * @version 1.0 2016-03-03
  */
+@SuppressWarnings("serial")
 public class ConnectPanel extends JPanel {
 	
 	/** The connectinput, exclusive actionlistener for this class */

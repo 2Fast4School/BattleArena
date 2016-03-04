@@ -1,8 +1,5 @@
 package model;
 
-import java.io.Externalizable;
-import java.io.Serializable;
-
 
 public abstract class Weapon extends Entity {
 

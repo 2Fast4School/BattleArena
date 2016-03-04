@@ -143,6 +143,8 @@ public class MapGenerator {
 		
 		//prints the number of entities created
 		//
+
+		System.out.println("Number of Tiles in map: " + (map.getTiles().size() + map.getSpawnPoints().size())); 
 		//System.out.println("Number of Tiles in map: " + map.getTiles().size()+map.getSpawnPoints().size()); 
 		map.setBackground(background);
 		return map;

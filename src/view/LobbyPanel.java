@@ -27,6 +27,7 @@ import controller.LobbyInput;
  * @author Fred Hedenberg
  * @version 1.0 2016-03-03
  */
+@SuppressWarnings("serial")
 public class LobbyPanel extends JPanel {
 	
 	/** The lobbyinput. Exclusive actionlistener for this class */
@@ -40,9 +41,6 @@ public class LobbyPanel extends JPanel {
 	
 	/** The map name. */
 	private String mapName = "";
-	
-	/** The scaled (new) height and width of the minimap. */
-	private int scaledWidth, scaledHeight;
 	
 	/**
 	 * Instantiates a new lobby panel.
@@ -125,14 +123,16 @@ public class LobbyPanel extends JPanel {
 		}
 
 		// Scales the game-map to a minimap
+		int scaledWidth = 0;
+		int scaledHeight = 0;
 		if (mapImage != null) {
 			if (mapImage.getHeight()<=mapImage.getWidth()){
-				int scaledWidth = 400;
-				int scaledHeight = mapImage.getHeight()*(scaledWidth/mapImage.getWidth());
+				scaledWidth = 400;
+				scaledHeight = mapImage.getHeight()*(scaledWidth/mapImage.getWidth());
 			}
 			else {
-				int scaledHeight = 400;
-				int scaledWidth = mapImage.getWidth()*(scaledHeight/mapImage.getHeight());
+				scaledHeight = 400;
+				scaledWidth = mapImage.getWidth()*(scaledHeight/mapImage.getHeight());
 			}
 			if (scaledWidth <= 0 || scaledHeight <= 0) {
 				scaledWidth = 400;
