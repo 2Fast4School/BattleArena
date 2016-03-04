@@ -14,7 +14,7 @@ public abstract class Weapon extends Entity {
 	private int damage;
 	
 	/**
-	 * 
+	 * Constructor of Weapon
 	 * @param owner The Unit who is the owner of the Weapon.
 	 * @param width The Weapons width.
 	 * @param height The Weapons Height.
@@ -28,7 +28,7 @@ public abstract class Weapon extends Entity {
 	}
 	
 	/**
-	 * 
+	 * Returns the owner of the weapon
 	 * @return The Owner of the Weapon.
 	 */
 	public Unit getOwner(){
@@ -43,7 +43,7 @@ public abstract class Weapon extends Entity {
 	
 
 	/**
-	 * 
+	 * Returns the weapons damage
 	 * @return The weapons damage.
 	 */
 	public int getDmg(){
@@ -51,7 +51,7 @@ public abstract class Weapon extends Entity {
 	}
 	
 	/**
-	 * 
+	 * Returns the damage done in the current cycle
 	 * @return True if damage's been done in the current cycle.
 	 */
 	public boolean getDmgDone(){
@@ -74,7 +74,7 @@ public abstract class Weapon extends Entity {
 	}
 	
 	/**
-	 * 
+	 * Checks if the weapon is currently attacking
 	 * @return True if this weapon is currently attacking.
 	 */
 	public boolean isAttacking(){

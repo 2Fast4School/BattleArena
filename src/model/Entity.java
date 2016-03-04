@@ -11,9 +11,6 @@ import java.awt.image.BufferedImage;
  * @version 1.0
  */
 public abstract class Entity {
-	/**
-	 * 
-	 */
 	private boolean solid;
 	protected int x, y, w, h, rotation, hp;
 	protected transient BufferedImage sprite;

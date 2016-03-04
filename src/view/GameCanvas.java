@@ -20,11 +20,14 @@ import model.Weapon;
 public class GameCanvas extends Canvas implements Observer{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Entity> gameObjects;
-	private BufferedImage img = null;
+	private BufferedImage backgroundImage = null;
 	
-	//Kanske ta bort
+	/**
+	 * Contructor of GameCanvas
+	 * @param backgroundImage The backgroundimage of the gamecanvas
+	 */
 	public GameCanvas(BufferedImage img){
-		this.img = img;
+		this.backgroundImage = img;
 	}
 
 	/**
@@ -42,8 +45,8 @@ public class GameCanvas extends Canvas implements Observer{
 		Graphics g = bs.getDrawGraphics();
 		Graphics2D g2d = (Graphics2D)g;
 		///// Paint method
-		if(img != null){
-			g2d.drawImage(img, null, 0, 0);
+		if(backgroundImage != null){
+			g2d.drawImage(backgroundImage, null, 0, 0);
 			
 		}else{
 			g2d.setColor(Color.WHITE);
@@ -113,7 +116,7 @@ public class GameCanvas extends Canvas implements Observer{
 		if(arg0 instanceof GameState){
 			GameState state = (GameState)arg0;
 			gameObjects = state.getList();
-			img = state.getBackground();
+			backgroundImage = state.getBackground();
 			render();
 		}
 	}
