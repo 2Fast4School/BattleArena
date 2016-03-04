@@ -116,6 +116,7 @@ public class Client implements Runnable, Observer{
 					int playerHP=receiveMessage.getPlayerHP();
 					
 					if(code==4){
+						System.out.println(state.getID());
 						state.setName(receiveMessage.getPlayerName());
 						state.setGameOver(true);
 						stop();
@@ -179,7 +180,6 @@ public class Client implements Runnable, Observer{
 			
 			BufferedImage logicMap = null;
 			try {
-				System.out.println(receiveMessage.getMapName());
 			logicMap = ImageIO.read(Main.class.getResource("/maps/"+receiveMessage.getMapName()));
 			}
 			catch (Exception e) {
@@ -193,6 +193,7 @@ public class Client implements Runnable, Observer{
 						e.printStackTrace();
 					}
 			}
+			System.out.println(receiveMessage.getID());
 			map=MapGenerator.generateMap(logicMap, receiveMessage.getMapType(), 16);
 
 			state.setup(receiveMessage.getID(), receiveMessage.getMaxNrPlayers(), map);

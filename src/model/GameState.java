@@ -202,7 +202,6 @@ public class GameState extends Observable{
 							//We can't hit more than one object so break the loop if a hit occured.
 							break;
 						} else if(ent.isSolid() && !(ent instanceof Player)){
-							System.out.println("Stuck here?");
 							w.damageDone();
 						}
 						
