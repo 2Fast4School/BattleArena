@@ -32,15 +32,15 @@ public class SettingsPanel extends JPanel {
 	
 	/** The name-list */
 	private String[] name =
-			{"Märta", "Ann-Britt", "Karin", "Majken", "Kerstin", "Viola", "Göta", "Inga", "Dagny", "Gerd", "Sixten", "Nils", "Birger",
+			{"Mï¿½rta", "Ann-Britt", "Karin", "Majken", "Kerstin", "Viola", "Gï¿½ta", "Inga", "Dagny", "Gerd", "Sixten", "Nils", "Birger",
 			"Sune", "Ture", "Harry", "Lars", "Per", "Ernst", "Gunnar", "Eva", "Gunnel", "Gunborg", "Birgit", "Astrid", "Ulla-Britt",
-			"Berit", "Sonja", "Vanja", "Jan", "Åke", "Sven", "Olof", "Allan", "Harald", "Bertil", "Gösta", "Bengt", "Birgitta", "Margareta",
+			"Berit", "Sonja", "Vanja", "Jan", "ï¿½ke", "Sven", "Olof", "Allan", "Harald", "Bertil", "Gï¿½sta", "Bengt", "Birgitta", "Margareta",
 			"Christina", "Marianne", "Ingrid", "Inger", "Gertrud", "Doris", "Kerstin", "Elisabeth", "Maj-Britt", "Anita", "Britt-Marie",
-			"Barbro", "Lars", "Per-Erik", "Kjell", "Kurt", "Håkan", "Leif", "Roland", "Bert", "Åke", "Göran", "Monica", "Katarina",
+			"Barbro", "Lars", "Per-Erik", "Kjell", "Kurt", "Hï¿½kan", "Leif", "Roland", "Bert", "ï¿½ke", "Gï¿½ran", "Monica", "Katarina",
 			"Eva", "Christina", "Agneta", "Lena", "Peter", "Krister", "Stefan", "Mats", "Patrik", "Niklas", "Henrik", "Susanne",
 			"Jeanette", "Christine", "Maria", "Helena", "Caroline", "Annika", "Louise", "Malin", "Eva", "Fredrik", "Joachim", "Johan",
 			"Patrik", "Jimmy", "Jonas", "Christoffer", "Mattias", "Markus", "Johan", "Niklas", "Oskar", "Malin", "Helena", "Sofia",
-			"Johanna", "Anna", "Frida", "Emma", "Lisa", "Jannike", "Therese", "Åsa", "Elin", "Pernilla", "Josefine", "Jenny"};
+			"Johanna", "Anna", "Frida", "Emma", "Lisa", "Jannike", "Therese", "ï¿½sa", "Elin", "Pernilla", "Josefine", "Jenny"};
 	
 	/** The background image for menus. */
 	private Image preGameArt;
@@ -69,7 +69,7 @@ public class SettingsPanel extends JPanel {
 		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);
 		Font font2 = new Font("Comic Sans MS", Font.PLAIN, 14);
 		
-		JButton settingsCloseBtn = new JButton("Cancel");
+		JButton settingsCloseBtn = new JButton("Back");
 		settingsCloseBtn.setFont(font1);
 		settingsCloseBtn.setBounds(300, 320, 200, 60);
 		settingsCloseBtn.setActionCommand("settingsCloseBtn");
