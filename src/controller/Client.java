@@ -35,8 +35,7 @@ import arenaFighter.Main;
 * <b>state:GameState</b> The game's current state, with all data regarding the current game<p>
 * <b>map:Map</b> The selected map<p>
 * @author  William Bjorklund / Victor Dahlberg
-* @version 1.0
-* @since   2016-03-03
+* @version 1.0 2016-03-03
 */
 public class Client implements Runnable, Observer{
 	private int srvport;
