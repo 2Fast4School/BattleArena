@@ -1,7 +1,8 @@
 package model;
 
 /**
- * A simple class which represents a wall in game
+ * <h1>WallTile</h1>
+ * A simple class which represents a wall in the game
  * @author Alexander Erenstedt - Modified 28-02-16
  * @version 1.0  28-02-16
  */

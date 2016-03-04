@@ -1,6 +1,7 @@
 package model;
 
 /**
+ * <h1>SpawnPoint</h1>
  * A class which represents the spawnpoints in the map
  * Has it's own ArrayList in Map.
  * @author Alexander Erenstedt - Modified 28-02-16
@@ -8,9 +9,6 @@ package model;
  * 
  */
 public class SpawnPoint extends Tile{
-
-	private boolean isUsed;
-	
 	/**
 	 * Creates a spawnpoint at x,y with size = 1*1, not solid
 	 * @param x The x-position of the SpawnPoint.
@@ -18,28 +16,8 @@ public class SpawnPoint extends Tile{
 	 */
 	public SpawnPoint(int x, int y) {
 		super(x, y, 1, 1, false);
-		isUsed=false;
-	}
-	/**
-	 * Sets the SpawnPoint as used so the server can keep track on used SpawnPoints
-	 */
-	public void setUsed(){
-		isUsed = true;
 	}
 	
-	/**
-	 * Sets the SpawnPoint as unused
-	 */
-	public void setUnused(){
-		isUsed = false;
-	}
-	
-	/**
-	 * @return If the SpawnPoint has been used
-	 */
-	public boolean checkUsed(){
-		return isUsed;
-	}
 	/**
 	 * This tile should'nt do anything on tick
 	 */

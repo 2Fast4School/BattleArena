@@ -1,6 +1,7 @@
 package model;
 
 /**
+ * <h1>DamageTile</h1>
  * The logic tiles to represent damage when stepping on them, for example lava or bushes
  * 
  * @author Alexander Erenstedt - Modified 28-02-16
@@ -35,6 +36,7 @@ public class DamageTile extends Tile {
 	}
 	
 	/**
+	 * Returns the damage the tile deals
 	 * @return The damage it deals.
 	 */
 	public int getDmg(){

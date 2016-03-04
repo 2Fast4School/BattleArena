@@ -35,14 +35,14 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * UNUSED
+	 * Used to get the sprite for the Entity
 	 * @return BufferedImage sprite
 	 */
 	public BufferedImage getSprite(){
 		return sprite;
 	}
 	/**
-	 * UNUSED
+	 * Used to set the sprite for the Entity
 	 * @param sprite
 	 */
 	public void setSprite(BufferedImage sprite){
