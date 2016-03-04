@@ -7,7 +7,7 @@ import model.Tile;
 import model.SpawnPoint;
 /**
  * <h1>Map</h1>
- * Object to hold the map-specific objects such as spawnPoints and boundaries
+ * Object to hold the map-specific objects such as spawnPoints, boundaries and damagetiles
  * @author Alexander Erenstedt - Modified: 28-02-16 
  * @version 1.0 
  */
@@ -18,7 +18,7 @@ public class Map{
 	
 	/**
 	 * Constructor for Map,
-	 * Initializes the background image as null temporarily
+	 * Initializes the background image as null
 	 */
 	public Map(){
 		background = null;
@@ -27,6 +27,7 @@ public class Map{
 	}
 	
 	/**
+	 * Used to set the background image of the map
 	 * @param img The background image for the board
 	 */
 	public void setBackground(BufferedImage img){
@@ -34,13 +35,15 @@ public class Map{
 	}
 	
 	/**
-	 * @param e The entity which should be added to the map
+	 * Used to add tiles to the map, used by MapGenerator
+	 * @param e The tile which should be added to the map
 	 */
 	public void addTile(Tile e){
 		tiles.add(e);
 	}
 	
 	/**
+	 * Used to add spawnpoints to the map, used by MapGenerator
 	 * @param sp Adds spawnpoints
 	 */
 	public void addSpawnPoint(SpawnPoint sp){
@@ -48,13 +51,15 @@ public class Map{
 	}
 	
 	/**
-	 * @return Returns the background as a BufferedImage, could be null
+	 * Used to return the background image
+	 * @return Returns the background as a BufferedImage
 	 */
 	public BufferedImage getBackground(){
 		return background;
 	}
 	
 	/**
+	 * Returns the tiles of the map, not the spawnpoints
 	 * @return The array of the Map:s entities
 	 */
 	public ArrayList<Tile> getTiles(){
@@ -62,6 +67,7 @@ public class Map{
 	}
 	
 	/**
+	 * Returns the spawnpoints of the map
 	 * @return Returns the spawnpoints of the map
 	 */
 	public ArrayList<SpawnPoint> getSpawnPoints(){

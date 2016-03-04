@@ -1,7 +1,7 @@
 package model;
 
 /**
- * A simple class which represents a wall in game
+ * A simple class which represents a wall in the game
  * @author Alexander Erenstedt - Modified 28-02-16
  * @version 1.0  28-02-16
  */

@@ -3,27 +3,37 @@ package map;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 /**
- * DEPRECATED DONT FUCKING USE IT yet...
+ * Used to wrap a BufferedImage for serialization
+ * Not fully implemented yet.
  * @author Alexander
  *
  */
-public class MyBufferedImage implements Serializable{
+public class SerializeableBufferedImage implements Serializable{
 	private static final long serialVersionUID = -8565146954702818348L;
 	private transient BufferedImage image;
 	
-	public MyBufferedImage(){
-		image = null;
+	/**
+	 * Constructs a BufferedImage of one of the predefined image types.
+	 * @param width width of the created image 
+	 * @param height height of the created image
+	 * @param imageType type of the created image
+	 */
+	public SerializeableBufferedImage(int width, int height, int imageType){
+		image = new BufferedImage(width, height, imageType);
 	}
 	
-	public MyBufferedImage(int width, int height, int type){
-		image = new BufferedImage(width, height, type);
-	}
-	
-	
+	/**
+	 * Used to get the wrapped BufferedImage
+	 * @return the current image
+	 */
 	public BufferedImage getImage(){
 		return image;
 	}
 	
+	/**
+	 * Used to set the wrapped BufferedImage
+	 * @param img the new BufferedImage
+	 */
 	public void setImage(BufferedImage img){
 		image = img;
 	}

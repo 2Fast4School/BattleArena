@@ -19,8 +19,13 @@ import model.SpawnPoint;
  */
 public class MapGenerator {
 	/**
-	 * Enormous method which generates entities as boundaries in the Map object it returns
+	 * Method which generates entities as boundaries in the Map object it returns
 	 * and paints the background depending on the parameter type.
+	 * It creates tiles depending on which ARGB code in the image.
+	 * "ff000000" is a black color which represents a wall
+	 * "ffed1c24" is a red color which represents a damagetile
+	 * "fffff200" is a white color which represents a spawnpoint
+	 * If none of the above colors is matched not tile is created which means that the area will be pathable
 	 * @param logicMap The logicmap which will be used to create walls and such, cannot be null
 	 * @param type The desired theme of the map generated
 	 * @param sizeOfPixel The size each pixel in the logicMap should represent in the game view (16 or 8)
@@ -152,7 +157,7 @@ public class MapGenerator {
 	
 	/**
 	 * A recursive function to check if the pixel to the right is adjacent
-	 * is used to optimize the creation of entities in MapGenerator.
+	 * is used to optimize the creation of tiles in MapGenerator.
 	 * @param x The x-coord of the pixel comparing to
 	 * @param y	The y-coord of the pixel comparing to
 	 * @param img The img used to compare
