@@ -4,8 +4,8 @@ package model;
  * <h1>SpawnPoint</h1>
  * A class which represents the spawnpoints in the map
  * Has it's own ArrayList in Map.
- * @author Alexander Erenstedt - Modified 28-02-16
- * @version 1.0  
+ * @author Alexander Erenstedt
+ * @version 1.0  2016-02-28
  * 
  */
 public class SpawnPoint extends Tile{

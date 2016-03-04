@@ -217,7 +217,7 @@ public class Window extends JFrame {
 				break;
 				
 			case "GAME":
-				this.setSize(GAMESTATE.getBackground().getWidth(),GAMESTATE.getBackground().getHeight());
+				this.setSize(GAMESTATE.getBackground().getWidth()+10,GAMESTATE.getBackground().getHeight()+45);
 				GAMECANVAS.addKeyListener(GAMEINPUT);
 				GAMECANVAS.addMouseListener(GAMEINPUT);
 				GAMECANVAS.addMouseMotionListener(GAMEINPUT);
