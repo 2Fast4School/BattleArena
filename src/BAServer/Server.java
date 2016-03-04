@@ -36,7 +36,7 @@ public class Server extends Observable implements Runnable{
 	private int maxPlayers = 0;
 	private List<ClientInfo> clients;
 	private Map map = null;
-	private String mapName="logicMap.png";;
+	private String mapName="DotaMap.png";;
 	private String type="grass";
 	private boolean safelyClosed=false;
 	private ByteRepresenter byteRepresenter;

@@ -14,7 +14,6 @@ public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
 	private ArrayList<Entity> objInNode;
 	private ArrayList<Weapon> arrows;
-	private List<Enemy> theEnemies;
 	private Enemy gotHit;
 	private ArrayList<SpawnPoint> spawnPoints;
 	private boolean alive;
@@ -32,7 +31,6 @@ public class GameState extends Observable{
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		arrows = new ArrayList<Weapon>();
-		theEnemies = Collections.synchronizedList(new ArrayList<Enemy>());
 		gotHit = null;
 		spawnPoints = new ArrayList<SpawnPoint>();
 		alive = false;
@@ -206,7 +204,6 @@ public class GameState extends Observable{
 							//We can't hit more than one object so break the loop if a hit occured.
 							break;
 						} else if(ent.isSolid() && !(ent instanceof Player)){
-							System.out.println("Stuck here?");
 							w.damageDone();
 						}
 						

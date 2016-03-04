@@ -87,13 +87,22 @@ public class ServerController implements ItemListener, ActionListener{
 		view.toTerminal("Starting server on " + view.getIpAddress() + ":" + view.getPort() + "\n");
 	}//startServer()
 	
-	
 	/**
 	 * Creates a file explorer to find maps which is of filetype .png
 	 */
 	public void chooseMap()
 	{
-		JFileChooser chooser = new JFileChooser(new File(System.getProperty("user.dir")+"/res/maps"));
+		String className=this.getClass().getName().replace('.', '/');
+		String classJar=this.getClass().getResource('/'+className+".class").toString();
+		File toChoose;
+		view.toTerminal(classJar);
+		if(classJar.startsWith("rsrc:")){
+			toChoose=new File(System.getProperty("user.dir")+"/maps");
+		}
+		else{
+			toChoose=new File(System.getProperty("user.dir")+"/res/maps");
+		}
+		JFileChooser chooser = new JFileChooser(toChoose);
 		BufferedImage logicMap = null;
 		
 	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
