@@ -20,7 +20,6 @@ public class Player extends Unit{
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
 	/**
 	 * Constructor.
-	 * @param id ID of the entity.
 	 * @param x The players x position.
 	 * @param y The player y position.
 	 * @param w The player's hitbox-width.
@@ -37,7 +36,7 @@ public class Player extends Unit{
 	
 	/**
 	 * Updates the variables holding the mousecursor's position.
-	 * @param p
+	 * @param p The point where the PLayer should look at
 	 */
 	public void setTarget(Point p){
 		tx = (int) p.getX();

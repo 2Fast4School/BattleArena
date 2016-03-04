@@ -151,7 +151,7 @@ public class ServerGUI implements Observer {
 	/**
 	 * Print text to server terminal window
 	 * 
-	 * @param text
+	 * @param text The text that should be printed to the terminal
 	 */
 	public void toTerminal(String text) {
 		infoArea.append(text + "\n");

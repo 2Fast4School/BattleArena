@@ -19,9 +19,8 @@ public abstract class Entity {
 	protected transient BufferedImage sprite;
 	
 	/**
-	 * Constructor for Entity. 
+	 * Constructor for Entity.  
 	 * Temporarily sets the Sprite of the Image to null.
-	 * @param id This is the id of the Entity.
 	 * @param x The x-position of the Entity.
 	 * @param y	The y-position of the Entity
 	 * @param w	The width of the Entity.
@@ -43,7 +42,7 @@ public abstract class Entity {
 	}
 	/**
 	 * Used to set the sprite for the Entity
-	 * @param sprite
+	 * @param sprite The new sprite
 	 */
 	public void setSprite(BufferedImage sprite){
 		this.sprite = sprite;
@@ -100,8 +99,6 @@ public abstract class Entity {
 	/**
 	 * Returns a Rectangle, used to check collission.
 	 * Check collission in front of the Object. So for example x + dx, as the parameter x.
-	 * @param x The x-pos of the Rectangle.
-	 * @param y The y-pos of The Rectangle.
 	 * @return A Rectangle specified by the parameters with the same width and height as the Entity.
 	 */
 	public Rectangle getBounds(){
@@ -111,7 +108,7 @@ public abstract class Entity {
 	/**
 	 * UNUSED
 	 * Set a rotation-variable.
-	 * @param rotation
+	 * @param rotation The new rotation of the entity
 	 */
 	public void setRotVar(int rotation){
 		this.rotation = rotation;

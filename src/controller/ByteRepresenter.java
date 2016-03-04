@@ -24,7 +24,7 @@ public class ByteRepresenter {
 	 * Retreives the byte representation of what's received from the writeExternal method
 	 * of an object implementing the externializable interface, and returns it.<p>
 	 * Currently only implemented for Class Message
-	 * @param externializable
+	 * @param externializable Oject to externialize
 	 * @return byte[] bOut 
 	 */
 	public byte[] externByteRepresentation(Object externializable){
@@ -46,8 +46,8 @@ public class ByteRepresenter {
 	 * Recreates an object implementing the externializable interface using
 	 * the supplied byte array.<p>
 	 * Currently only implemented for class Message
-	 * @param byteRepresentation
-	 * @return Message message
+	 * @param byteRepresentation The byterepresentation to convert to a message
+	 * @return Message The converted message
 	 */
 	public Message bytesToExternObject(byte[] byteRepresentation){
 		try{

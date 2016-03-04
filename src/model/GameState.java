@@ -62,12 +62,19 @@ public class GameState extends Observable{
 
 	
 	/**
+	 * 
+	 * @param id 
+	 * @param maxPlayers 
+	 * @param map
+	 */
+	
+	/**
 	 * Setups the Gamestate with a map, new spawnpoints, it also creates the player.
 	 * @param id The id to give the gamestate.
 	 * @param maxPlayers The maximum amount of players in the current game.
 	 * @param map The map which the game should be run on.
+	 * @param mapName The name of the map
 	 */
-
 	public void setup(int id, int maxPlayers, Map map, String mapName){
 
 		this.id = id;

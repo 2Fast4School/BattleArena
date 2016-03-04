@@ -60,14 +60,14 @@ public class Enemy extends Unit {
 	}
 	
 	/**
-	 * 
-	 * @param state
+	 * Method to set the hasAttacked
+	 * @param state Sets if the Enemy returned or not
 	 */
 	public void setHasAttacked(boolean state){hasAttacked=state;}
 	
 	/**
-	 * 
-	 * @return
+	 * Method check if the EnemyObject has attacked
+	 * @return true/false if the enemyobject has attacked
 	 */
 	public boolean getHasAttacked(){return hasAttacked;}
 }

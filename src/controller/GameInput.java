@@ -26,7 +26,7 @@ public class GameInput implements KeyListener, MouseListener, MouseMotionListene
 
 	/**
 	 * Initiliazes the Input object with the specified Player object.
-	 * @param Player p The player object that the Class will manipulate.
+	 * @param p The player object that the Class will manipulate.
 	 */
 	public void setup(Player p){this.p = p;}
 	/**

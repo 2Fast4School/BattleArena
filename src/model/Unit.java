@@ -99,7 +99,7 @@ public abstract class Unit extends Entity{
 	
 	/**
 	 *  Set's the unit to newHp. If newHp is less than 0, it set's the health to 0 and alive to false.
-	 * @param newHp
+	 * @param newHp The desired hp
 	 */
 	public void setHP(int newHp){
 		if(newHp <= 0){
