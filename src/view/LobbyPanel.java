@@ -4,11 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -17,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import arenaFighter.Main;
 import controller.LobbyInput;
 import map.Map;
 import model.GameState;
@@ -33,6 +30,11 @@ import model.GameState;
  */
 
 public class LobbyPanel extends JPanel implements Observer{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private LobbyInput lobbyinput;
 	
@@ -115,11 +117,6 @@ public class LobbyPanel extends JPanel implements Observer{
 		playersJoinedTF.setBounds(600, 200, 140, 40);
 		add(playersJoinedTF);
 		playersJoinedTF.setColumns(10);
-		
-
-		// Scales the game-map to a minimap
-		int scaledWidth = 0;
-		int scaledHeight = 0;
 
 		// Scales the map to a minimap
 	}

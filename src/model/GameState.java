@@ -3,7 +3,6 @@ package model;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
@@ -219,7 +218,6 @@ public class GameState extends Observable{
 						} else if(ent.isSolid() && !(ent instanceof Player)){
 							w.damageDone();
 						}
-						
 					} 
 				}
 				

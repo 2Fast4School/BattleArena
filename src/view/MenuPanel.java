@@ -26,19 +26,6 @@ public class MenuPanel extends JPanel{
 	
 	/** The menuInput. Exclusive actionlistener for menupanel */
 	private MenuInput menuInput;
-	
-	/** The create game button. Starts a server */
-	private JButton createGameBtn;
-	
-	/** The connect game btn. Enters the submenu mode Connect*/
-	private JButton connectGameBtn;
-	
-	/** The settings btn. Enters the submenu mode settings*/
-	private JButton settingsBtn;
-	
-	/** The quit btn. Exits the application */
-	private JButton quitBtn;
-	
 	/**
 	 * Instantiates the main menu.
 	 * 

@@ -6,10 +6,8 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -118,21 +116,15 @@ public class ServerController implements ItemListener, ActionListener{
 			toChoose=new File(System.getProperty("user.dir")+"/res/maps");
 		}
 		JFileChooser chooser = new JFileChooser(toChoose);
-		BufferedImage logicMap = null;
 		
 	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
 	        ".PNG logic maps", "png");
 	    chooser.setFileFilter(filter);
 	    
 	    int returnVal = chooser.showOpenDialog(null);
-	    if(returnVal == JFileChooser.APPROVE_OPTION) {
-		       System.out.println("You chose to open this file: " +
-		            chooser.getSelectedFile().getName());
-		       try {
-				logicMap = ImageIO.read(chooser.getSelectedFile());
-				} catch (IOException e) {
-					e.printStackTrace();
-				} 
+	    if(returnVal == JFileChooser.APPROVE_OPTION){
+		    System.out.println("You chose to open this file: " +
+		    chooser.getSelectedFile().getName());
 		    String mapName=chooser.getSelectedFile().getName();
 		    if(mapName==null){
 		    	mapName="logicMap.png";

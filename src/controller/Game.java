@@ -78,12 +78,6 @@ public class Game implements Runnable {
 		//Used so the game will tick a little faster if you because of some reason had a couple of fewer ticks.
 		double delta = 0;
 		
-		//Used to calculate the number of ticks, i.e updates.
-		int updates = 0;
-		
-		//Just a variable used to calculate when a second has passed.
-		long timer = System.currentTimeMillis();
-		
 		while(running){
 			if(GAMESTATE.getGameOver()){
 				GAMESTATE.setGameOver(false);	// Game is still running. Might want to join other game.
@@ -109,20 +103,9 @@ public class Game implements Runnable {
 					if(delta >= 1){ 
 						//Update the gamestate.
 						GAMESTATE.tick();
-						updates++;
 						
 						//Decrement the tick with 1. We don't set it to 0 because if we would loose a couple of ticks, we want the next second to tick a few more times than 60.
 						delta--;
-		
-					}
-					/*else{
-						thread.sleep();
-					}*/
-					//Used to print number of "ticks" the last second.
-					if(System.currentTimeMillis() - timer > 1000){
-						timer += 1000;
-						//System.out.println("TICKS: "+updates);
-						updates = 0;
 					}
 			}
 		}

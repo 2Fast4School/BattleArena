@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Observable;
 
 import controller.ByteRepresenter;
-import map.Map;
 import model.Message;
 
 /**
@@ -21,7 +20,9 @@ import model.Message;
 *  <b>maxPlayers:int</b> The maximum number of players in the game<p>
 *  <b>idToGiveClient:int</b> The id a joining client should receive<p>
 *  <b>mapName:String</b> The path to the map selected to be played<p>
-*   <b>type:String</b> The name of the texture chosen for the background<p>
+*  <b>type:String</b> The name of the texture chosen for the background<p>
+*  <b>map:Map</b> The gamemap<p>
+*  <b>clients:List(ClientInfo)</b> The clients communicating with the server
 * @author  William Bjorklund / Victor Dahlberg
 * @version 1.0 2016-02-26
 */
@@ -34,7 +35,6 @@ public class Server extends Observable implements Runnable{
 	private int idToGiveClient=0;
 	private int maxPlayers = 0;
 	private List<ClientInfo> clients;
-	private Map map = null;
 	private String mapName="DotaMap.png";;
 	private String type="grass";
 	private boolean safelyClosed=false;
@@ -54,11 +54,6 @@ public class Server extends Observable implements Runnable{
 		byteRepresenter = new ByteRepresenter();
 	}
 	
-	public void setMap(Map map)
-	{
-		this.map=map;
-	}
-	
 	public void setMapName(String mapName){
 		this.mapName=mapName;
 	}
@@ -66,11 +61,6 @@ public class Server extends Observable implements Runnable{
 		this.type=type;
 	}
 	public String getMapName(){return mapName;}
-	
-	public Map getMap()
-	{
-		return map;
-	}
 	
 	public void setMaxPlayers(int nrOfPlayers)
 	{
@@ -115,7 +105,6 @@ public class Server extends Observable implements Runnable{
 
 	private class PacketHandler implements Runnable{
 		DatagramPacket pkt = null;
-		byte[] bReceive = null;
 		DatagramSocket skt = null;
 		int code, id;
 		Message receiveMessage;
@@ -127,7 +116,6 @@ public class Server extends Observable implements Runnable{
 		 */
 		public PacketHandler(DatagramPacket pkt, byte[] bReceive){
 			this.pkt = pkt;
-			this.bReceive=bReceive;
 				
 			try {
 				receiveMessage=byteRepresenter.bytesToExternObject(bReceive);
@@ -344,10 +332,31 @@ public class Server extends Observable implements Runnable{
 		public int getID(){
 			return id;
 		}
+		/**
+		 * Returns whether the client is ready to start the game.
+		 * @return ready:boolean
+		 */
 		public boolean getReady(){return ready;}
+		
+		/**
+		 * Sets whether the client is ready to start the game.
+		 * @param state
+		 */
 		public void setReady(boolean state){ready=state;}
+		/**
+		 * Checks whether the client is alive in the game.
+		 * @return alive:boolean
+		 */
 		public boolean getAlive(){return alive;}
+		/**
+		 * Sets whether the client is alive in the game.
+		 * @param state
+		 */
 		public void setAlive(boolean state){alive=state;}
+		/**
+		 * Returns the client's name.
+		 * @return name:String
+		 */
 		public String getName(){return name;}
 	}
 }
