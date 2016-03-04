@@ -170,22 +170,34 @@ public class ServerGUI implements Observer {
 		serverIp.setSelectedIndex(serverIp.getItemCount() - 1);
 	}
 
+	/**
+	 * Gets the IP address
+	 * @return string of ip address
+	 */
 	public String getIpAddress() {
 		return serverIp.getSelectedItem().toString();
 	}
 
+	/**
+	 * Gets the port address
+	 * @return int of port address
+	 */
 	public int getPort() {
 		return Integer.parseInt(serverPort.getText());
 	}
 
 	/**
-	 * 
-	 * @return hej
+	 * Gets number of players connected
+	 * @return int of number of players
 	 */
 	public int getNrOfPlayers() {
 		return Integer.parseInt(nrOfPlayers.getText().trim());
 	}
 
+	/**
+	 * Adds the associated actionlistener-class for this GUI
+	 * @param controller ServerController
+	 */
 	public void addController(ActionListener controller) {
 		System.out.println("View      : adding controller");
 		startGameBtn.addActionListener(controller);
@@ -211,6 +223,10 @@ public class ServerGUI implements Observer {
 		}
 	}
 
+	/**
+	 * Gets the map type/theme
+	 * @return string of the type
+	 */
 	public String getMapType() {
 		return typeChoice.getSelectedItem();
 	}

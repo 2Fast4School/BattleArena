@@ -94,14 +94,11 @@ public class GameInput implements KeyListener, MouseListener, MouseMotionListene
 		}
 	}
 	
-	//Unused
 	public void keyTyped(KeyEvent e) {
 		
 	}
 	
-	//Unused
 	public void mouseDragged(MouseEvent e) {
-		//System.out.println(e.toString());
 		if(p.isAlive()){
 			if(e.getButton()==MouseEvent.BUTTON1){
 				p.doAttack();
@@ -110,6 +107,9 @@ public class GameInput implements KeyListener, MouseListener, MouseMotionListene
 
 	}
 	
+	/**
+	 * Updates where the player aims
+	 */
 	public void mouseMoved(MouseEvent e) {
 		//System.out.println(e.toString());
 		if(p.isAlive()){;
@@ -117,6 +117,9 @@ public class GameInput implements KeyListener, MouseListener, MouseMotionListene
 		}
 	}
 
+	/**
+	 * Attacks with selected weapon
+	 */
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		if(p.isAlive()){
@@ -136,6 +139,9 @@ public class GameInput implements KeyListener, MouseListener, MouseMotionListene
 				
 	}
 
+	/**
+	 * Attacks with selected weapon
+	 */
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		if(p.isAlive()){

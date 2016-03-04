@@ -11,6 +11,7 @@ import java.util.Enumeration;
  * <h1>NetworkHelper</h1>
  * Get information about network and network interfaces.
  * @author Oscar Hall
+ * @version 1.0 2016-03-04
  */
 public class NetworkHelper {
 	/**

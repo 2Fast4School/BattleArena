@@ -54,14 +54,30 @@ public class Server extends Observable implements Runnable{
 		byteRepresenter = new ByteRepresenter();
 	}
 	
+	/**
+	 * Sets the map name
+	 * @param mapName
+	 */
 	public void setMapName(String mapName){
 		this.mapName=mapName;
 	}
+	/**
+	 *  Sets the map type
+	 * @param type
+	 */
 	public void setMapType(String type){
 		this.type=type;
 	}
+	/**
+	 * Gets the map name
+	 * @return the map name
+	 */
 	public String getMapName(){return mapName;}
 	
+	/**
+	 * Sets number of players
+	 * @param nrOfPlayers
+	 */
 	public void setMaxPlayers(int nrOfPlayers)
 	{
 		this.maxPlayers = nrOfPlayers;
@@ -290,6 +306,7 @@ public class Server extends Observable implements Runnable{
 	}
 	
 	/**
+	 * ClientInfo
 	 * Holds selected information regarding a single client communicating with the server.<p>
 	 * <b><u>Known information:</u></b><p> 
 	 * <b>ip:InetAddress</b> - the InetAddress of the client<p>
@@ -312,6 +329,13 @@ public class Server extends Observable implements Runnable{
 		private boolean alive;
 		private String name;
 		
+		/**
+		 * Instanciates the ClientInfo
+		 * @param ip IP address
+		 * @param port Port address
+		 * @param id Player ID
+		 * @param name Player name
+		 */
 		public ClientInfo(InetAddress ip, int port, int id, String name){
 			this.ip = ip;
 			this.port = port;
@@ -321,14 +345,24 @@ public class Server extends Observable implements Runnable{
 			alive=true;
 		}
 		
+		/**
+		 * Gets the IP address (InetAddress)
+		 * @return InetAddress
+		 */
 		public InetAddress getIP(){
 			return ip;
 		}
-		
+		/**
+		 * Gets the port
+		 * @return port 
+		 */
 		public int getPort(){
 			return port;
 		}
-		
+		/**
+		 * Get player ID
+		 * @return
+		 */
 		public int getID(){
 			return id;
 		}

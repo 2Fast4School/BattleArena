@@ -19,9 +19,9 @@ public class Message implements Externalizable{
 	 * Contructor of message, does not init any variables.
 	 */
 	public Message(){
-		
 	}
 	
+
 	/**
 	 * Constructor of message
 	 * @param id the id the message should represent

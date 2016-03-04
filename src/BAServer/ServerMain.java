@@ -21,7 +21,7 @@ public class ServerMain {
 	
 	
 	/**
-	 * 
+	 * Singleton intanciation of this class
 	 * @return instance of ServerMain
 	 */
 	public static ServerMain getInstance()

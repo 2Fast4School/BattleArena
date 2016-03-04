@@ -18,13 +18,11 @@ public class Bow extends Weapon {
 	private Arrow newArrow;
 	private int delay;
 	
-	/**
-	 * 
-	 */
+	/**	newArrowFetched, if a new arrow is ready to be shot */
 	private boolean newArrowFetched = false;
 	
 	/**
-	 * 
+	 * Instanciates Bow class
 	 * @param owner The bow's owner.
 	 * @param arrowWidth The width of the arrows the bow creates.
 	 * @param arrowHeight The height of the arrows the bow creates.
@@ -48,6 +46,10 @@ public class Bow extends Weapon {
 		return newArrow;
 	}
 
+	/**
+	 * Gets the bounds for this bow
+	 * @return Rectangle with the new position of the arrow
+	 */
 	public Rectangle getBounds() {return (new Rectangle(owner.getCenterX(),owner.getCenterY(),0,0));}
 
 	/**
@@ -130,6 +132,7 @@ public class Bow extends Weapon {
 		
 		/**
 		 * Returns the arrows rotation.
+		 * @return the objects rotation in degrees
 		 */
 		public int getRotVar(){
 			return rotation;
@@ -149,6 +152,7 @@ public class Bow extends Weapon {
 		
 
 		/**
+		 * Gets the hitbox rectangle of the arrow
 		 *  @return A new Rectangle in the top of the arrow, which is the arrows hitbox.
 		 */
 		public Rectangle getBounds(){
