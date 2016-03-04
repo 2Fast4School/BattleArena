@@ -17,7 +17,7 @@ import model.SpawnPoint;
  * @author Alexander Erenstedt - Modified 02-28-16
  * @version 1.0
  */
-public class MapGenerator { //Perhaps implement serialization
+public class MapGenerator {
 	/**
 	 * Enormous method which generates entities as boundaries in the Map object it returns
 	 * and paints the background depending on the parameter type.
@@ -47,6 +47,7 @@ public class MapGenerator { //Perhaps implement serialization
 		int width = logicMap.getWidth();
 		BufferedImage background = new BufferedImage(logicMap.getWidth()*sizeOfPixel, logicMap.getHeight()*sizeOfPixel, BufferedImage.TYPE_INT_ARGB);
 		Map map = new Map();
+		
 		//Create map boundaries so that you can't leave the map
 			//Top boundary
 			map.addTile(new WallTile(-10, -10, width*sizeOfPixel+20, 10));
@@ -89,7 +90,7 @@ public class MapGenerator { //Perhaps implement serialization
 				int rgb = logicMap.getRGB(x, y);
 				//System.out.println(rgb);
 				String tileType = "";
-				if(rgb == 0){ //No color at all, should be white/standard
+				if(rgb == 0){ //No color at all, should never happen...
 					tileType = "standard";
 					rgb = -1; //Set the color to white
 				}
@@ -115,21 +116,21 @@ public class MapGenerator { //Perhaps implement serialization
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), standardTileBackground.getRGB(i, j));
 								break;
 							}else{
-								tileType="donotmatchondis";
+								tileType="donotmatchondis"; //Make sure there will be some color if image is null
 							}
 						case "wall":
 							if(wallTileBackground != null){
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), wallTileBackground.getRGB(i, j));
 								break;
 							}else{
-								tileType="donotmatchondis";
+								tileType="donotmatchondis"; //Make sure there will be some color if image is null
 							}
 						case "damage":
 							if(damageTileBackground != null){
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), damageTileBackground.getRGB(i, j));
 								break;
 							}else{
-								tileType="donotmatchondis";
+								tileType="donotmatchondis"; //Make sure there will be some color if image is null
 							}
 						default: //The case where the color didn't match anything
 							background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), rgb);
@@ -141,7 +142,8 @@ public class MapGenerator { //Perhaps implement serialization
 		}
 		
 		//prints the number of entities created
-		//System.out.println(map.getTiles().size()+map.getSpawnPoints().size()); 
+		//
+		System.out.println("Number of Tiles in map: " + map.getTiles().size()+map.getSpawnPoints().size()); 
 		map.setBackground(background);
 		return map;
 	}

@@ -8,9 +8,7 @@ package model;
  * 
  */
 public class SpawnPoint extends Tile{
-	/**
-	 * 
-	 */
+
 	private boolean isUsed;
 	
 	/**
@@ -18,12 +16,10 @@ public class SpawnPoint extends Tile{
 	 * @param x The x-position of the SpawnPoint.
 	 * @param y	The y-position of the SpawnPoint
 	 */
-	
 	public SpawnPoint(int x, int y) {
 		super(x, y, 1, 1, false);
 		isUsed=false;
 	}
-	
 	/**
 	 * Sets the SpawnPoint as used so the server can keep track on used SpawnPoints
 	 */
@@ -44,7 +40,9 @@ public class SpawnPoint extends Tile{
 	public boolean checkUsed(){
 		return isUsed;
 	}
-	
+	/**
+	 * This tile should'nt do anything on tick
+	 */
 	@Override
 	public void tick() {
 		

@@ -20,7 +20,9 @@ public class DamageTile extends Tile {
 	public DamageTile(int x, int y, int w, int h){
 		super(x, y, w ,h, false); //Never is solid.
 	}
-	
+	/**
+	 * The logic used for collision with players, deals dmg every 5 ticks
+	 */
 	@Override
 	public void tick() {
 		if(counter >= 5){

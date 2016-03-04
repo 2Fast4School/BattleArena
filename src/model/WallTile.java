@@ -16,7 +16,9 @@ public class WallTile extends Tile{
 	public WallTile(int x, int y, int w, int h) {
 		super(x, y, w, h, true); //Is always solid
 	}
-
+	/**
+	 * This tile should'nt do anything on tick
+	 */
 	public void tick() {
 
 	}

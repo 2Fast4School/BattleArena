@@ -164,8 +164,7 @@ public class ServerGUI implements Observer {
 	 * Update the network interface combobox with available interfaces.
 	 */
 	private void updateIpComboBox() {
-		NetworkHelper n = new NetworkHelper();
-		Iterator<String> i = n.getInterfaces().iterator();
+		Iterator<String> i = NetworkHelper.getInterfaces().iterator();
 		while(i.hasNext())
 			serverIp.addItem(i.next().toString());
 		

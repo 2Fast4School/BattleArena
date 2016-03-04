@@ -14,15 +14,17 @@ import java.util.Enumeration;
  *
  */
 public class NetworkHelper {
-	
-	public ArrayList<String> getInterfaces() {
+	/**
+	 * Method to find the local networkinterfaces
+	 * @return ArrayList with interfaces found on the device
+	 */
+	public static ArrayList<String> getInterfaces() {
 		Enumeration<NetworkInterface> e = null;
 		ArrayList<String> interfaces = new ArrayList<String>();
 
 		try {
 			e = NetworkInterface.getNetworkInterfaces();
 		} catch (SocketException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
