@@ -16,6 +16,7 @@ import map.Map;
  */
 public class GameState extends Observable{
 	private ArrayList<Entity> gameObjects;
+	private ArrayList<Enemy> enemies;
 	private ArrayList<Entity> objInNode;
 	private ArrayList<Weapon> arrows;
 	private Enemy gotHit;
@@ -29,6 +30,8 @@ public class GameState extends Observable{
 	private boolean gameOver;
 	private boolean sendArrow;
 	private String name;
+	private String mapName="";
+	private int nrPlayers=1;private int maxPlayers;
 	// Keeps track of which players have been hit by an attack from an entity. Since they should only be hit once per attack
 	
 	
@@ -39,6 +42,9 @@ public class GameState extends Observable{
 		gameObjects=new ArrayList<Entity>();
 		objInNode = new ArrayList<Entity>();
 		arrows = new ArrayList<Weapon>();
+
+		enemies=new ArrayList<Enemy>();
+
 		gotHit = null;
 		spawnPoints = new ArrayList<SpawnPoint>();
 		alive = false;
@@ -52,13 +58,7 @@ public class GameState extends Observable{
 	 * @return A list with all the enemies in the game.
 	 */
 	public List<Enemy> getTheEnemies(){
-		ArrayList<Enemy> ens = new ArrayList<Enemy>();
-		for(Entity e : gameObjects){
-			if(e instanceof Enemy){
-				ens.add((Enemy)e);
-			}
-		} return ens;
-		//return theEnemies;
+		return enemies;
 	}
 
 	
@@ -68,10 +68,16 @@ public class GameState extends Observable{
 	 * @param maxPlayers The maximum amount of players in the current game.
 	 * @param map The map which the game should be run on.
 	 */
-	public void setup(int id, int maxPlayers, Map map){
+
+	public void setup(int id, int maxPlayers, Map map, String mapName){
+
 		this.id = id;
 		this.map = map;
-
+		this.mapName=mapName;
+		this.maxPlayers=maxPlayers;
+		setChanged();
+		notifyObservers();
+		
 		//Init the quadtree with the size of the screen.
 		quadtree = new Quadtree(new Rectangle(0,0,map.getBackground().getWidth(),map.getBackground().getHeight()));
 				
@@ -95,6 +101,7 @@ public class GameState extends Observable{
 				Enemy en = new Enemy(spawnPoints.get(i-1).getX(), spawnPoints.get(i-1).getY(), 40, 40);
 				en.setID(i);
 				gameObjects.add(en);
+				enemies.add(en);
 			}
 			
 		}
@@ -210,7 +217,6 @@ public class GameState extends Observable{
 							//We can't hit more than one object so break the loop if a hit occured.
 							break;
 						} else if(ent.isSolid() && !(ent instanceof Player)){
-							System.out.println("Stuck here?");
 							w.damageDone();
 						}
 						
@@ -335,16 +341,23 @@ public class GameState extends Observable{
 	 * @return the gamestates name.
 	 */
 	public String getName(){return name;}
+
 	
 	/**
 	 * 
 	 * @return true if there has been an arrow-attack. false otherwise.
 	 */
+
 	public boolean getNewBowAttack(){
 		if(sendArrow){
 			sendArrow = false;
 			return true;
 		} return false;
 	}
-	
+	public String getMapName(){return mapName;}
+	public Map getMap(){return map;}
+	public void setNrPlayers(int nrPlayers){this.nrPlayers=nrPlayers;}
+	public int getNrPlayers(){return nrPlayers;}
+	public int getMaxNrPlayers(){return maxPlayers;}
+
 }

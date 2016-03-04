@@ -6,7 +6,6 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,6 +21,7 @@ import controller.SettingsInput;
  * @author Fred Hedenberg
  * @version 1.0 2016-03-03
  */
+@SuppressWarnings("serial")
 public class SettingsPanel extends JPanel {
 	
 	/** The settingsinput. actionlistener for this components in this class */
@@ -85,8 +85,7 @@ public class SettingsPanel extends JPanel {
 		nameTextField.setFont(font2);
 		nameTextField.setBounds(70, 0, 130, 60);
 		nameTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		System.out.println(name.length);
-		nameTextField.setText(name[new Random().nextInt(name.length+1)]);
+		nameTextField.setText(name[new Random().nextInt(name.length)]);
 		nameTextField.setColumns(10);
 		panel.add(nameTextField);
 		

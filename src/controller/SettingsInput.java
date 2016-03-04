@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-import view.Meny;
+import arenaFighter.Window;
 import view.SettingsPanel;
 
 /**
@@ -19,7 +19,7 @@ import view.SettingsPanel;
 public class SettingsInput implements ActionListener {
 		
 		/** The frame, application window */
-		private Meny theFrame;
+		private Window theFrame;
 		
 		/** The player name chosen */
 		private String name;
@@ -29,7 +29,7 @@ public class SettingsInput implements ActionListener {
 		 *
 		 * @param theFrame the application window
 		 */
-		public SettingsInput(Meny theFrame) {
+		public SettingsInput(Window theFrame) {
 			this.theFrame = theFrame;
 		}
 		
@@ -54,7 +54,7 @@ public class SettingsInput implements ActionListener {
 				JButton settingsCloseBtn = (JButton)(arg0.getSource());
 				SettingsPanel settingsPanel = (SettingsPanel)(settingsCloseBtn.getParent());
 				name = settingsPanel.getName();
-				theFrame.setView("MENY");
+				theFrame.setView("MENU");
 				break;
 				
 			default:

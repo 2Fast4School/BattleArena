@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import arenaFighter.Main;
  */
 public class Player extends Unit{
 	private int dx, dy;
+	private int tx = 0, ty = 0;
 	private ArrayList<Entity> closeObjects = new ArrayList<Entity>();
 	/**
 	 * Constructor.
@@ -34,10 +36,36 @@ public class Player extends Unit{
 	public void tick(){}
 	
 	/**
+	 * Updates the variables holding the mousecursor's position.
+	 * @param p
+	 */
+	public void setTarget(Point p){
+		tx = (int) p.getX();
+		ty = (int) p.getY();
+	}
+	
+	/**
 	 * An override of the usual tick because this tick needs to know about the objects closeby so it can check for collission.
 	 * @param closeObjects Possible object the Player can collide with.
 	 */
 	public void tick(ArrayList<Entity> closeObjects){
+		
+		//Calculates the angle between the mouse-pointer and the player's central coordinates.
+		int angle = (int) Math.round(Math.toDegrees(Math.atan2(ty - getCenterY(), tx - getCenterX())));
+		
+		/*
+		 * We need to add 90 degrees because for us, 0 degrees angle is straight up,
+		 * but we calculate it as if it were to the right. Think about the unit circle, (SE Enhetscirkeln).
+		 */
+		angle += 90;
+		
+		//Instead of using negative angles, we just add 360 degrees to get the positive value of the same angle.
+		if(angle < 0){
+			angle += 360;
+		}
+		
+		setRotVar(angle);
+				
 		this.closeObjects.clear();
 		this.closeObjects.addAll(closeObjects);
 		move(dx, dy);

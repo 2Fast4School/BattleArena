@@ -7,8 +7,8 @@ import java.util.Observer;
 
 import javax.swing.JCheckBox;
 
+import arenaFighter.Window;
 import model.GameState;
-import view.Meny;
 
 /**
  * The Class LobbyInput.
@@ -21,7 +21,7 @@ import view.Meny;
 public class LobbyInput implements ActionListener, Observer {
 
 	/** The frame, application window*/
-	private Meny frame;
+	private Window frame;
 	
 	/** The state. */
 	private GameState state;
@@ -32,7 +32,7 @@ public class LobbyInput implements ActionListener, Observer {
 	 * @param frame the frame
 	 * @param state the state
 	 */
-	public LobbyInput(Meny frame, GameState state) {
+	public LobbyInput(Window frame, GameState state) {
 		this.frame = frame;
 		this.state = state;
 	}

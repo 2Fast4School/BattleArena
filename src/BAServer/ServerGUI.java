@@ -1,6 +1,5 @@
 package BAServer;
 
-
 import java.awt.BorderLayout;
 import java.awt.Choice;
 import java.awt.Color;
@@ -24,11 +23,12 @@ import javax.swing.JTextField;
 import arenaFighter.Main;
 
 /**
- * <h1>ServerGUI</h1>
- * ServerGUI creates a graphic interface for a game server with a terminal output,
- * a comboBox for option of network interfaces and buttons to start and end game.
+ * <h1>ServerGUI</h1> ServerGUI creates a graphic interface for a game server
+ * with a terminal output, a comboBox for option of network interfaces and
+ * buttons to start and end game.
+ * 
  * @author Oscar Hall
- * @version 2016-03-03
+ * @version 1.0 2016-03-03
  */
 public class ServerGUI implements Observer {
 
@@ -40,7 +40,7 @@ public class ServerGUI implements Observer {
 	private static JPanel buttonArea, serverInfoArea;
 	private static JButton startGameBtn, endGameBtn, chooseMapBtn;
 	private Choice typeChoice;
-	private boolean shutDown=false;
+	private boolean shutDown = false;
 	private static int port = 5050;
 
 	/**
@@ -50,17 +50,15 @@ public class ServerGUI implements Observer {
 		mainWindow = new JFrame("Battle Arena Server");
 		try {
 			mainWindow.setIconImage(ImageIO.read(Main.class.getResource("/testa.png")));
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			try {
 				mainWindow.setIconImage(Toolkit.getDefaultToolkit().getImage("res/testa.png"));
-			}
-			catch(Exception e2) {
+			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
 		}
-			
+
 		mainWindow.setLayout(new BorderLayout());
 		mainWindow.setSize(700, 400);
 
@@ -77,11 +75,11 @@ public class ServerGUI implements Observer {
 		JLabel IPLabel = new JLabel("IP adresses:");
 		JLabel portLabel = new JLabel("Port:");
 		JLabel nrOfPlayersLabel = new JLabel("Number of players:");
-		typeChoice=new Choice();
+		typeChoice = new Choice();
 		typeChoice.add("grass");
 		typeChoice.add("lava");
 		typeChoice.add("desert");
-		
+
 		// Add components to mainFrame
 		mainWindow.add(serverInfoArea, BorderLayout.NORTH);
 		mainWindow.add(infoScrollPane);
@@ -96,7 +94,6 @@ public class ServerGUI implements Observer {
 		serverInfoArea.add(serverPort);
 		serverInfoArea.add(nrOfPlayersLabel);
 		serverInfoArea.add(nrOfPlayers);
-		
 
 		// Modifications to components
 		serverIp.setBackground(Color.DARK_GRAY);
@@ -121,106 +118,98 @@ public class ServerGUI implements Observer {
 	}
 
 	/**
-	 * update is used to send information to the terminal output from observed objects
+	 * update is used to send information to the terminal output from observed
+	 * objects
 	 */
 	@Override
-	public void update(Observable o, Object arg){
-		if(arg instanceof Boolean){
-			if(!shutDown && (Boolean)arg==true){
-				shutDown=(Boolean)arg;
+	public void update(Observable o, Object arg) {
+		if (arg instanceof Boolean) {
+			if (!shutDown && (Boolean) arg == true) {
+				shutDown = (Boolean) arg;
 				infoArea.append("The game is over.\n");
 				toTerminal("Server shut down\n");
 				switchButtonState();
 			}
-			if((Boolean)arg==false){
-				shutDown=false;
+			if ((Boolean) arg == false) {
+				shutDown = false;
 			}
-		}
-		else{
-			String[] message = new String((byte[])arg).trim().split(",");
+		} else {
+			String[] message = new String((byte[]) arg).trim().split(",");
 			int OPcode = Integer.parseInt(message[0]);
 			String id = message[1];
-		
-			//Check if attack OP = 2
-			if(OPcode == 2)
-			{
+
+			// Check if attack OP = 2
+			if (OPcode == 2) {
 				infoArea.append(id + " is attacking!\n");
 				infoArea.setCaretPosition(infoArea.getDocument().getLength());
 			}
 		}
 	}
-	
+
 	/**
 	 * Print text to server terminal window
+	 * 
 	 * @param text
 	 */
-	public void toTerminal(String text)
-	{
-		infoArea.append(text+"\n");
+	public void toTerminal(String text) {
+		infoArea.append(text + "\n");
 	}
 
 	/**
-	 * updateIpComboBox
-	 * Update the network interface combobox with available interfaces.
+	 * updateIpComboBox Update the network interface combobox with available
+	 * interfaces.
 	 */
 	private void updateIpComboBox() {
 		Iterator<String> i = NetworkHelper.getInterfaces().iterator();
-		while(i.hasNext())
+		while (i.hasNext())
 			serverIp.addItem(i.next().toString());
-		
-		//Set Loopback as default adress
-		serverIp.setSelectedIndex(serverIp.getItemCount()-1);
+
+		// Set Loopback as default adress
+		serverIp.setSelectedIndex(serverIp.getItemCount() - 1);
 	}
-	
-	public String getIpAddress()
-	{
+
+	public String getIpAddress() {
 		return serverIp.getSelectedItem().toString();
 	}
-	
-	public int getPort()
-	{
+
+	public int getPort() {
 		return Integer.parseInt(serverPort.getText());
 	}
-	
+
 	/**
 	 * 
 	 * @return hej
 	 */
-	public int getNrOfPlayers()
-	{
+	public int getNrOfPlayers() {
 		return Integer.parseInt(nrOfPlayers.getText().trim());
 	}
-	
-	public void addController(ActionListener controller){
+
+	public void addController(ActionListener controller) {
 		System.out.println("View      : adding controller");
-		startGameBtn.addActionListener(controller);	
+		startGameBtn.addActionListener(controller);
 		endGameBtn.addActionListener(controller);
-		chooseMapBtn.addActionListener(controller);	
-		typeChoice.addItemListener((ItemListener)controller);
-	} //addController()
-	
-	
+		chooseMapBtn.addActionListener(controller);
+		typeChoice.addItemListener((ItemListener) controller);
+	} // addController()
+
 	/**
 	 * Switches enabled state on Start Game button and End Game Button
 	 */
-	public void switchButtonState()
-	{
-		if(startGameBtn.isEnabled())
-		{
+	public void switchButtonState() {
+		if (startGameBtn.isEnabled()) {
 			startGameBtn.setEnabled(false);
 			endGameBtn.setEnabled(true);
 			chooseMapBtn.setEnabled(true);
 			typeChoice.setEnabled(true);
-		}
-		else
-		{
-			startGameBtn.setEnabled(true);	
+		} else {
+			startGameBtn.setEnabled(true);
 			endGameBtn.setEnabled(false);
 			chooseMapBtn.setEnabled(false);
 			typeChoice.setEnabled(false);
 		}
 	}
-	public String getMapType(){
+
+	public String getMapType() {
 		return typeChoice.getSelectedItem();
 	}
 }

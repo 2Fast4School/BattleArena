@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -17,6 +19,8 @@ import javax.swing.SwingConstants;
 
 import arenaFighter.Main;
 import controller.LobbyInput;
+import map.Map;
+import model.GameState;
 
 /**
  * The Class LobbyPanel.
@@ -27,9 +31,9 @@ import controller.LobbyInput;
  * @author Fred Hedenberg
  * @version 1.0 2016-03-03
  */
-public class LobbyPanel extends JPanel {
-	
-	/** The lobbyinput. Exclusive actionlistener for this class */
+
+public class LobbyPanel extends JPanel implements Observer{
+
 	private LobbyInput lobbyinput;
 	
 	/** The map image. To be displayed as a minimap */
@@ -40,9 +44,12 @@ public class LobbyPanel extends JPanel {
 	
 	/** The map name. */
 	private String mapName = "";
-	
-	/** The scaled (new) height and width of the minimap. */
+
 	private int scaledWidth, scaledHeight;
+	private JTextField mapText;
+	private JTextField txtPlayer;
+	private JTextField playersJoinedTF;
+	private int nrPlayers;
 	
 	/**
 	 * Instantiates a new lobby panel.
@@ -61,21 +68,23 @@ public class LobbyPanel extends JPanel {
 	 */
 	private void initPanel() {
 		
+		setLayout(null);
+		
 		Font font1 = new Font("Comic Sans MS", Font.PLAIN, 21);
 		Font font2 = new Font("Comic Sans MS", Font.PLAIN, 14);
 		
-		setLayout(null);
-		JTextField miniMapNameTF = new JTextField();
-		miniMapNameTF.setBackground(new Color(255, 255, 255));
-		miniMapNameTF.setEditable(false);
-		miniMapNameTF.setHorizontalAlignment(SwingConstants.CENTER);
-		miniMapNameTF.setFont(font1);
-		miniMapNameTF.setText("Map: " + mapName);
-		miniMapNameTF.setBounds(60, 200, 400, 40);
-		add(miniMapNameTF);
-		miniMapNameTF.setColumns(10);
+
+		mapText = new JTextField();
+		mapText.setBackground(new Color(255, 255, 255));
+		mapText.setEditable(false);
+		mapText.setHorizontalAlignment(SwingConstants.CENTER);
+		mapText.setFont(font1);
+		mapText.setText("Map: " + mapName);
+		mapText.setBounds(60, 200, 400, 40);
+		add(mapText);
+		mapText.setColumns(10);
 		
-		JTextField txtPlayer = new JTextField();
+		txtPlayer = new JTextField();
 		txtPlayer.setHorizontalAlignment(SwingConstants.CENTER);
 		txtPlayer.setEditable(false);
 		txtPlayer.setText("Player 1");
@@ -98,7 +107,7 @@ public class LobbyPanel extends JPanel {
 		leaveBtn.setBounds(600, 600, 140, 50);
 		add(leaveBtn);
 		
-		JTextField playersJoinedTF = new JTextField();
+		playersJoinedTF = new JTextField();
 		playersJoinedTF.setFont(font2);
 		playersJoinedTF.setEditable(false);
 		playersJoinedTF.setHorizontalAlignment(SwingConstants.CENTER);
@@ -107,32 +116,22 @@ public class LobbyPanel extends JPanel {
 		add(playersJoinedTF);
 		playersJoinedTF.setColumns(10);
 		
-		try {
-			mapImage = ImageIO.read(Main.class.getResource("/pregameart.png"));
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		if (preGameArt == null) {
-			try {
-				mapImage = ImageIO.read(new File("res/pregameart.png"));
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				mapImage = new BufferedImage(800,800, BufferedImage.TYPE_INT_ARGB);
-			}
-		}
 
 		// Scales the game-map to a minimap
+		int scaledWidth = 0;
+		int scaledHeight = 0;
+
+		// Scales the map to a minimap
+	}
+	public void setMiniMap(){
 		if (mapImage != null) {
 			if (mapImage.getHeight()<=mapImage.getWidth()){
-				int scaledWidth = 400;
-				int scaledHeight = mapImage.getHeight()*(scaledWidth/mapImage.getWidth());
+				scaledWidth = 400;
+				scaledHeight = mapImage.getHeight()*(scaledWidth/mapImage.getWidth());
 			}
 			else {
-				int scaledHeight = 400;
-				int scaledWidth = mapImage.getWidth()*(scaledHeight/mapImage.getHeight());
+				scaledHeight = 400;
+				scaledWidth = mapImage.getWidth()*(scaledHeight/mapImage.getHeight());
 			}
 			if (scaledWidth <= 0 || scaledHeight <= 0) {
 				scaledWidth = 400;
@@ -149,6 +148,24 @@ public class LobbyPanel extends JPanel {
 				picLabel.setBounds(0, 0, 800, 800);
 			}
 		}
-
+	}
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if(arg0 instanceof GameState){
+			GameState state=(GameState)arg0;
+			if(nrPlayers!=state.getNrPlayers()){
+				nrPlayers=state.getNrPlayers();
+				playersJoinedTF.setText(nrPlayers+"/"+state.getMaxNrPlayers()+" players joined");
+			}
+			if(mapName==""){
+				mapName=state.getMapName();
+				mapName=mapName.substring(0, mapName.length()-4);
+				Map map=state.getMap();
+				mapImage=map.getBackground();
+				txtPlayer.setText(state.getName());
+				mapText.setText("Map: " + mapName);
+				setMiniMap();
+			}
+		}
 	}
 }
