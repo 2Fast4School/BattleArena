@@ -180,14 +180,13 @@ public class ServerGUI implements Observer {
 
 	/**
 	 * 
-	 * @return hej
+	 * @return int Number of players set.
 	 */
 	public int getNrOfPlayers() {
 		return Integer.parseInt(nrOfPlayers.getText().trim());
 	}
 
 	public void addController(ActionListener controller) {
-		System.out.println("View      : adding controller");
 		startGameBtn.addActionListener(controller);
 		endGameBtn.addActionListener(controller);
 		chooseMapBtn.addActionListener(controller);
