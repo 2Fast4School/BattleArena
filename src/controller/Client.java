@@ -179,6 +179,7 @@ public class Client implements Runnable, Observer{
 			
 			BufferedImage logicMap = null;
 			try {
+				System.out.println(receiveMessage.getMapName());
 			logicMap = ImageIO.read(Main.class.getResource("/maps/"+receiveMessage.getMapName()));
 			}
 			catch (Exception e) {
