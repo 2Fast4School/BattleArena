@@ -56,14 +56,14 @@ public class Server extends Observable implements Runnable{
 	
 	/**
 	 * Sets the map name
-	 * @param mapName
+	 * @param mapName the desired mapname
 	 */
 	public void setMapName(String mapName){
 		this.mapName=mapName;
 	}
 	/**
 	 *  Sets the map type
-	 * @param type
+	 * @param type the desired maptype
 	 */
 	public void setMapType(String type){
 		this.type=type;
@@ -76,7 +76,7 @@ public class Server extends Observable implements Runnable{
 	
 	/**
 	 * Sets number of players
-	 * @param nrOfPlayers
+	 * @param nrOfPlayers the desired number of players
 	 */
 	public void setMaxPlayers(int nrOfPlayers)
 	{

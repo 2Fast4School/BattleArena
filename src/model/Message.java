@@ -263,8 +263,8 @@ public class Message implements Externalizable{
 	/**
 	 * Implements the readExtrenal
 	 * @param arg0 The ObjectInput to read from
-	 * @throws IOexception
-	 * @throws ClassNotFoundException
+	 * @throws IOException IOException occured
+	 * @throws ClassNotFoundException Class not found exception occured
 	 */
 	@Override
 	public void readExternal(ObjectInput arg0) throws IOException, ClassNotFoundException {
@@ -291,7 +291,7 @@ public class Message implements Externalizable{
 	/**
 	 * Implements the write External
 	 * @param arg0 the ObjectOutput to read from
-	 * @throws IOException
+	 * @throws IOException IOException occured
 	 */
 	@Override
 	public void writeExternal(ObjectOutput arg0) throws IOException {

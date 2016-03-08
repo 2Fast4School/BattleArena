@@ -24,7 +24,7 @@ public class GameCanvas extends Canvas implements Observer{
 	
 	/**
 	 * Contructor of GameCanvas
-	 * @param backgroundImage The backgroundimage of the gamecanvas
+	 * @param img The backgroundimage of the gamecanvas
 	 */
 	public GameCanvas(BufferedImage img){
 		this.backgroundImage = img;
