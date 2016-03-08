@@ -1,4 +1,4 @@
-package arenaFighter;
+package main;
 /**
  * The class Main.
  * Starts the application window, nothing else.

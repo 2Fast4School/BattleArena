@@ -1,4 +1,4 @@
-package BAServer;
+package network;
 
 /**
  * <h1>ServerMain</h1>

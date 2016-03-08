@@ -1,4 +1,4 @@
-package BAServer;
+package network;
 
 import java.awt.BorderLayout;
 import java.awt.Choice;
@@ -20,7 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import arenaFighter.Main;
+import main.Main;
 
 /**
  * <h1>ServerGUI</h1> ServerGUI creates a graphic interface for a game server
@@ -187,8 +187,9 @@ public class ServerGUI implements Observer {
 	}
 
 	/**
-	 * Gets number of players connected
-	 * @return int of number of players
+	 * Returns the number of wanted players
+	 * @return int Number of players set.
+
 	 */
 	public int getNrOfPlayers() {
 		return Integer.parseInt(nrOfPlayers.getText().trim());
@@ -199,7 +200,6 @@ public class ServerGUI implements Observer {
 	 * @param controller ServerController
 	 */
 	public void addController(ActionListener controller) {
-		System.out.println("View      : adding controller");
 		startGameBtn.addActionListener(controller);
 		endGameBtn.addActionListener(controller);
 		chooseMapBtn.addActionListener(controller);

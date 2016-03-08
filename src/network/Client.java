@@ -1,4 +1,4 @@
-package controller;
+package network;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
@@ -16,6 +16,8 @@ import java.util.Observer;
 
 import javax.imageio.ImageIO;
 
+import controller.ByteRepresenter;
+import main.Main;
 import map.Map;
 import map.MapGenerator;
 import model.Bow;
@@ -23,7 +25,6 @@ import model.Enemy;
 import model.GameState;
 import model.Message;
 import model.Player;
-import arenaFighter.Main;
 /**
 * <h1>Client</h1>
 

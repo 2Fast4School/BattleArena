@@ -6,8 +6,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import arenaFighter.Main;
-import arenaFighter.Window;
+import main.Main;
+import main.Window;
 import model.GameState;
 
 /**

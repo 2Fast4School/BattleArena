@@ -7,7 +7,7 @@ import java.util.Observer;
 
 import javax.swing.JCheckBox;
 
-import arenaFighter.Window;
+import main.Window;
 import model.GameState;
 
 /**

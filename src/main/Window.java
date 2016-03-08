@@ -1,4 +1,4 @@
-package arenaFighter;
+package main;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -6,11 +6,11 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import controller.Client;
 import controller.ConnectInput;
 import controller.Game;
 import controller.GameInput;
@@ -18,6 +18,7 @@ import controller.LobbyInput;
 import controller.MenuInput;
 import controller.SettingsInput;
 import model.GameState;
+import network.Client;
 import view.ConnectPanel;
 import view.GameCanvas;
 import view.LobbyPanel;
