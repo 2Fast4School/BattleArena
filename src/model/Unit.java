@@ -28,7 +28,7 @@ public abstract class Unit extends Entity{
 	public Unit(int x, int y, int w, int h, boolean solid) {
 		super(x, y, w, h, solid);
 		hp = MAXHP;
-		weapon = new SweepSword(this, 8, 50, 5);
+		weapon = new SweepSword(this, 8, 50, 33);
 		secondaryWeapon = new Bow(this, 5, 18, 5);
 		alive = true;
 	}

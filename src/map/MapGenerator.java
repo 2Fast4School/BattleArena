@@ -2,13 +2,15 @@ package map;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
 import main.Main;
 import model.DamageTile;
-import model.WallTile;
 import model.SpawnPoint;
+import model.WallTile;
 
 /**
  * <h1>MapGenerator</h1>
@@ -33,19 +35,9 @@ public class MapGenerator {
 	 */
 	public static Map generateMap(BufferedImage logicMap, String type, int sizeOfPixel){		
 		//The different images used
-		BufferedImage standardTileBackground = null;
-		BufferedImage wallTileBackground = null;
-		BufferedImage damageTileBackground = null;
 		
-		//If the read failed they will be null and be painted as the colorcode on the background
-		try {
-			standardTileBackground = ImageIO.read(Main.class.getResource("/"+type + "/standardBackground.png"));
-			wallTileBackground = ImageIO.read(Main.class.getResource("/"+type + "/wall.png"));
-			damageTileBackground = ImageIO.read(Main.class.getResource("/"+type + "/damageTileBackground.png"));
-			
-		} catch (IOException e) {	
-		    e.printStackTrace();
-		}
+		Random random = new Random();
+		
 		
 		
 		int height = logicMap.getHeight();
@@ -88,18 +80,49 @@ public class MapGenerator {
 				//System.out.println(Integer.toHexString(rgb));
 			}
 		}
+		//If the read failed they will be null and be painted as the colorcode on the background
+		ArrayList<BufferedImage> standardTileBackgrounds = new ArrayList<BufferedImage>();
+		
+		BufferedImage wallTileBackground = null;
+		BufferedImage damageTileBackground = null;
+		
+		try {
+			standardTileBackgrounds.add(ImageIO.read(Main.class.getResource("/"+type + "/standardBackground0.png")));
+			standardTileBackgrounds.add(ImageIO.read(Main.class.getResource("/"+type + "/standardBackground1.png")));
+			standardTileBackgrounds.add(ImageIO.read(Main.class.getResource("/"+type + "/standardBackground2.png")));
+			
+			wallTileBackground = ImageIO.read(Main.class.getResource("/"+type + "/wall.png"));
+			damageTileBackground = ImageIO.read(Main.class.getResource("/"+type + "/damageTileBackground.png"));
+			
+		} catch (IOException e) {	
+		    e.printStackTrace();
+		}
+		
+		
 		
 		//Paint the background
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
+				int bIndex = 0;
 				int rgb = logicMap.getRGB(x, y);
+				
+				bIndex = random.nextInt(3) - random.nextInt(20);
+				if(bIndex < 0){
+					bIndex = 0;
+				}
+				
+				
 				//System.out.println(rgb);
 				String tileType = "";
 				if(rgb == 0){ //No color at all, should never happen...
+					
+					
 					tileType = "standard";
 					rgb = -1; //Set the color to white
+					
 				}
 				if(Integer.toHexString(rgb).compareTo("ffffffff") == 0) { //white
+					
 					tileType = "standard"; 
 				}
 				if(Integer.toHexString(rgb).compareTo("fffff200") == 0) { //Yellow
@@ -116,9 +139,9 @@ public class MapGenerator {
 				for(int i=0; i < sizeOfPixel; i++){
 					for(int j = 0; j < sizeOfPixel; j++){
 						switch(tileType){
-						case "standard": //Paints the standardBackground 					
-							if(standardTileBackground != null){
-								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), standardTileBackground.getRGB(i, j));
+						case "standard": //Paints the standardBackground 
+							if(standardTileBackgrounds.get(bIndex) != null){
+								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), standardTileBackgrounds.get(bIndex).getRGB(i, j));
 								break;
 							}else{
 								tileType="donotmatchondis"; //Make sure there will be some color if image is null
