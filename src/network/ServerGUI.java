@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
+import java.io.File;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
@@ -75,10 +76,20 @@ public class ServerGUI implements Observer {
 		JLabel IPLabel = new JLabel("IP adresses:");
 		JLabel portLabel = new JLabel("Port:");
 		JLabel nrOfPlayersLabel = new JLabel("Number of players:");
+		
+		File themeDir = new File("res/theme");
+		
+		File[] themes = themeDir.listFiles();
+		
 		typeChoice = new Choice();
-		typeChoice.add("grass");
-		typeChoice.add("lava");
-		typeChoice.add("desert");
+		
+		for(File file : themes){
+			typeChoice.add(file.getName());
+		}
+		
+		//typeChoice.add("desert");
+		//typeChoice.add("grass");
+		//typeChoice.add("lava");
 		typeChoice.setForeground(Color.GREEN);
 		typeChoice.setBackground(Color.BLACK);
 

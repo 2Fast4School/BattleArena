@@ -9,7 +9,6 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import main.Main;
 import model.DamageTile;
 import model.SpawnPoint;
 import model.WallTile;
@@ -83,9 +82,8 @@ public class MapGenerator {
 			}
 		}
 		
-		
 		ArrayList<BufferedImage> standardTileBackgrounds = new ArrayList<BufferedImage>();
-		File dirTheme = new File("res/"+type);
+		File dirTheme = new File("res/theme/"+type);
 		File[] standardBackgrounds = dirTheme.listFiles(new FilenameFilter() {
 		    public boolean accept(File dir, String name) {
 		      return name.startsWith("standardBackground");
@@ -100,6 +98,7 @@ public class MapGenerator {
 				e.printStackTrace();
 			}
 		}
+		
 		
 		ArrayList<BufferedImage> damageTile = new ArrayList<BufferedImage>();
 		
@@ -135,6 +134,7 @@ public class MapGenerator {
 			}
 		}
 		
+		
 	
 		
 		
@@ -145,8 +145,13 @@ public class MapGenerator {
 				
 				int rgb = logicMap.getRGB(x, y);
 				
-				int bIndex = random.nextInt((wallTile.size() + damageTile.size() + standardTileBackgrounds.size()+1) / 3  ) - random.nextInt((wallTile.size() + damageTile.size() + standardTileBackgrounds.size())) ;
+				//Randomize the index of choosing tile image, N0 > N1 > N2 > N3 ... > Nn
+				int bIndex = random.nextInt(
+					((wallTile.size() + damageTile.size() + standardTileBackgrounds.size()) / 3) +1  ) 
+					- 
+					random.nextInt((wallTile.size() + damageTile.size() + standardTileBackgrounds.size()+1) );
 				
+				//Make sure we dont get out of range because of a negative value
 				if(bIndex < 0){
 					bIndex = 0;
 				}
@@ -177,23 +182,27 @@ public class MapGenerator {
 				
 				for(int i=0; i < sizeOfPixel; i++){
 					for(int j = 0; j < sizeOfPixel; j++){
+					
 						switch(tileType){
+					
 						case "standard": //Paints the standardBackground 
-							if(standardTileBackgrounds.get(bIndex % standardTileBackgrounds.size()) != null){
+							
+							if(standardTileBackgrounds.size() != 0){
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), standardTileBackgrounds.get(bIndex % standardTileBackgrounds.size()).getRGB(i, j));
 								break;
 							}else{
 								tileType="donotmatchondis"; //Make sure there will be some color if image is null
 							}
+						
 						case "wall":
-							if(wallTile.get(bIndex % wallTile.size()) != null){
+							if(wallTile.size() != 0){
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), wallTile.get(bIndex % wallTile.size()).getRGB(i, j));
 								break;
 							}else{
 								tileType="donotmatchondis"; //Make sure there will be some color if image is null
 							}
 						case "damage":
-							if(damageTile.get(bIndex % damageTile.size()) != null){
+							if(damageTile.size() != 0){
 								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), damageTile.get(bIndex % damageTile.size()).getRGB(i, j));
 								break;
 							}else{
@@ -203,6 +212,7 @@ public class MapGenerator {
 							background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), rgb);
 							break;
 						}
+					
 					}
 				}
 			}
