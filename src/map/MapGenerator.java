@@ -1,6 +1,8 @@
 package map;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -80,37 +82,74 @@ public class MapGenerator {
 				//System.out.println(Integer.toHexString(rgb));
 			}
 		}
-		//If the read failed they will be null and be painted as the colorcode on the background
+		
+		
 		ArrayList<BufferedImage> standardTileBackgrounds = new ArrayList<BufferedImage>();
-		
-		BufferedImage wallTileBackground = null;
-		BufferedImage damageTileBackground = null;
-		
-		try {
-			standardTileBackgrounds.add(ImageIO.read(Main.class.getResource("/"+type + "/standardBackground0.png")));
-			standardTileBackgrounds.add(ImageIO.read(Main.class.getResource("/"+type + "/standardBackground1.png")));
-			standardTileBackgrounds.add(ImageIO.read(Main.class.getResource("/"+type + "/standardBackground2.png")));
-			
-			wallTileBackground = ImageIO.read(Main.class.getResource("/"+type + "/wall.png"));
-			damageTileBackground = ImageIO.read(Main.class.getResource("/"+type + "/damageTileBackground.png"));
-			
-		} catch (IOException e) {	
-		    e.printStackTrace();
+		File dirTheme = new File("res/"+type);
+		File[] standardBackgrounds = dirTheme.listFiles(new FilenameFilter() {
+		    public boolean accept(File dir, String name) {
+		      return name.startsWith("standardBackground");
+		    }
+		});
+		//read the standardbackground images
+		for(File file : standardBackgrounds){
+			try {
+				standardTileBackgrounds.add(ImageIO.read(file));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
+		ArrayList<BufferedImage> damageTile = new ArrayList<BufferedImage>();
+		
+		File[] damageTileImages = dirTheme.listFiles(new FilenameFilter() {
+		    public boolean accept(File dir, String name) {
+		      return name.startsWith("damageTile");
+		    }
+		});
+		//read the standardbackground images
+		for(File file : damageTileImages){
+			try {
+				damageTile.add(ImageIO.read(file));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+
+		ArrayList<BufferedImage> wallTile = new ArrayList<BufferedImage>();
+		File[] wallTileImages = dirTheme.listFiles(new FilenameFilter() {
+		    public boolean accept(File dir, String name) {
+		      return name.startsWith("wall");
+		    }
+		});
+		//read the standardbackground images
+		for(File file : wallTileImages){
+			try {
+				wallTile.add(ImageIO.read(file));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	
 		
 		
 		
 		//Paint the background
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
-				int bIndex = 0;
+				
 				int rgb = logicMap.getRGB(x, y);
 				
-				bIndex = random.nextInt(3) - random.nextInt(20);
+				int bIndex = random.nextInt((wallTile.size() + damageTile.size() + standardTileBackgrounds.size()+1) / 3  ) - random.nextInt((wallTile.size() + damageTile.size() + standardTileBackgrounds.size())) ;
+				
 				if(bIndex < 0){
 					bIndex = 0;
 				}
-				
 				
 				//System.out.println(rgb);
 				String tileType = "";
@@ -140,22 +179,22 @@ public class MapGenerator {
 					for(int j = 0; j < sizeOfPixel; j++){
 						switch(tileType){
 						case "standard": //Paints the standardBackground 
-							if(standardTileBackgrounds.get(bIndex) != null){
-								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), standardTileBackgrounds.get(bIndex).getRGB(i, j));
+							if(standardTileBackgrounds.get(bIndex % standardTileBackgrounds.size()) != null){
+								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), standardTileBackgrounds.get(bIndex % standardTileBackgrounds.size()).getRGB(i, j));
 								break;
 							}else{
 								tileType="donotmatchondis"; //Make sure there will be some color if image is null
 							}
 						case "wall":
-							if(wallTileBackground != null){
-								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), wallTileBackground.getRGB(i, j));
+							if(wallTile.get(bIndex % wallTile.size()) != null){
+								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), wallTile.get(bIndex % wallTile.size()).getRGB(i, j));
 								break;
 							}else{
 								tileType="donotmatchondis"; //Make sure there will be some color if image is null
 							}
 						case "damage":
-							if(damageTileBackground != null){
-								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), damageTileBackground.getRGB(i, j));
+							if(damageTile.get(bIndex % damageTile.size()) != null){
+								background.setRGB(i+(x*sizeOfPixel), j+(y*sizeOfPixel), damageTile.get(bIndex % damageTile.size()).getRGB(i, j));
 								break;
 							}else{
 								tileType="donotmatchondis"; //Make sure there will be some color if image is null
